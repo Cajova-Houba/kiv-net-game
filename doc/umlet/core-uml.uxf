@@ -87,13 +87,15 @@ bg=blue</panel_attributes>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
       <x>850</x>
-      <y>220</y>
-      <w>100</w>
-      <h>50</h>
+      <y>200</y>
+      <w>320</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>Key
 --
-- color:Color</panel_attributes>
+- color:EntranceState
+--
++ canOpen(mapBlock: MapBlock, direction: int)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -296,7 +298,9 @@ bg=blue</panel_attributes>
       <w>150</w>
       <h>110</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=1..*</panel_attributes>
     <additional_attributes>30;90;130;30</additional_attributes>
   </element>
   <element>
@@ -410,15 +414,18 @@ bg=green</panel_attributes>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
       <x>300</x>
-      <y>120</y>
-      <w>130</w>
-      <h>70</h>
+      <y>60</y>
+      <w>160</w>
+      <h>130</h>
     </coordinates>
-    <panel_attributes>Entrance
+    <panel_attributes>&lt;&lt;Enum&gt;&gt;
+Entrance
 --
-- open: boolean
-- gate: GateColor
-</panel_attributes>
+- state: EntranceState
+--
++ exists()
++ isOpen()
++ open()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -436,37 +443,37 @@ m1=  1
     <additional_attributes>30;130;30;30</additional_attributes>
   </element>
   <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>630</x>
+      <y>100</y>
+      <w>310</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;30;290;30;290;100</additional_attributes>
+  </element>
+  <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>850</x>
+      <x>550</x>
       <y>100</y>
-      <w>100</w>
-      <h>60</h>
+      <w>110</w>
+      <h>50</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Enum&gt;&gt;
-GateColor</panel_attributes>
+EntranceState</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>920</x>
+      <x>430</x>
       <y>100</y>
-      <w>100</w>
-      <h>170</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>30;30;80;30;80;150;30;150</additional_attributes>
-  </element>
-  <element>
-    <type>com.baselet.element.old.element.Relation</type>
-    <coordinates>
-      <x>400</x>
-      <y>110</y>
-      <w>470</w>
+      <w>140</w>
       <h>50</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>450;30;30;30</additional_attributes>
+    <additional_attributes>120;30;30;30</additional_attributes>
   </element>
 </diagram>
