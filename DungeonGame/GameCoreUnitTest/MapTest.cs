@@ -48,7 +48,7 @@ namespace GameCoreUnitTest
         }
 
         /// <summary>
-        /// Test AdjacentBlock() method of map with only one block.
+        /// Test AdjacentBlock() method on map with only one block.
         /// </summary>
         [TestMethod]
         public void TestAdjacentBlockOneBlockMap()
@@ -66,6 +66,52 @@ namespace GameCoreUnitTest
             foreach(Direction direction in directions)
             {
                 Assert.IsNull(map.AdjacentBlock(0, 0, direction), $"Adjacent block in diretion {direction} should be null!");
+            }
+        }
+
+        /// <summary>
+        /// Test AdjacentBlock() method on map with 3x3 blocks.
+        /// </summary>
+        [TestMethod]
+        public void TestAdjacentBlock()
+        {
+            // base map
+            Map map = new Map();
+
+            // create grid, initialize map
+            int w = 3;
+            int h = 3;
+            MapBlock[,] grid = new MapBlock[w, h];
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    grid[i, j] = new MapBlock(i, j);
+                }
+            }
+            map.InitializeMap(grid.GetLength(0), grid.GetLength(1), grid);
+
+            // tests
+            //middle block [2,2] should have all adjacent blocks non-null
+            Direction[] directions = new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
+            foreach (Direction direction in directions)
+            {
+                Assert.IsNotNull(map.AdjacentBlock(1, 1, direction), $"Adjacent block in diretion {direction} should exist for middle block!");
+            }
+
+            // top blocks [x,0] should have no NORTH adjacent blocks
+            // right blocks [w-1,y] should have no EAST adjacent blocks
+            // bottom blocks [x,h-1] should have no SOUTH adjacent blocks
+            // right blocks [0,y] should have no WEST adjacent blocks
+            for (int i = 0; i < w; i++)
+            {
+                Assert.IsNull(map.AdjacentBlock(i, 0, Direction.NORTH), $"Block [{i},{0}] should not have {Direction.NORTH} adjacent block!");
+                Assert.IsNull(map.AdjacentBlock(i, h - 1, Direction.SOUTH), $"Block [{i},{h - 1}] should not have {Direction.SOUTH} adjacent block!");
+            }
+            for (int j = 0; j < h; j++)
+            {
+                Assert.IsNull(map.AdjacentBlock(w-1, j, Direction.EAST), $"Block [{w-1},{j}] should not have {Direction.EAST} adjacent block!");
+                Assert.IsNull(map.AdjacentBlock(0, j, Direction.WEST), $"Block [{0},{j}] should not have {Direction.WEST} adjacent block!");
             }
         }
     }
