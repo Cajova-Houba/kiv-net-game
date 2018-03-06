@@ -2,20 +2,29 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameCore.map
+namespace GameCore.Map
 {
     /// <summary>
     /// Thic class represents entrance to the MapBlock.
     /// </summary>
     public class Entrance
     {
+        /// <summary>
+        /// State of this entrance.
+        /// </summary>
         public EntranceState State { get; protected set; }
+
+        /// <summary>
+        /// Returns lock if this entrance is locked.
+        /// </summary>
+        public Lock EntranceLock { get; protected set; }
 
         /// <summary>
         /// Initializes this entrance with NONEXISTENT state.
         /// </summary>
         public Entrance()
         {
+            EntranceLock = null;
             State = EntranceState.NONEXISTENT;
         }
 
@@ -26,6 +35,15 @@ namespace GameCore.map
         public Boolean IsOpen()
         {
             return State == EntranceState.OPEN;
+        }
+
+        /// <summary>
+        /// Method used to check if the entrance is locked by a lock.
+        /// </summary>
+        /// <returns></returns>
+        public Boolean IsLocked()
+        {
+            return EntranceLock != null;
         }
 
         /// <summary>
@@ -66,26 +84,6 @@ namespace GameCore.map
         /// Open entrance = open gate or hole in a wall.
         /// Entrace state should be switched to OPEN after it was unlocked.
         /// </summary>
-        OPEN,
-
-        /// <summary>
-        /// Entrance is locked by green gate.
-        /// </summary>
-        GREEN,
-
-        /// <summary>
-        /// Entrance is locked by blue gate.
-        /// </summary>
-        BLUE,
-
-        /// <summary>
-        /// Entrance is locked by black gate.
-        /// </summary>
-        BLACK,
-
-        /// <summary>
-        /// Entrance is locked by red gate.
-        /// </summary>
-        RED
+        OPEN
     }
 }

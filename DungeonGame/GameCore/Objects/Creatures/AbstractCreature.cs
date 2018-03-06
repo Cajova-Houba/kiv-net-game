@@ -33,5 +33,14 @@ namespace GameCore.Objects.Creatures
             BaseAttack = baseAttack;
             BaseDeffense = baseDeffense;
         }
+
+        /// <summary>
+        /// Moves creature to given block.
+        /// </summary>
+        /// <param name="mapBlock">New position.</param>
+        public void MoveTo(MapBlock mapBlock)
+        {
+            Position = mapBlock;
+        }
     }
 }

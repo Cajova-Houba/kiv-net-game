@@ -6,27 +6,28 @@ namespace GameCore.Map
 {
     /// <summary>
     /// Class containing constants which represents directions.
+    /// Can be used as index to array of length 4.
     /// </summary>
-    public class Direction
+    public enum Direction
     {
         /// <summary>
-        /// Constant for accessing north entrance to the block.
+        /// North direction. Represents 0.
         /// </summary>
-        public const int NORTH = 0;
+        NORTH,
 
         /// <summary>
-        /// Constant for accessing east entrance to the block.
-        /// </summary
-        public const int EAST = 1;
+        /// East direction. Represents 1.
+        /// </summary>
+        EAST,
 
         /// <summary>
-        /// Constant for accessing south entrance to the block.
-        /// </summary
-        public const int SOUTH = 2;
+        /// South direction. Represents 2.
+        /// </summary>
+        SOUTH,
 
         /// <summary>
-        /// Constant for accessing west entrance to the block.
-        /// </summary
-        public const int WEST = 3;
+        /// West direction. Represents 3.
+        /// </summary>
+        WEST
     }
 }

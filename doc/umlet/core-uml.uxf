@@ -4,8 +4,8 @@
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>0</x>
-      <y>20</y>
+      <x>10</x>
+      <y>0</y>
       <w>170</w>
       <h>90</h>
     </coordinates>
@@ -16,27 +16,28 @@ bg=blue</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>370</x>
-      <y>460</y>
-      <w>180</w>
-      <h>120</h>
+      <x>310</x>
+      <y>440</y>
+      <w>260</w>
+      <h>160</h>
     </coordinates>
     <panel_attributes>/AbstractCreature/
 --
 - hitPoints:int
 - damage:int
 - defense:int
+- actionQueue: Queue&lt;AbstractAction&gt;
 --
-/+ doTurn(info: GameInfo)/
-+ move(direction: int)
-</panel_attributes>
++ setNextAction(action: AbstractAction)
++ getNextAction(): AbstractAction
++ moveTo(block: MapBlock)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>950</x>
-      <y>490</y>
+      <x>970</x>
+      <y>470</y>
       <w>100</w>
       <h>60</h>
     </coordinates>
@@ -50,8 +51,8 @@ AbstractItem
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>490</x>
-      <y>280</y>
+      <x>500</x>
+      <y>260</y>
       <w>140</w>
       <h>90</h>
     </coordinates>
@@ -66,19 +67,19 @@ AbstractItem
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>410</x>
-      <y>340</y>
-      <w>130</w>
+      <x>470</x>
+      <y>320</y>
+      <w>80</w>
       <h>140</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>110;30;30;120</additional_attributes>
+    <additional_attributes>60;30;30;120</additional_attributes>
   </element>
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>890</x>
-      <y>100</y>
+      <x>910</x>
+      <y>80</y>
       <w>320</w>
       <h>70</h>
     </coordinates>
@@ -92,8 +93,8 @@ AbstractItem
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>860</x>
-      <y>200</y>
+      <x>880</x>
+      <y>180</y>
       <w>180</w>
       <h>90</h>
     </coordinates>
@@ -109,8 +110,8 @@ AbstractItem
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>640</x>
-      <y>520</y>
+      <x>620</x>
+      <y>560</y>
       <w>120</w>
       <h>50</h>
     </coordinates>
@@ -123,8 +124,8 @@ AbstractItem
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>730</x>
-      <y>450</y>
+      <x>700</x>
+      <y>480</y>
       <w>110</w>
       <h>50</h>
     </coordinates>
@@ -138,8 +139,8 @@ AbstractItem
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>30</x>
-      <y>610</y>
+      <x>40</x>
+      <y>590</y>
       <w>260</w>
       <h>80</h>
     </coordinates>
@@ -153,8 +154,8 @@ AbstractItem
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>70</x>
-      <y>480</y>
+      <x>80</x>
+      <y>460</y>
       <w>100</w>
       <h>20</h>
     </coordinates>
@@ -164,30 +165,30 @@ AbstractItem
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>140</x>
-      <y>460</y>
-      <w>250</w>
+      <x>150</x>
+      <y>440</y>
+      <w>180</w>
       <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>230;40;30;30</additional_attributes>
+    <additional_attributes>160;40;30;30</additional_attributes>
   </element>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>180</x>
-      <y>520</y>
-      <w>210</w>
+      <x>190</x>
+      <y>500</y>
+      <w>140</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>190;30;30;90</additional_attributes>
+    <additional_attributes>120;30;30;90</additional_attributes>
   </element>
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>920</x>
-      <y>370</y>
+      <x>940</x>
+      <y>350</y>
       <w>170</w>
       <h>50</h>
     </coordinates>
@@ -200,8 +201,8 @@ AbstractInventoryItem
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>30</x>
-      <y>350</y>
+      <x>40</x>
+      <y>330</y>
       <w>140</w>
       <h>80</h>
     </coordinates>
@@ -215,13 +216,15 @@ AbstractInventoryItem
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>270</x>
-      <y>290</y>
+      <x>280</x>
+      <y>270</y>
       <w>160</w>
-      <h>60</h>
+      <h>100</h>
     </coordinates>
     <panel_attributes>MapBlock
 --
+- x: int
+- y: int
 - entrances: Entrance[]
 - object: GameObject
 </panel_attributes>
@@ -230,8 +233,8 @@ AbstractInventoryItem
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>140</x>
-      <y>290</y>
+      <x>150</x>
+      <y>270</y>
       <w>150</w>
       <h>110</h>
     </coordinates>
@@ -243,8 +246,8 @@ m2=1..*</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>400</x>
-      <y>290</y>
+      <x>410</x>
+      <y>270</y>
       <w>110</w>
       <h>50</h>
     </coordinates>
@@ -254,8 +257,8 @@ m2=1..*</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>30</x>
-      <y>760</y>
+      <x>40</x>
+      <y>740</y>
       <w>100</w>
       <h>20</h>
     </coordinates>
@@ -265,8 +268,8 @@ m2=1..*</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>180</x>
-      <y>760</y>
+      <x>190</x>
+      <y>740</y>
       <w>100</w>
       <h>20</h>
     </coordinates>
@@ -276,8 +279,8 @@ m2=1..*</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>200</x>
-      <y>660</y>
+      <x>210</x>
+      <y>640</y>
       <w>50</w>
       <h>120</h>
     </coordinates>
@@ -287,8 +290,8 @@ m2=1..*</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>50</x>
-      <y>660</y>
+      <x>60</x>
+      <y>640</y>
       <w>50</w>
       <h>120</h>
     </coordinates>
@@ -298,8 +301,8 @@ m2=1..*</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Note</type>
     <coordinates>
-      <x>500</x>
-      <y>180</y>
+      <x>510</x>
+      <y>160</y>
       <w>210</w>
       <h>80</h>
     </coordinates>
@@ -313,12 +316,12 @@ bg=green</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Note</type>
     <coordinates>
-      <x>340</x>
-      <y>600</y>
+      <x>350</x>
+      <y>610</y>
       <w>260</w>
       <h>150</h>
     </coordinates>
-    <panel_attributes>Creature is a base class 
+    <panel_attributes>AbstractCreature is a base class 
 for all 'living' object on the
 map - player, enemies, AI.
 
@@ -334,15 +337,16 @@ bg=green</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Note</type>
     <coordinates>
-      <x>770</x>
-      <y>670</y>
+      <x>680</x>
+      <y>320</y>
       <w>250</w>
-      <h>80</h>
+      <h>90</h>
     </coordinates>
-    <panel_attributes>AbstractItem is a base class for
-all 'non-living' objects on the map.
-Such items can be keys, weapons, 
-equipable items (weapons, armor)...
+    <panel_attributes>IItem is interface used to tag 
+all 'non-living' objects placed on map. 
+IInventoryItem tags subset of these 
+items which can be placed in player's 
+inventory.
 
 bg=green</panel_attributes>
     <additional_attributes/>
@@ -350,8 +354,8 @@ bg=green</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>280</x>
-      <y>60</y>
+      <x>290</x>
+      <y>40</y>
       <w>160</w>
       <h>130</h>
     </coordinates>
@@ -368,8 +372,8 @@ bg=green</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>310</x>
-      <y>160</y>
+      <x>320</x>
+      <y>140</y>
       <w>50</w>
       <h>150</h>
     </coordinates>
@@ -382,8 +386,8 @@ m1=  1
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>530</x>
-      <y>60</y>
+      <x>540</x>
+      <y>40</y>
       <w>110</w>
       <h>50</h>
     </coordinates>
@@ -394,8 +398,8 @@ EntranceState</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>410</x>
-      <y>60</y>
+      <x>420</x>
+      <y>40</y>
       <w>140</w>
       <h>50</h>
     </coordinates>
@@ -405,8 +409,8 @@ EntranceState</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>90</x>
-      <y>180</y>
+      <x>100</x>
+      <y>160</y>
       <w>100</w>
       <h>100</h>
     </coordinates>
@@ -421,8 +425,8 @@ EntranceState</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>530</x>
-      <y>120</y>
+      <x>540</x>
+      <y>100</y>
       <w>130</w>
       <h>50</h>
     </coordinates>
@@ -434,8 +438,8 @@ EntranceState</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>410</x>
-      <y>110</y>
+      <x>420</x>
+      <y>90</y>
       <w>140</w>
       <h>50</h>
     </coordinates>
@@ -445,8 +449,8 @@ EntranceState</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>720</x>
-      <y>120</y>
+      <x>730</x>
+      <y>100</y>
       <w>100</w>
       <h>50</h>
     </coordinates>
@@ -457,8 +461,8 @@ LockColor</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>630</x>
-      <y>110</y>
+      <x>640</x>
+      <y>90</y>
       <w>110</w>
       <h>50</h>
     </coordinates>
@@ -468,8 +472,8 @@ LockColor</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>970</x>
-      <y>390</y>
+      <x>990</x>
+      <y>370</y>
       <w>50</w>
       <h>120</h>
     </coordinates>
@@ -479,63 +483,63 @@ LockColor</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>730</x>
-      <y>500</y>
-      <w>240</w>
+      <x>710</x>
+      <y>480</y>
+      <w>280</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>260;30;30;120</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>780</x>
+      <y>450</y>
+      <w>210</w>
       <h>80</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>220;30;30;60</additional_attributes>
+    <additional_attributes>190;30;30;60</additional_attributes>
   </element>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>810</x>
-      <y>450</y>
-      <w>160</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>140;50;30;30</additional_attributes>
-  </element>
-  <element>
-    <type>com.baselet.element.old.element.Relation</type>
-    <coordinates>
-      <x>570</x>
-      <y>340</y>
-      <w>120</w>
-      <h>200</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;100;180</additional_attributes>
-  </element>
-  <element>
-    <type>com.baselet.element.old.element.Relation</type>
-    <coordinates>
-      <x>600</x>
+      <x>580</x>
       <y>320</y>
-      <w>150</w>
-      <h>160</h>
+      <w>90</w>
+      <h>260</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;130;140</additional_attributes>
+    <additional_attributes>30;30;70;240</additional_attributes>
   </element>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>790</x>
-      <y>110</y>
-      <w>120</w>
+      <x>610</x>
+      <y>300</y>
+      <w>110</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;90;190</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>800</x>
+      <y>90</y>
+      <w>130</w>
       <h>50</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>30;30;100;30</additional_attributes>
+    <additional_attributes>30;30;110;30</additional_attributes>
   </element>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>1040</x>
-      <y>140</y>
+      <x>1060</x>
+      <y>120</y>
       <w>50</w>
       <h>250</h>
     </coordinates>
@@ -545,8 +549,8 @@ LockColor</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>930</x>
-      <y>260</y>
+      <x>950</x>
+      <y>240</y>
       <w>50</w>
       <h>130</h>
     </coordinates>
@@ -556,23 +560,130 @@ LockColor</panel_attributes>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>600</x>
-      <y>250</y>
-      <w>280</w>
+      <x>610</x>
+      <y>230</y>
+      <w>290</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;90;260;30</additional_attributes>
+    <additional_attributes>30;90;270;30</additional_attributes>
   </element>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
     <coordinates>
-      <x>600</x>
-      <y>130</y>
-      <w>310</w>
+      <x>610</x>
+      <y>110</y>
+      <w>320</w>
       <h>200</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;180;290;30</additional_attributes>
+    <additional_attributes>30;180;300;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>910</x>
+      <y>600</y>
+      <w>100</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Move
+--
+- direction: int
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>640</x>
+      <y>660</y>
+      <w>170</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>/AbstractAction/
+--
+- actor: AbstractCreature
+--
++ execute()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>780</x>
+      <y>600</y>
+      <w>150</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;80;130;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>910</x>
+      <y>670</y>
+      <w>150</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>PickUp
+--
+- target: AbstractItem</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>780</x>
+      <y>660</y>
+      <w>150</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;40;130;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Note</type>
+    <coordinates>
+      <x>630</x>
+      <y>740</y>
+      <w>180</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>All actions creatures can 
+perform are wrapped in 
+AbstractAction classes 
+following the Command 
+pattern.
+
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>910</x>
+      <y>740</y>
+      <w>150</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>Unlock
+--
+- target: Entrance</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>780</x>
+      <y>680</y>
+      <w>150</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;130;90</additional_attributes>
   </element>
 </diagram>

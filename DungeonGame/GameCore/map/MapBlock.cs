@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GameCore.Map;
+using GameCore.Objects;
 
-namespace GameCore.map
+namespace GameCore.Map
 {
     /// <summary>
     /// Map is represented by grid of MapBlocks.
@@ -10,24 +12,14 @@ namespace GameCore.map
     public class MapBlock
     {
         /// <summary>
-        /// Constant for accessing north entrance to the block.
+        /// X coordinate of this block.
         /// </summary>
-        public const int NORTH = 0;
+        private readonly int x;
 
         /// <summary>
-        /// Constant for accessing east entrance to the block.
-        /// </summary
-        public const int EAST = 1;
-
-        /// <summary>
-        /// Constant for accessing south entrance to the block.
-        /// </summary
-        public const int SOUTH = 2;
-
-        /// <summary>
-        /// Constant for accessing west entrance to the block.
-        /// </summary
-        public const int WEST = 3;
+        /// Y coordinate of this block.
+        /// </summary>
+        private readonly int y;
 
         /// <summary>
         /// Array to store possible entrances.
@@ -35,28 +27,80 @@ namespace GameCore.map
         private Entrance[] entrances;
 
         /// <summary>
+        /// Optional game object placed in this map block.
+        /// </summary>
+        private GameObject gameObject;
+
+        /// <summary>
+        /// Reference to parent map;
+        /// </summary>
+        protected Map parentMap;
+
+        /// <summary>
         /// North entrance to this block.
         /// </summary>
-        public Entrance North { get { return entrances[NORTH]; } }
+        public Entrance North { get { return entrances[(int)Direction.NORTH]; } }
 
         /// <summary>
         /// East entrance to this block.
         /// </summary>
-        public Entrance East { get { return entrances[EAST]; } }
+        public Entrance East { get { return entrances[(int)Direction.EAST]; } }
 
         /// <summary>
         /// South entrance to this block.
         /// </summary>
-        public Entrance South { get { return entrances[SOUTH]; } }
+        public Entrance South { get { return entrances[(int)Direction.SOUTH]; } }
 
         /// <summary>
         /// West entrance to this block.
         /// </summary>
-        public Entrance West { get { return entrances[WEST]; } }
+        public Entrance West { get { return entrances[(int)Direction.WEST]; } }
 
-        public MapBlock()
+        /// <summary>
+        /// Default constructor which initializes map block with 4 NONEXISTENT entrances and [0,0] coordinates.
+        /// </summary>
+        public MapBlock() : this(null, 0, 0)
+        {
+        }
+
+        /// <summary>
+        /// Initializes map block with 4 NONEXISTENT entrances, parent map and position in that map..
+        /// </summary>
+        /// <param name="parentMap">Reference to map this block lies in.</param>
+        /// <param name="x">X coordinate of this block.</param>
+        /// <param name="y">Y coordinate of this block.</param>
+        public MapBlock(Map parentMap, int x, int y)
         {
             entrances = new Entrance[4];
+            this.parentMap = parentMap;
+            this.x = x;
+            this.y = y;
+        }
+
+        /// <summary>
+        /// Returns entance to this map block in given direction.
+        /// </summary>
+        /// <param name="direction">Direction of the entrance.</param>
+        /// <returns>Entrance.</returns>
+        public Entrance EntranceInDirection(Direction direction)
+        {
+            return entrances[(int)direction];
+        }
+
+        /// <summary>
+        /// Returns the block which lies next to this block in given direction.
+        /// If such block doesn't exist null is returned.
+        /// </summary>
+        /// <param name="direction">Direction of next block.</param>
+        /// <returns>Adjacent block or null.</returns>
+        public MapBlock NextBlock(Direction direction)
+        {
+            if (parentMap == null)
+            {
+                return null;
+            }
+
+            return parentMap.AdjacentBlock(x, y, direction);
         }
 
     }
