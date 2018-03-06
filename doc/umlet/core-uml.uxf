@@ -19,7 +19,7 @@ bg=blue</panel_attributes>
       <x>310</x>
       <y>440</y>
       <w>260</w>
-      <h>160</h>
+      <h>170</h>
     </coordinates>
     <panel_attributes>/AbstractCreature/
 --
@@ -30,7 +30,8 @@ bg=blue</panel_attributes>
 --
 + setNextAction(action: AbstractAction)
 + getNextAction(): AbstractAction
-+ moveTo(block: MapBlock)</panel_attributes>
++ moveTo(block: MapBlock)
++ think()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -317,7 +318,7 @@ bg=green</panel_attributes>
     <type>com.baselet.element.old.element.Note</type>
     <coordinates>
       <x>350</x>
-      <y>610</y>
+      <y>630</y>
       <w>260</w>
       <h>150</h>
     </coordinates>
