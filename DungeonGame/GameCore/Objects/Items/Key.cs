@@ -8,7 +8,7 @@ namespace GameCore.Objects.Items
     /// <summary>
     /// Key which can be used to open lock of a certain color.
     /// </summary>
-    public class Key : GameObject, AbstractInventoryItem
+    public class Key : GameObject, IInventoryItem
     {
         /// <summary>
         /// Color this key can open.

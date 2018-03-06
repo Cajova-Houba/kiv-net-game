@@ -12,18 +12,48 @@ namespace GameCore.Map
         /// <summary>
         /// Number of MapBlocks in horizontal direction.
         /// </summary>
-        private int width;
+        public int Width { get; protected set; }
 
         /// <summary>
         /// Number of MapBlocks in vertical direction.
         /// </summary>
-        private int height;
+        public int Height { get; protected set; }
 
         /// <summary>
         /// Game map.
         /// </summary>
-        private MapBlock[][] grid;
-        
+        public MapBlock[,] Grid { get; protected set; }
+
+
+        /// <summary>
+        /// Initializes map with dimensions 0x0 and empty grid.
+        /// </summary>
+        public Map()
+        {
+            InitializeMap(0, 0, new MapBlock[0, 0]);
+        }
+
+        /// <summary>
+        /// Initializes this map with given values and assigns parentMap to each MapBlock.
+        /// </summary>
+        /// <param name="widht">Widht.</param>
+        /// <param name="height">Height.</param>
+        /// <param name="grid">Map, dimensions should match with width and height.</param>
+        public void InitializeMap(int width, int height, MapBlock[,] grid)
+        {
+            Width = width;
+            Height = height;
+            Grid = grid;
+
+            for(int i = 0; i < Width; i++)
+            {
+                for( int j = 0; j < Height; j++)
+                {
+                    grid[i, j].AssignToMap(this);
+                }
+            }
+        }
+
         /// <summary>
         /// Returns MapBlock which is adjacent to current block given by [curX,curY] and lies in a given
         /// direction from current block.
@@ -34,7 +64,7 @@ namespace GameCore.Map
         /// <returns>Adjacent map block or null if such block doesn't exists.</returns>
         public MapBlock AdjacentBlock(int curX, int curY, Direction direction)
         {
-            if (curX < 0 || curX >= width || curY < 0 || curY >= height)
+            if (curX < 0 || curX >= Width || curY < 0 || curY >= Height)
             {
                 throw new ArgumentOutOfRangeException($"Current block coordinates [{curX},{curY}] are out of boundaries.");
             }
@@ -48,25 +78,25 @@ namespace GameCore.Map
                         return null;
                     } else
                     {
-                        return grid[curX][curY - 1];
+                        return Grid[curX,curY - 1];
                     }
 
                 case Direction.EAST:
-                    if (curX == width -1)
+                    if (curX == Width -1)
                     {
                         return null;
                     } else
                     {
-                        return grid[curX + 1][curY];
+                        return Grid[curX + 1,curY];
                     }
 
                 case Direction.SOUTH:
-                    if (curY == height -1)
+                    if (curY == Height -1)
                     {
                         return null;
                     } else
                     {
-                        return grid[curX][curY + 1];
+                        return Grid[curX,curY + 1];
                     }
 
                 case Direction.WEST:
@@ -75,7 +105,7 @@ namespace GameCore.Map
                         return null;
                     } else
                     {
-                        return grid[curX - 1][curY];
+                        return Grid[curX - 1,curY];
                     }
 
                 default:

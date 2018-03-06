@@ -34,7 +34,7 @@ namespace GameCore.Map
         /// <summary>
         /// Reference to parent map;
         /// </summary>
-        protected Map parentMap;
+        public Map ParentMap { get; protected set; }
 
         /// <summary>
         /// North entrance to this block.
@@ -59,22 +59,29 @@ namespace GameCore.Map
         /// <summary>
         /// Default constructor which initializes map block with 4 NONEXISTENT entrances and [0,0] coordinates.
         /// </summary>
-        public MapBlock() : this(null, 0, 0)
+        public MapBlock() : this(0, 0)
         {
         }
 
         /// <summary>
         /// Initializes map block with 4 NONEXISTENT entrances, parent map and position in that map..
         /// </summary>
-        /// <param name="parentMap">Reference to map this block lies in.</param>
         /// <param name="x">X coordinate of this block.</param>
         /// <param name="y">Y coordinate of this block.</param>
-        public MapBlock(Map parentMap, int x, int y)
+        public MapBlock(int x, int y)
         {
             entrances = new Entrance[4];
-            this.parentMap = parentMap;
             this.x = x;
             this.y = y;
+        }
+
+        /// <summary>
+        /// Assigns this block to a new map. Coordinates will remain unchanged.
+        /// </summary>
+        /// <param name="map">New parent map.</param>
+        public void AssignToMap(Map map)
+        {
+            ParentMap = map;
         }
 
         /// <summary>
@@ -95,12 +102,12 @@ namespace GameCore.Map
         /// <returns>Adjacent block or null.</returns>
         public MapBlock NextBlock(Direction direction)
         {
-            if (parentMap == null)
+            if (ParentMap == null)
             {
                 return null;
             }
 
-            return parentMap.AdjacentBlock(x, y, direction);
+            return ParentMap.AdjacentBlock(x, y, direction);
         }
 
     }
