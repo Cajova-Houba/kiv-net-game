@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using GameCore.Map;
+using GameCore.Objects.Creatures.Actions;
 
 namespace GameCore.Objects.Creatures
 {
@@ -26,12 +27,22 @@ namespace GameCore.Objects.Creatures
         /// </summary>
         public int BaseDeffense { get; protected set; }
 
+        /// <summary>
+        /// Actions to be performed in game loop. Rather than direct access (public get is for testing purposes), NextAction property should be used.
+        /// </summary>
+        public Queue<AbstractAction> ActionQueue {get; protected set;}
+
+        /// <summary>
+        /// Returns the action to be performed (if any) and adds new action to the action queue.
+        /// </summary>
+        public AbstractAction NextAction { get { return ActionQueue.Dequeue(); } set { ActionQueue.Enqueue(value); } }
 
         public AbstractCreature(string name, MapBlock position, int baseHitPoints, int baseAttack, int baseDeffense) : base(name, position)
         {
             BaseHitPoints = baseHitPoints;
             BaseAttack = baseAttack;
             BaseDeffense = baseDeffense;
+            ActionQueue = new Queue<AbstractAction>();
         }
 
         /// <summary>
@@ -42,5 +53,12 @@ namespace GameCore.Objects.Creatures
         {
             Position = mapBlock;
         }
+
+
+        /// <summary>
+        /// Performs 'AI thinking'. Result of this method should be action(s) added to action queue.
+        /// Leave this method empty for human players as their thinking is replaced by user input.
+        /// </summary>
+        public abstract void Think();
     }
 }
