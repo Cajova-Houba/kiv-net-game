@@ -110,5 +110,14 @@ namespace GameCore.Map
             return ParentMap.AdjacentBlock(x, y, direction);
         }
 
+        /// <summary>
+        /// Creates OPEN entrance in given direction.
+        /// </summary>
+        /// <param name="direction">Direction in which entrance will be created.</param>
+        public void CreateEntrance(Direction direction)
+        {
+            entrances[(int)direction] = new Entrance(EntranceState.OPEN);
+        }
+
     }
 }

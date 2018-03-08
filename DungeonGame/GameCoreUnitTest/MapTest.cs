@@ -30,7 +30,7 @@ namespace GameCoreUnitTest
                     grid[i,j] = new MapBlock(i,j);
                 }
             }
-            map.InitializeMap(grid.GetLength(0), grid.GetLength(1), grid);
+            map.InitializeMap( grid);
 
             // test initialitazion
             Assert.IsNotNull(map.Grid, "Grid is not initialized!");
@@ -59,7 +59,7 @@ namespace GameCoreUnitTest
             // create grid, initialize map
             MapBlock[,] grid = new MapBlock[1, 1];
             grid[0, 0] = new MapBlock(0, 0);
-            map.InitializeMap(grid.GetLength(0), grid.GetLength(1), grid);
+            map.InitializeMap(grid);
 
             // test
             Direction[] directions = new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
@@ -89,7 +89,7 @@ namespace GameCoreUnitTest
                     grid[i, j] = new MapBlock(i, j);
                 }
             }
-            map.InitializeMap(grid.GetLength(0), grid.GetLength(1), grid);
+            map.InitializeMap(grid);
 
             // tests
             //middle block [2,2] should have all adjacent blocks non-null

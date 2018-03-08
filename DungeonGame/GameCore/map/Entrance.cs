@@ -29,6 +29,17 @@ namespace GameCore.Map
         }
 
         /// <summary>
+        /// Creates entrance with given state.
+        /// </summary>
+        /// <param name="state">State of the entrance.</param>
+        public Entrance(EntranceState state)
+        {
+            State = state;
+        }
+
+
+
+        /// <summary>
         /// Method used to check if the entrance is open.
         /// </summary>
         /// <returns>Returns true if the entrance state is OPEN.</returns>

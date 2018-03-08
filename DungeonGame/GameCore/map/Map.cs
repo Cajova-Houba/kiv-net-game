@@ -30,19 +30,17 @@ namespace GameCore.Map
         /// </summary>
         public Map()
         {
-            InitializeMap(0, 0, new MapBlock[0, 0]);
+            InitializeMap(new MapBlock[0, 0]);
         }
 
         /// <summary>
         /// Initializes this map with given values and assigns parentMap to each MapBlock.
         /// </summary>
-        /// <param name="widht">Widht.</param>
-        /// <param name="height">Height.</param>
         /// <param name="grid">Map, dimensions should match with width and height.</param>
-        public void InitializeMap(int width, int height, MapBlock[,] grid)
+        public void InitializeMap(MapBlock[,] grid)
         {
-            Width = width;
-            Height = height;
+            Width = grid.GetLength(0);
+            Height = grid.GetLength(1);
             Grid = grid;
 
             for(int i = 0; i < Width; i++)
