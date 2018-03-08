@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GameCore.Map;
+﻿using GameCore.Map;
+using System;
 
 namespace GameCore.Generator
 {
@@ -10,8 +8,13 @@ namespace GameCore.Generator
     /// </summary>
     public class OpenMapGenerator : IMapGenerator
     {
-        public MapBlock[,] GenerateGrid(int width, int height)
+        public MapBlock[,] GenerateGrid(int width, int height, int seed)
         {
+            if (width < 1 || height < 1)
+            {
+                throw new ArgumentOutOfRangeException($"[{width}, {height}] are not valid map dimensions!");
+            }
+
             MapBlock[,] grid = new MapBlock[width, height];
             Direction[] allDirections = new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
             for(int i = 0; i < width; i++)
@@ -29,10 +32,10 @@ namespace GameCore.Generator
             return grid;
         }
 
-        public Map.Map GenerateMap(int width, int height)
+        public Map.Map GenerateMap(int width, int height, int seed)
         {
             Map.Map map = new Map.Map();
-            map.InitializeMap(GenerateGrid(width, height));
+            map.InitializeMap(GenerateGrid(width, height, seed));
 
             return map;
         }

@@ -30,4 +30,46 @@ namespace GameCore.Map
         /// </summary>
         WEST
     }
+
+    /// <summary>
+    /// Extension class for Direciton enum.
+    /// </summary>
+    public static class DirectionMethods
+    {
+        /// <summary>
+        /// Returns all directions. Must be done via item in enum so it's not exactly a nice way.
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        public static Direction[] GetAllDirections(this Direction dir)
+        {
+            return new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
+        }
+
+        /// <summary>
+        /// Returns direction which is opposite.
+        /// </summary>
+        /// <param name="dir">Source direction.</param>
+        /// <returns>Opposite direction.</returns>
+        public static Direction OppsiteDirection(this Direction dir)
+        {
+            switch(dir)
+            {
+                case Direction.NORTH:
+                    return Direction.SOUTH;
+
+                case Direction.EAST:
+                    return Direction.WEST;
+
+                case Direction.SOUTH:
+                    return Direction.NORTH;
+
+                case Direction.WEST:
+                    return Direction.EAST;
+
+                default:
+                    throw new ArgumentException($"Opposite direction for {dir} not implemented.");
+            }
+        }
+    }
 }

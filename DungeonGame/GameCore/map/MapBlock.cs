@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GameCore.Map;
-using GameCore.Objects;
+﻿using GameCore.Objects;
 
 namespace GameCore.Map
 {
@@ -57,6 +53,16 @@ namespace GameCore.Map
         public Entrance West { get { return entrances[(int)Direction.WEST]; } }
 
         /// <summary>
+        /// Returns X coordinate of this block.
+        /// </summary>
+        public int X { get { return x; } }
+
+        /// <summary>
+        /// Returns Y coordinate of this block.
+        /// </summary>
+        public int Y { get { return y; } }
+
+        /// <summary>
         /// Default constructor which initializes map block with 4 NONEXISTENT entrances and [0,0] coordinates.
         /// </summary>
         public MapBlock() : this(0, 0)
@@ -97,6 +103,7 @@ namespace GameCore.Map
         /// <summary>
         /// Returns the block which lies next to this block in given direction.
         /// If such block doesn't exist null is returned.
+        /// Uses parent map to determine next block and if the parent map is null, null is returned.
         /// </summary>
         /// <param name="direction">Direction of next block.</param>
         /// <returns>Adjacent block or null.</returns>
@@ -119,5 +126,25 @@ namespace GameCore.Map
             entrances[(int)direction] = new Entrance(EntranceState.OPEN);
         }
 
+        /// <summary>
+        /// Two map blocks are equal if their coordinates match.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            var block = obj as MapBlock;
+            return block != null &&
+                   x == block.x &&
+                   y == block.y;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 1502939027;
+            hashCode = hashCode * -1521134295 + x.GetHashCode();
+            hashCode = hashCode * -1521134295 + y.GetHashCode();
+            return hashCode;
+        }
     }
 }

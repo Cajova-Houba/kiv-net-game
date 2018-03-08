@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GameCore.Map;
+﻿using GameCore.Map;
 using GameCore.Objects.Items;
+using System.Collections.Generic;
 
 namespace GameCore.Objects.Creatures
 {

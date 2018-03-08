@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GameCore.Map
 {
@@ -22,10 +20,8 @@ namespace GameCore.Map
         /// <summary>
         /// Initializes this entrance with NONEXISTENT state.
         /// </summary>
-        public Entrance()
+        public Entrance() : this(EntranceState.NONEXISTENT)
         {
-            EntranceLock = null;
-            State = EntranceState.NONEXISTENT;
         }
 
         /// <summary>
@@ -34,6 +30,7 @@ namespace GameCore.Map
         /// <param name="state">State of the entrance.</param>
         public Entrance(EntranceState state)
         {
+            EntranceLock = null;
             State = state;
         }
 
@@ -76,6 +73,15 @@ namespace GameCore.Map
                 throw new Exception($"Entrance with {State} state can't be opened!");
             }
 
+            State = EntranceState.OPEN;
+        }
+        
+        /// <summary>
+        /// Sets the state of this entrance to OPEN no matter what. If there was any lock, it's set to null.
+        /// </summary>
+        public void DemolishWall()
+        {
+            EntranceLock = null;
             State = EntranceState.OPEN;
         }
     }

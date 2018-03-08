@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GameCore.Map;
+﻿using GameCore.Map;
 
 namespace GameCore.Objects.Items
 {
