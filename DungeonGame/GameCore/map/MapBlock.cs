@@ -77,6 +77,10 @@ namespace GameCore.Map
         public MapBlock(int x, int y)
         {
             entrances = new Entrance[4];
+            for(int i = 0; i < entrances.Length; i++)
+            {
+                entrances[i] = new Entrance();
+            }
             this.x = x;
             this.y = y;
         }

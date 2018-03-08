@@ -64,8 +64,32 @@ namespace GameCoreUnitTest
             IMapGenerator simpleMapGenerator = new SimpleMapGenerator();
             int w = 5;
             int h = 10;
+            Direction[] allDirections = Direction.NORTH.GetAllDirections();
 
             MapBlock[,] grid = simpleMapGenerator.GenerateGrid(w, h, IMapGeneratorConstants.NO_SEED);
+
+            Assert.IsNotNull(grid, "Null grid returned!");
+            Assert.AreEqual(w, grid.GetLength(0), "Wrong width of map grid!");
+            Assert.AreEqual(h, grid.GetLength(1), "Wrong height of map grid!");
+
+            // test that no map block has all entrances closed
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    int entrances = 0;
+                    foreach (Direction dir in allDirections)
+                    {
+                        if(grid[i,j].EntranceInDirection(dir).Exists())
+                        {
+                            entrances++;
+                        }
+                    }
+
+                    Assert.IsTrue(entrances > 0, $"Block at [{i},{j}] has no entrance!");
+                }
+            }
+
         }
 
         /// <summary>

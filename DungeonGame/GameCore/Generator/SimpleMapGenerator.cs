@@ -71,6 +71,10 @@ namespace GameCore.Generator
 
                     // add neighbour to the stack so the path creation will continue this way
                     stack.Push(neighbour);
+
+                    // mark current cell and neighbour as visited
+                    visitedGrid[current.X, current.Y] = true;
+                    visitedGrid[neighbour.X, neighbour.Y] = true;
                 } else
                 {
                     // every neighbour was visited, pop current block and continue with next block in the stack
