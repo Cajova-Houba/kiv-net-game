@@ -102,8 +102,36 @@ namespace GameCoreUnitTest
             int w = 5;
             int h = 10;
             int seed = 87452;
+            Direction[] allDirections = Direction.NORTH.GetAllDirections();
 
             MapBlock[,] grid = simpleMapGenerator.GenerateGrid(w, h, seed);
+            MapBlock[,] grid2 = simpleMapGenerator.GenerateGrid(w, h, seed);
+
+            Assert.IsNotNull(grid, "Grid 1 is null!");
+            Assert.IsNotNull(grid2, "Grid 2 is null!");
+            Assert.AreEqual(w, grid.GetLength(0), "Wrong width of map grid!");
+            Assert.AreEqual(h, grid.GetLength(1), "Wrong height of map grid!");
+            Assert.AreEqual(w, grid2.GetLength(0), "Wrong width of map grid 2!");
+            Assert.AreEqual(h, grid2.GetLength(1), "Wrong height of map grid 2!");
+            
+            // all map block should be same
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    int entrances = 0;
+                    foreach (Direction dir in allDirections)
+                    {
+                        Assert.AreEqual(grid[i, j].EntranceInDirection(dir).Exists(), grid2[i, j].EntranceInDirection(dir).Exists(), $"Map block at position [{i},{j}] has different entrance in direction {dir}.");
+                        if (grid[i, j].EntranceInDirection(dir).Exists())
+                        {
+                            entrances++;
+                        }
+                    }
+
+                    Assert.IsTrue(entrances > 0, $"Block at [{i},{j}] has no entrance!");
+                }
+            }
         }
     }
 }
