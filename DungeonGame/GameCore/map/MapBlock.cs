@@ -122,6 +122,33 @@ namespace GameCore.Map
         }
 
         /// <summary>
+        /// Returns the block thich lies next to this block in given direction and is accessible (entrance is OPEN).
+        /// If such block doesn't exist null is returned.
+        /// 
+        /// Uses parent map to determine next block and if the parent map is null, null is returned.
+        /// </summary>
+        /// <param name="direction">Direction of next block.</param>
+        /// <returns>Adjacent, accessible block or null.</returns>
+        public MapBlock NextOpenBlock(Direction direction)
+        {
+            MapBlock nextOpenBlock = NextBlock(direction);
+
+            if(nextOpenBlock == null)
+            {
+                return null;
+            } else
+            {
+                if (EntranceInDirection(direction).IsOpen() && nextOpenBlock.EntranceInDirection(direction.OppsiteDirection()).IsOpen())
+                {
+                    return nextOpenBlock;
+                } else
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
         /// Creates OPEN entrance in given direction.
         /// </summary>
         /// <param name="direction">Direction in which entrance will be created.</param>

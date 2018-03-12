@@ -28,7 +28,13 @@ namespace GameCore.Map
         /// <summary>
         /// West direction. Represents 3.
         /// </summary>
-        WEST
+        WEST,
+
+        /// <summary>
+        /// Special direction to be used instead of null.
+        /// </summary>
+        NO_DIRECTION
+
     }
 
     /// <summary>
@@ -70,6 +76,16 @@ namespace GameCore.Map
                 default:
                     throw new ArgumentException($"Opposite direction for {dir} not implemented.");
             }
+        }
+
+        /// <summary>
+        /// Returns true if this direciton is NO_DIRECTION.
+        /// </summary>
+        /// <param name="dir">This direction.</param>
+        /// <returns>True if NO_DIRECTION.</returns>
+        public static bool IsNoDirection(this Direction dir)
+        {
+            return dir == Direction.NO_DIRECTION;
         }
     }
 }
