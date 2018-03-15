@@ -10,7 +10,7 @@ namespace GameCore.Objects.Creatures
     /// This class represents simple creatures such as spiders, rats and goblins which lurk in
     /// the dungeon. Monsters can't win, they can only lose (=die).
     /// </summary>
-    public abstract class Monster : AbstractCreature
+    public class Monster : AbstractCreature
     {
         /// <summary>
         /// Default maximum of stack capacity.
@@ -71,7 +71,8 @@ namespace GameCore.Objects.Creatures
         /// <param name="stackCapacity">Max capacity of stack. Should be greater than 0.</param>
         public Monster(string name, MapBlock position, int baseHitPoints, int baseAttack, int baseDeffense, int stackCapacity) : base(name, position, baseHitPoints, baseAttack, baseDeffense)
         {
-            goBackwardFlag = true;
+            goBackwardFlag = false;
+            randomizer = new Random();
             this.stackCapacity = stackCapacity;
             pathStack = new Stack<Direction>();
         }
@@ -88,12 +89,13 @@ namespace GameCore.Objects.Creatures
             } else
             {
                 nextDirection = GoForward();
-            }
+            } 
 
             if(!nextDirection.IsNoDirection())
             {
                 // direction returned, add move action
-                NextAction = new Move() { Actor = this, Direction = nextDirection };
+                AbstractAction action = new Move() { Actor = this, Direction = nextDirection };
+                NextAction = action;
             }
         }
 
@@ -108,9 +110,9 @@ namespace GameCore.Objects.Creatures
             if (pathStack.Count != stackCapacity)
             {
                 // stack is not full, pick next direction
-                // keep trying random directions until one is selected or max attempt count is reached
+                // keep trying random directions until one (different from the last one) is selected or max attempt count is reached
                 int attempt = 0;
-                while (nextDirection.IsNoDirection() && attempt < DEF_MAX_RANDOM_TRIES)
+                while ((nextDirection.IsNoDirection() || (pathStack.Count > 0 && nextDirection == pathStack.Peek())) && attempt < DEF_MAX_RANDOM_TRIES)
                 {
                     Direction randomDirection = allDirections[randomizer.Next(allDirections.Length)];
                     if(Position.NextOpenBlock(randomDirection) != null)
@@ -143,7 +145,7 @@ namespace GameCore.Objects.Creatures
             if (pathStack.Count > 0)
             {
                 // stack is not empty, go backwards
-                nextDirection = pathStack.Pop().OppsiteDirection();
+                nextDirection = pathStack.Pop().OppositeDirection();
             } else
             {
                 // stack is empty, unset backward flag

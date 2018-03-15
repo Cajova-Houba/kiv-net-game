@@ -57,7 +57,7 @@ namespace GameCore.Map
         /// </summary>
         /// <param name="dir">Source direction.</param>
         /// <returns>Opposite direction.</returns>
-        public static Direction OppsiteDirection(this Direction dir)
+        public static Direction OppositeDirection(this Direction dir)
         {
             switch(dir)
             {

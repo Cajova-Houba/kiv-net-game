@@ -33,7 +33,21 @@ namespace GameCore.Objects.Creatures
         /// <summary>
         /// Returns the action to be performed (if any) and adds new action to the action queue.
         /// </summary>
-        public AbstractAction NextAction { get { return ActionQueue.Dequeue(); } set { ActionQueue.Enqueue(value); } }
+        public AbstractAction NextAction {
+            get
+            {
+                if (ActionQueue.Count > 0)
+                {
+                    return ActionQueue.Dequeue();
+                } else
+                {
+                    return null;
+                }
+            }
+            set {
+                ActionQueue.Enqueue(value);
+            }
+        }
 
         public AbstractCreature(string name, MapBlock position, int baseHitPoints, int baseAttack, int baseDeffense) : base(name, position)
         {

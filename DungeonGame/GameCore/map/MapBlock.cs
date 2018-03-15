@@ -138,7 +138,7 @@ namespace GameCore.Map
                 return null;
             } else
             {
-                if (EntranceInDirection(direction).IsOpen() && nextOpenBlock.EntranceInDirection(direction.OppsiteDirection()).IsOpen())
+                if (EntranceInDirection(direction).IsOpen() && nextOpenBlock.EntranceInDirection(direction.OppositeDirection()).IsOpen())
                 {
                     return nextOpenBlock;
                 } else

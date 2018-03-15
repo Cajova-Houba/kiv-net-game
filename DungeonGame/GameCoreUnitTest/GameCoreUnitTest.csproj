@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="MapGeneratorTest.cs" />
     <Compile Include="MapTest.cs" />
+    <Compile Include="MonsterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -109,7 +109,7 @@ namespace GameCore.Generator
             }
 
             fromBlock.EntranceInDirection(fromDirection).DemolishWall();
-            toBlock.EntranceInDirection(fromDirection.OppsiteDirection()).DemolishWall();
+            toBlock.EntranceInDirection(fromDirection.OppositeDirection()).DemolishWall();
         }
 
         public Map.Map GenerateMap(int width, int height, int seed)
