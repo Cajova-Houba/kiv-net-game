@@ -18,6 +18,62 @@ namespace GameCoreUnitTest
     public class MonsterTest
     {
         /// <summary>
+        /// One monster attacks another. Check that everything works as expected.
+        /// </summary>
+        [TestMethod]
+        public void SimpleAttackMonsterTest()
+        {
+            int w = 2;
+            int h = 1;
+            OpenMapGenerator mapGenerator = new OpenMapGenerator();
+            Map map = mapGenerator.GenerateMap(w, h, IMapGeneratorConstants.NO_SEED);
+
+            // place monsters
+            int baseHp = 10;
+            int expectedHp = 9;
+            Monster m1 = new Monster("Test monster 1", map.Grid[0, 0], baseHp, 2, 1);
+            Monster m2 = new Monster("Test monster 2", map.Grid[1, 0], baseHp, 2, 1);
+
+            // m1 attacks m2
+            Attack attackAction = new Attack() { Actor = m1, Direction = Direction.EAST };
+            attackAction.Execute();
+
+            // check
+            Assert.AreEqual(baseHp, m1.CurrentHitPoints, "Monster 1 is expected to have full HP!");
+            Assert.AreEqual(expectedHp, m2.CurrentHitPoints, "Monster 2 is not epxected to have full HP after being attacked!");
+        }
+
+
+        /// <summary>
+        /// One monster attacks another one which has DEF > first monestr's attack. Check that everything works as expected.
+        /// </summary>
+        [TestMethod]
+        public void AttackStrongMonsterTest()
+        {
+            int w = 3;
+            int h = 1;
+            OpenMapGenerator mapGenerator = new OpenMapGenerator();
+            Map map = mapGenerator.GenerateMap(w, h, IMapGeneratorConstants.NO_SEED);
+
+            // place monsters
+            int baseHp = 10;
+            Monster m1 = new Monster("Test monster 1", map.Grid[1, 0], baseHp, 2, 1);
+            Monster m2 = new Monster("Test monster 2", map.Grid[0, 0], baseHp, 2, 2);
+            Monster m3 = new Monster("Test monster 2", map.Grid[2, 0], baseHp, 2, 10);
+
+            // m1 attacks m2
+            Attack attackM2 = new Attack() { Actor = m1, Direction = Direction.WEST };
+            Attack attackM3 = new Attack() { Actor = m1, Direction = Direction.EAST };
+            attackM2.Execute();
+            attackM3.Execute();
+
+            // check
+            Assert.AreEqual(baseHp, m1.CurrentHitPoints, "Monster 1 is expected to have full HP!");
+            Assert.AreEqual(baseHp, m2.CurrentHitPoints, "Monster 2 is not expected to take any damage!");
+            Assert.AreEqual(baseHp, m3.CurrentHitPoints, "Monster 2 is not expected to take any damage!");
+        }
+
+        /// <summary>
         /// Create map 5x1 and check that monster will vander around these blocks correctly.
         /// </summary>
         [TestMethod]

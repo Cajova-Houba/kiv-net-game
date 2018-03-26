@@ -154,5 +154,26 @@ namespace GameCore.Objects.Creatures
             }
             return nextDirection;
         }
+
+
+        public override double TotalAttack()
+        {
+            return BaseAttack;
+        }
+
+        public override double TotalDeffense()
+        {
+            return BaseDeffense;
+        }
+
+        public override double CurrentlHitPoints()
+        {
+            return CurrentHitPoints;
+        }
+
+        public override double MaxHitPoints()
+        {
+            return BaseHitPoints;
+        }
     }
 }

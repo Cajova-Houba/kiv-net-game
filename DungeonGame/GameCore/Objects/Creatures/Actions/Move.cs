@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using GameCore.Map;
+using GameCore.Objects.Creatures.Actions.Exceptions;
 
 namespace GameCore.Objects.Creatures.Actions
 {
@@ -20,7 +21,7 @@ namespace GameCore.Objects.Creatures.Actions
             // check that actor can mvoe in this way
             if (!actor.Position.EntranceInDirection(Direction).IsOpen() || targetBlock == null || targetBlock.Occupied)
             {
-                throw new CantMoveInThisDirectionException(actor, Direction);
+                throw new MapBlockInDirectionNotAccessibleException(actor, Direction);
             }
 
             // perform move

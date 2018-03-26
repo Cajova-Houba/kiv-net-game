@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using GameCore.Map;
 
-namespace GameCore.Objects.Creatures.Actions
+namespace GameCore.Objects.Creatures.Actions.Exceptions
 {
     /// <summary>
-    /// An exception thrown when trying to perform Move action in direction which is blocked.
+    /// An exception thrown when trying to access block in direction which either doesn't exist, is blocked or is occupied by some other creature.
     /// </summary>
-    public class CantMoveInThisDirectionException : Exception
+    public class MapBlockInDirectionNotAccessibleException : Exception
     {
         /// <summary>
-        /// Actor who tried to perform move action.
+        /// Actor who tried to access block in some direction.
         /// </summary>
         public AbstractCreature Actor { get; private set; }
 
@@ -25,7 +25,7 @@ namespace GameCore.Objects.Creatures.Actions
         /// </summary>
         /// <param name="actor">Actor who tried to perform move action.</param>
         /// <param name="direction">Blocked direction.</param>
-        public CantMoveInThisDirectionException(AbstractCreature actor, Direction direction)
+        public MapBlockInDirectionNotAccessibleException(AbstractCreature actor, Direction direction)
         {
             Actor = actor;
             Direction = direction;
