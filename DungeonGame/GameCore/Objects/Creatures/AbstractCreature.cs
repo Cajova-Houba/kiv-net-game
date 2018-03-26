@@ -79,6 +79,10 @@ namespace GameCore.Objects.Creatures
         /// <param name="mapBlock">New position.</param>
         public void MoveTo(MapBlock mapBlock)
         {
+            // move from current position
+            Position.Creature = null;
+
+            // to the new position
             Position = mapBlock;
             mapBlock.Creature = this;
         }

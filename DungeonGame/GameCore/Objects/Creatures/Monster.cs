@@ -20,7 +20,7 @@ namespace GameCore.Objects.Creatures
         /// <summary>
         /// Max number of tries. After this number of attemts is reached, monster will stop on choosing next block and stays still.
         /// </summary>
-        public const int DEF_MAX_RANDOM_TRIES = 10;
+        public const int DEF_MAX_RANDOM_TRIES = 30;
 
 
         /// <summary>
@@ -145,8 +145,13 @@ namespace GameCore.Objects.Creatures
             Direction nextDirection = Direction.NO_DIRECTION;
             if (pathStack.Count > 0)
             {
-                // stack is not empty, go backwards
+                // stack is not empty, go backwards but first check if that block isn't occupied
                 nextDirection = pathStack.Pop().OppositeDirection();
+                if ( Position.NextBlock(nextDirection).Occupied)
+                {
+                    pathStack.Push(nextDirection.OppositeDirection());
+                    nextDirection = Direction.NO_DIRECTION;
+                }
             } else
             {
                 // stack is empty, unset backward flag
