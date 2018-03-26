@@ -1,4 +1,6 @@
 ﻿using GameCore.Objects;
+using GameCore.Objects.Creatures;
+using GameCore.Objects.Items;
 
 namespace GameCore.Map
 {
@@ -23,9 +25,14 @@ namespace GameCore.Map
         private Entrance[] entrances;
 
         /// <summary>
+        /// Creature which may occupy this map block.
+        /// </summary>
+        private AbstractCreature creature;
+
+        /// <summary>
         /// Optional game object placed in this map block.
         /// </summary>
-        private GameObject gameObject;
+        private IItem gameObject;
 
         /// <summary>
         /// Reference to parent map;
@@ -61,6 +68,16 @@ namespace GameCore.Map
         /// Returns Y coordinate of this block.
         /// </summary>
         public int Y { get { return y; } }
+
+        /// <summary>
+        /// Returns true if this map block is occupied by any creature (or player).
+        /// </summary>
+        public bool Occupied { get { return creature != null;} }
+
+        /// <summary>
+        /// Gets or sets creature which occupies this block.
+        /// </summary>
+        public AbstractCreature Creature { get { return creature; } set { creature = value; } }
 
         /// <summary>
         /// Default constructor which initializes map block with 4 NONEXISTENT entrances and [0,0] coordinates.

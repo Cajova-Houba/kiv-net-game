@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GameCore.Map;
+using GameCore.Objects.Creatures;
 
 namespace GameCoreUnitTest
 {
@@ -10,6 +11,19 @@ namespace GameCoreUnitTest
     [TestClass]
     public class MapTest
     {
+        /// <summary>
+        /// Test that map block with creatures are occupied.
+        /// </summary>
+        [TestMethod]
+        public void TestOccupiedBlock()
+        {
+            MapBlock mb1 = new MapBlock();
+            Assert.IsFalse(mb1.Occupied, "Empty map block shouldn't be occupied!");
+
+            mb1.Creature = new Monster("Test monster", mb1, 10, 10, 10);
+            Assert.IsTrue(mb1.Occupied, "Block with creature should be occupied!");
+        }
+
         /// <summary>
         /// Test map initialization.
         /// </summary>

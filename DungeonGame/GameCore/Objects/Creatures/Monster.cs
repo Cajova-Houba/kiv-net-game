@@ -115,7 +115,8 @@ namespace GameCore.Objects.Creatures
                 while ((nextDirection.IsNoDirection() || (pathStack.Count > 0 && nextDirection == pathStack.Peek())) && attempt < DEF_MAX_RANDOM_TRIES)
                 {
                     Direction randomDirection = allDirections[randomizer.Next(allDirections.Length)];
-                    if(Position.NextOpenBlock(randomDirection) != null)
+                    MapBlock possibleNextBlock = Position.NextOpenBlock(randomDirection);
+                    if(possibleNextBlock != null && !possibleNextBlock.Occupied)
                     {
                         nextDirection = randomDirection;
                     }

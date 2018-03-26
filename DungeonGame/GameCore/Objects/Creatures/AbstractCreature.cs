@@ -64,6 +64,7 @@ namespace GameCore.Objects.Creatures
         public void MoveTo(MapBlock mapBlock)
         {
             Position = mapBlock;
+            mapBlock.Creature = this;
         }
 
 

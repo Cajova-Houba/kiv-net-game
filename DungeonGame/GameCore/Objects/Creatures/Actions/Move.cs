@@ -18,7 +18,7 @@ namespace GameCore.Objects.Creatures.Actions
             MapBlock targetBlock = actor.Position.NextBlock(Direction);
 
             // check that actor can mvoe in this way
-            if (!actor.Position.EntranceInDirection(Direction).IsOpen() || targetBlock == null)
+            if (!actor.Position.EntranceInDirection(Direction).IsOpen() || targetBlock == null || targetBlock.Occupied)
             {
                 throw new CantMoveInThisDirectionException(actor, Direction);
             }
