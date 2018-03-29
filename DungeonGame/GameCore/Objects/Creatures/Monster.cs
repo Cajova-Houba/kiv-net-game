@@ -106,7 +106,7 @@ namespace GameCore.Objects.Creatures
         private Direction GoForward()
         {
             Direction nextDirection = Direction.NO_DIRECTION;
-            Direction[] allDirections = Direction.NORTH.GetAllDirections();
+            Direction[] allDirections = DirectionMethods.GetAllDirections();
             if (pathStack.Count != stackCapacity)
             {
                 // stack is not full, pick next direction

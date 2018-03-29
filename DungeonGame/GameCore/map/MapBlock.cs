@@ -1,6 +1,7 @@
 ﻿using GameCore.Objects;
 using GameCore.Objects.Creatures;
 using GameCore.Objects.Items;
+using System.Collections.Generic;
 
 namespace GameCore.Map
 {
@@ -163,6 +164,27 @@ namespace GameCore.Map
                     return null;
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns all accessible neighbours of this map block.
+        /// Neighbour is acessible if there's no wall/locked gate between this block and the neighbour.
+        /// </summary>
+        /// <returns>Neighbour blocks.</returns>
+        public List<MapBlock> AccessibleNeighbours()
+        {
+            Direction[] allDirections = DirectionMethods.GetAllDirections();
+            List<MapBlock> neighbours = new List<MapBlock>();
+            foreach(Direction dir in allDirections)
+            {
+                MapBlock neighbour = NextOpenBlock(dir);
+                if (neighbour != null)
+                {
+                    neighbours.Add(neighbour);
+                }
+            }
+
+            return neighbours;
         }
 
         /// <summary>

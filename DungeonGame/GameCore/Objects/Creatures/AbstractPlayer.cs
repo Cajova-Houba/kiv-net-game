@@ -48,5 +48,48 @@ namespace GameCore.Objects.Creatures
         {
             Inventory = new LinkedList<IInventoryItem>();
         }
+
+        public override double CurrentlHitPoints()
+        {
+            int currHp = CurrentHitPoints;
+
+            // any effect should be put here in the future
+
+            return currHp;
+        }
+
+        public override double MaxHitPoints()
+        {
+            int baseHp = BaseHitPoints;
+
+            // any effect should be put here in the future
+
+            return baseHp;
+        }
+
+        public override double TotalAttack()
+        {
+            int baseAtt = BaseAttack;
+
+            if (Weapon != null )
+            {
+                baseAtt += Weapon.Damage;
+            }
+
+            return baseAtt;
+        }
+
+        public override double TotalDeffense()
+        {
+            int baseDef = BaseDeffense;
+
+            if (Armor != null)
+            {
+                baseDef += Armor.Defense;
+            }
+
+            return baseDef;
+        }
+       
     }
 }

@@ -47,7 +47,7 @@ namespace GameCore.Map
         /// </summary>
         /// <param name="dir"></param>
         /// <returns></returns>
-        public static Direction[] GetAllDirections(this Direction dir)
+        public static Direction[] GetAllDirections()
         {
             return new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
         }
@@ -86,6 +86,38 @@ namespace GameCore.Map
         public static bool IsNoDirection(this Direction dir)
         {
             return dir == Direction.NO_DIRECTION;
+        }
+
+        /// <summary>
+        /// Returns direction from one block to another. Uses only block's coordinates to calculate the direction.
+        /// Returns NO_DIRECTION if the blocks have same coordinates.
+        /// Works best for adjacent blocks.
+        /// </summary>
+        /// <param name="from">Start block<./param>
+        /// <param name="to">Target block.</param>
+        /// <returns>Direction between two blocks.</returns>
+        public static Direction GetDirection(MapBlock from, MapBlock to)
+        {
+            if (from.X < to.X)
+            {
+                return Direction.EAST;
+            }
+            else if (from.X > to.X)
+            {
+                return Direction.WEST;
+            }
+            else if (from.Y < to.Y)
+            {
+                return Direction.SOUTH;
+            }
+            else if (from.Y > to.Y)
+            {
+                return Direction.NORTH;
+            } 
+            else
+            {
+                return Direction.NO_DIRECTION;
+            }
         }
     }
 }

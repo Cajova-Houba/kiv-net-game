@@ -19,7 +19,7 @@ namespace GameCoreUnitTest
             IMapGenerator openMapGenerator = new OpenMapGenerator();
             int w = 10;
             int h = 15;
-            Direction[] allDirections = Direction.NORTH.GetAllDirections();
+            Direction[] allDirections = DirectionMethods.GetAllDirections();
 
             MapBlock[,] grid = openMapGenerator.GenerateGrid(w, h, 0);
             Assert.IsNotNull(grid, "Null grid returned!");
@@ -64,7 +64,7 @@ namespace GameCoreUnitTest
             IMapGenerator simpleMapGenerator = new SimpleMapGenerator();
             int w = 5;
             int h = 10;
-            Direction[] allDirections = Direction.NORTH.GetAllDirections();
+            Direction[] allDirections = DirectionMethods.GetAllDirections();
 
             MapBlock[,] grid = simpleMapGenerator.GenerateGrid(w, h, IMapGeneratorConstants.NO_SEED);
 
@@ -102,7 +102,7 @@ namespace GameCoreUnitTest
             int w = 5;
             int h = 10;
             int seed = 87452;
-            Direction[] allDirections = Direction.NORTH.GetAllDirections();
+            Direction[] allDirections = DirectionMethods.GetAllDirections();
 
             MapBlock[,] grid = simpleMapGenerator.GenerateGrid(w, h, seed);
             MapBlock[,] grid2 = simpleMapGenerator.GenerateGrid(w, h, seed);

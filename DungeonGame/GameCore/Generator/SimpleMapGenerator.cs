@@ -15,7 +15,7 @@ namespace GameCore.Generator
             MapBlock[,] grid = new MapBlock[width, height];
             // array to hold information about cells which were already visited by algorithm
             bool[,] visitedGrid = new bool[width, height];
-            Direction[] allDirections = Direction.NORTH.GetAllDirections();
+            Direction[] allDirections = DirectionMethods.GetAllDirections();
             for(int i = 0; i < width; i ++)
             {
                 for (int j =0; j < height; j++)
