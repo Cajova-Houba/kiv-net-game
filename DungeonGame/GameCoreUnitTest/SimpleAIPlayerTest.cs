@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GameCore.Map;
 using GameCore.Objects.Creatures;
+using GameCore.Objects.Creatures.AIPlayers;
 using GameCore.Generator;
 using GameCore.Objects.Creatures.Actions;
 using System.Collections.Generic;

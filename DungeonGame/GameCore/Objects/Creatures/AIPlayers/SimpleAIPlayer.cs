@@ -4,7 +4,7 @@ using System.Text;
 using GameCore.Map;
 using GameCore.Objects.Creatures.Actions;
 
-namespace GameCore.Objects.Creatures
+namespace GameCore.Objects.Creatures.AIPlayers
 {
     /// <summary>
     /// This class represents computer player with simple AI which will wander around the maze, avoid fights and pick up better items.
