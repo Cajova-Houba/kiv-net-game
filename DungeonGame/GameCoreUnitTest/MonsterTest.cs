@@ -21,7 +21,7 @@ namespace GameCoreUnitTest
         /// One monster attacks another. Check that everything works as expected.
         /// </summary>
         [TestMethod]
-        public void SimpleAttackMonsterTest()
+        public void TestSimpleAttackMonster()
         {
             int w = 2;
             int h = 1;
@@ -48,7 +48,7 @@ namespace GameCoreUnitTest
         /// One monster attacks another one which has DEF > first monestr's attack. Check that everything works as expected.
         /// </summary>
         [TestMethod]
-        public void AttackStrongMonsterTest()
+        public void TestAttackStrongMonster()
         {
             int w = 3;
             int h = 1;
@@ -77,7 +77,7 @@ namespace GameCoreUnitTest
         /// Create map 5x1 and check that monster will vander around these blocks correctly.
         /// </summary>
         [TestMethod]
-        public void SimpleMonsterPathTest()
+        public void TestSimpleMonsterPath()
         {
             int w = 5;
             int h = 1;
@@ -125,7 +125,7 @@ namespace GameCoreUnitTest
         /// Create map with just one block and check that monster's next action will be always null.
         /// </summary>
         [TestMethod]
-        public void NoPathTest()
+        public void TestNoPath()
         {
             // 1x1 map
             int w = 1;

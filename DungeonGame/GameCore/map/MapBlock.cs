@@ -1,6 +1,7 @@
 ﻿using GameCore.Objects;
 using GameCore.Objects.Creatures;
 using GameCore.Objects.Items;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace GameCore.Map
@@ -8,17 +9,18 @@ namespace GameCore.Map
     /// <summary>
     /// Map is represented by grid of MapBlocks.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn, Title = "mapBlock")]
     public class MapBlock
     {
         /// <summary>
         /// X coordinate of this block.
         /// </summary>
-        private readonly int x;
+        private int x;
 
         /// <summary>
         /// Y coordinate of this block.
         /// </summary>
-        private readonly int y;
+        private int y;
 
         /// <summary>
         /// Array to store possible entrances.
@@ -43,32 +45,38 @@ namespace GameCore.Map
         /// <summary>
         /// North entrance to this block.
         /// </summary>
+        [JsonProperty]
         public Entrance North { get { return entrances[(int)Direction.NORTH]; } }
 
         /// <summary>
         /// East entrance to this block.
         /// </summary>
+        [JsonProperty]
         public Entrance East { get { return entrances[(int)Direction.EAST]; } }
 
         /// <summary>
         /// South entrance to this block.
         /// </summary>
+        [JsonProperty]
         public Entrance South { get { return entrances[(int)Direction.SOUTH]; } }
 
         /// <summary>
         /// West entrance to this block.
         /// </summary>
+        [JsonProperty]
         public Entrance West { get { return entrances[(int)Direction.WEST]; } }
 
         /// <summary>
         /// Returns X coordinate of this block.
         /// </summary>
-        public int X { get { return x; } }
+        [JsonProperty]
+        public int X { get { return x; } set { x = value; } }
 
         /// <summary>
         /// Returns Y coordinate of this block.
         /// </summary>
-        public int Y { get { return y; } }
+        [JsonProperty]
+        public int Y { get { return y; } set { y = value; } }
 
         /// <summary>
         /// Returns true if this map block is occupied by any creature (or player).

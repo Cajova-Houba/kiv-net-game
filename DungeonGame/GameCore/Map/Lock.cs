@@ -14,10 +14,24 @@ namespace GameCore.Map
         /// </summary>
         public LockColor LockColor { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            var @lock = obj as Lock;
+            return @lock != null &&
+                   LockColor == @lock.LockColor;
+        }
+
+        public override int GetHashCode()
+        {
+            return -1556827747 + LockColor.GetHashCode();
+        }
+
         public override string ToString()
         {
             return LockColor.ToString();
         }
+
+        
     }
 
     public enum LockColor

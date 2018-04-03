@@ -1,15 +1,21 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
+using System.Collections.Generic;
 
 namespace GameCore.Map
 {
     /// <summary>
     /// Thic class represents entrance to the MapBlock.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class Entrance
     {
         /// <summary>
         /// State of this entrance.
         /// </summary>
+        [JsonProperty]
+        [JsonConverter(typeof(StringEnumConverter))]
         public EntranceState State { get; protected set; }
 
         /// <summary>
@@ -88,6 +94,22 @@ namespace GameCore.Map
         public override string ToString()
         {
             return $"Entrance: {State}; Lock: {EntranceLock}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            var entrance = obj as Entrance;
+            return entrance != null &&
+                   State == entrance.State &&
+                   EqualityComparer<Lock>.Default.Equals(EntranceLock, entrance.EntranceLock);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 668350114;
+            hashCode = hashCode * -1521134295 + State.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<Lock>.Default.GetHashCode(EntranceLock);
+            return hashCode;
         }
     }
 

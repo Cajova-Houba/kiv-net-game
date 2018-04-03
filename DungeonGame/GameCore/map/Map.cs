@@ -1,25 +1,30 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace GameCore.Map
 {
     /// <summary>
     /// Class which contains game map.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class Map
     {
         /// <summary>
         /// Number of MapBlocks in horizontal direction.
         /// </summary>
+        [JsonProperty]
         public int Width { get; protected set; }
 
         /// <summary>
         /// Number of MapBlocks in vertical direction.
         /// </summary>
+        [JsonProperty]
         public int Height { get; protected set; }
 
         /// <summary>
         /// Game map.
         /// </summary>
+        [JsonProperty]
         public MapBlock[,] Grid { get; protected set; }
 
 

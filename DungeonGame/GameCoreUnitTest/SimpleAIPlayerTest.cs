@@ -16,7 +16,7 @@ namespace GameCoreUnitTest
         /// Test that hash function of VisitedBlock works as expected.
         /// </summary>
         [TestMethod]
-        public void VisitedBlockTest()
+        public void TestVisitedBlock()
         {
             HashSet<VisitedBlock> set = new HashSet<VisitedBlock>();
             VisitedBlock vb1 = new VisitedBlock() { x = 0, y = 0, state = BlockState.NEW };
@@ -31,7 +31,7 @@ namespace GameCoreUnitTest
         /// Create simple map and test if the AI is able to find its way.
         /// </summary>
         [TestMethod]
-        public void DfsAiTest()
+        public void TestDfsAi()
         {
             IMapGenerator simpleMapGenerator = new OpenMapGenerator();
             int w = 5;
@@ -62,7 +62,7 @@ namespace GameCoreUnitTest
         /// Create 2x1 map and place SimpleAI next to Monster. SimpleAI should not move.
         /// </summary>
         [TestMethod]
-        public void OccupiedBlockTest()
+        public void TestOccupiedBlock()
         {
             IMapGenerator openMapGenerator = new OpenMapGenerator();
             int w = 2;
@@ -84,7 +84,7 @@ namespace GameCoreUnitTest
         /// AI should be able to do it in fixed number of iterations.
         /// </summary>
         [TestMethod]
-        public void DfsMazeTest()
+        public void TestDfsMaze()
         {
             int w = 50;
             int h = 50;
