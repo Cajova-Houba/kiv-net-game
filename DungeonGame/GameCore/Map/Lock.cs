@@ -13,6 +13,11 @@ namespace GameCore.Map
         /// Color of this lock.
         /// </summary>
         public LockColor LockColor { get; set; }
+
+        public override string ToString()
+        {
+            return LockColor.ToString();
+        }
     }
 
     public enum LockColor

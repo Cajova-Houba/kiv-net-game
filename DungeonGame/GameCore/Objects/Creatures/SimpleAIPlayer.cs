@@ -9,6 +9,8 @@ namespace GameCore.Objects.Creatures
     /// <summary>
     /// This class represents computer player with simple AI which will wander around the maze, avoid fights and pick up better items.
     /// Wandering around the map will be realized by DFS algorithm.
+    /// 
+    /// Note that when the only possible block this AI can go to is occupied by a creature, AI won't move (to avoid fights).
     /// </summary>
     public class SimpleAIPlayer : AbstractPlayer
     {
@@ -25,7 +27,16 @@ namespace GameCore.Objects.Creatures
 
         public override void Think()
         {
+            // TODO: algorithm is not optimal because when returning from child to parent, child nodes will be listed again (not so big problem, but it something to improve)
+
             Map.Map map = Position.ParentMap;
+
+            // if the stack is empty AI may be in dead end
+            // put its current position to the stack and run the DFS again
+            if (blockStack.Count == 0)
+            {
+                blockStack.Push(new VisitedBlock(Position));
+            }
 
             // get current node and his neighbours
             VisitedBlock currVisitedBlock = blockStack.Peek();
@@ -43,8 +54,8 @@ namespace GameCore.Objects.Creatures
                 // visited block hash code is calculated only by its coordinates so this can be used
                 VisitedBlock neighbourVb = new VisitedBlock(neighbour);
                 if (!visitedBlocks.Contains(neighbourVb) && !neighbour.Occupied) {
-                    // neighbour wasn't visited and is not occupied -> add it to the stack
-                    blockStack.Push(neighbourVb);
+                    // get the last not-visited, unoccupied neighbour
+                    // add it to the stack later
                     nextBlock = neighbour;
 
                 }
@@ -54,7 +65,9 @@ namespace GameCore.Objects.Creatures
             // if some neighbours were found, create move action to the last block on the stack
             if (nextBlock != null)
             {
-                NextAction = new Move() { Actor = this, Direction = DirectionMethods.GetDirection(Position, nextBlock) };
+                blockStack.Push(new VisitedBlock(nextBlock));
+                Direction nextDirection = DirectionMethods.GetDirection(Position, nextBlock);
+                NextAction = new Move() { Actor = this, Direction = nextDirection };
             } else
             {
                 // no possible neighbours were found
@@ -68,7 +81,7 @@ namespace GameCore.Objects.Creatures
                 blockStack.Pop();
 
                 // move one step back
-                if (!(blockStack.Count > 0))
+                if (blockStack.Count > 0)
                 {
                     VisitedBlock prevBlock = blockStack.Peek();
                     nextBlock = map.Grid[prevBlock.x, prevBlock.y];
@@ -124,6 +137,11 @@ namespace GameCore.Objects.Creatures
             hashCode = hashCode * -1521134295 + x.GetHashCode();
             hashCode = hashCode * -1521134295 + y.GetHashCode();
             return hashCode;
+        }
+
+        public override string ToString()
+        {
+            return $"VisitedBlock [{x}, {y}]";
         }
     }
 

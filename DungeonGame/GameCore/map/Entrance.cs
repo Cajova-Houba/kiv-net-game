@@ -84,6 +84,11 @@ namespace GameCore.Map
             EntranceLock = null;
             State = EntranceState.OPEN;
         }
+
+        public override string ToString()
+        {
+            return $"Entrance: {State}; Lock: {EntranceLock}";
+        }
     }
 
     /// <summary>
