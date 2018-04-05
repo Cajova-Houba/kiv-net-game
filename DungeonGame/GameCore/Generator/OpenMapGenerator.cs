@@ -36,6 +36,7 @@ namespace GameCore.Generator
         {
             Map.Map map = new Map.Map();
             map.InitializeMap(GenerateGrid(width, height, seed));
+            map.WinningBlock = map.Grid[(width - 1) / 2, (height - 1) / 2];
 
             return map;
         }

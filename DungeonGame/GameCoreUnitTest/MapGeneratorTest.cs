@@ -16,7 +16,7 @@ namespace GameCoreUnitTest
         [TestMethod]
         public void TestOpenMapGenerator()
         {
-            IMapGenerator openMapGenerator = new OpenMapGenerator();
+            IMapGenerator openMapGenerator = MapGeneratorFactory.CreateOpenMapGenerator();
             int w = 10;
             int h = 15;
             Direction[] allDirections = DirectionMethods.GetAllDirections();
@@ -43,6 +43,10 @@ namespace GameCoreUnitTest
             MapBlock[,] grid2 = map.Grid;
             Assert.AreEqual(grid.GetLength(0), grid.GetLength(0), "Widths of grids don't match!");
             Assert.AreEqual(grid.GetLength(1), grid.GetLength(1), "Widths of grids don't match!");
+            Assert.IsNotNull(map.WinningBlock, "Winning block is null!");
+            Assert.AreEqual((w - 1) / 2, map.WinningBlock.X, "Wrong X coordinate of winning block.");
+            Assert.AreEqual((h - 1) / 2, map.WinningBlock.Y, "Wrong Y coordinate of winning block.");
+
             for (int i = 0; i < w; i++)
             {
                 for (int j = 0; j < h; j++)
@@ -61,16 +65,20 @@ namespace GameCoreUnitTest
         [TestMethod]
         public void TestSimpleMapGenerator()
         {
-            IMapGenerator simpleMapGenerator = new SimpleMapGenerator();
+            IMapGenerator simpleMapGenerator = MapGeneratorFactory.CreateSimpleMapGenerator();
             int w = 5;
             int h = 10;
             Direction[] allDirections = DirectionMethods.GetAllDirections();
 
-            MapBlock[,] grid = simpleMapGenerator.GenerateGrid(w, h, IMapGeneratorConstants.NO_SEED);
+            Map map = simpleMapGenerator.GenerateMap(w, h, IMapGeneratorConstants.NO_SEED);
+            MapBlock[,] grid = map.Grid;
 
             Assert.IsNotNull(grid, "Null grid returned!");
             Assert.AreEqual(w, grid.GetLength(0), "Wrong width of map grid!");
             Assert.AreEqual(h, grid.GetLength(1), "Wrong height of map grid!");
+            Assert.IsNotNull(map.WinningBlock, "Winning block is null!");
+            Assert.AreEqual((w - 1) / 2, map.WinningBlock.X, "Wrong X coordinate of winning block.");
+            Assert.AreEqual((h - 1) / 2, map.WinningBlock.Y, "Wrong Y coordinate of winning block.");
 
             // test that no map block has all entrances closed
             for (int i = 0; i < w; i++)
@@ -98,7 +106,7 @@ namespace GameCoreUnitTest
         [TestMethod]
         public void TestSimpleMapGeneratorSeed()
         {
-            IMapGenerator simpleMapGenerator = new SimpleMapGenerator();
+            IMapGenerator simpleMapGenerator = MapGeneratorFactory.CreateSimpleMapGenerator();
             int w = 5;
             int h = 10;
             int seed = 87452;

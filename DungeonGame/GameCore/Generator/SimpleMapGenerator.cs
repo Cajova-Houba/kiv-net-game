@@ -116,6 +116,21 @@ namespace GameCore.Generator
         {
             Map.Map map = new Map.Map();
             map.InitializeMap(GenerateGrid(width, height, seed));
+
+            int wx = (width-1)/2,
+                wy = (height-1)/2;
+            if (width > 20 && height > 2)
+            {
+                // if the map dimensions are big enough, pick random block in the 'middle' region
+                int regWidth = width / 10;
+                int regHeight = height / 10;
+
+                Random r = new Random();
+                wx = wx - (regWidth / 2) + r.Next(regWidth + 1);
+                wy = wy - (regHeight / 2) + r.Next(regHeight + 1);
+            }
+            map.WinningBlock = map.Grid[wx, wy];
+
             return map;
         }
     }

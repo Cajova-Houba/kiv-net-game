@@ -22,6 +22,11 @@ namespace GameCore.Map
         public int Height { get; protected set; }
 
         /// <summary>
+        /// Winning block of this map.
+        /// </summary>
+        public MapBlock WinningBlock { get; set; }
+
+        /// <summary>
         /// Game map.
         /// </summary>
         [JsonProperty]

@@ -30,6 +30,16 @@ namespace GameCore.Game
         public Map.Map GameMap;
 
         /// <summary>
+        /// Winner of the game.
+        /// </summary>
+        public AbstractPlayer Winner { get; set; }
+
+        /// <summary>
+        /// Returns true if there is a winner. Should be checked after every game loop step.
+        /// </summary>
+        public bool IsWinner { get { return Winner != null; } }
+
+        /// <summary>
         /// Default constructor. Initializes structures for players and monsters. Map is kept null.
         /// </summary>
         public Game()
@@ -67,7 +77,7 @@ namespace GameCore.Game
         }
 
         /// <summary>
-        /// One cycle of game loop.
+        /// One cycle of game loop. If some player wins, game loop will exit after winning condition check.
         /// </summary>
         public void GameLoopStep()
         {
@@ -75,6 +85,11 @@ namespace GameCore.Game
             foreach(AbstractPlayer player in HumanPlayers)
             {
                 player.NextAction?.Execute();
+                if (CheckWinningConditions(player))
+                {
+                    Winner = player;
+                    return;
+                }
             }
 
             // AI 'thinking' and actions
@@ -82,6 +97,11 @@ namespace GameCore.Game
             {
                 aiPlayer.Think();
                 aiPlayer.NextAction?.Execute();
+                if (CheckWinningConditions(aiPlayer))
+                {
+                    Winner = aiPlayer;
+                    return;
+                }
             }
 
             // monster 'thinking' and acitons
@@ -94,12 +114,19 @@ namespace GameCore.Game
 
         /// <summary>
         /// Check if the player meets winning criteria. Works for both human and AI players.
+        /// Current criteria for player to be a winer is to be on the winning block (if it's defined).
         /// </summary>
         /// <param name="player">Player to be checked.</param>
         /// <returns>Returns true if player wins. This doesn't have to mean the game end though.</returns>
         public bool CheckWinningConditions(AbstractPlayer player)
         {
-            return false;
+            if (GameMap.WinningBlock == null)
+            {
+                return false;
+            } else
+            {
+                return GameMap.WinningBlock.Equals(player.Position);
+            }
         }
     }
 }
