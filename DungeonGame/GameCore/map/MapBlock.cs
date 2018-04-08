@@ -35,7 +35,7 @@ namespace GameCore.Map
         /// <summary>
         /// Optional game object placed in this map block.
         /// </summary>
-        private IItem gameObject;
+        public AbstractItem Item { get; set; }
 
         /// <summary>
         /// Reference to parent map;
@@ -202,6 +202,18 @@ namespace GameCore.Map
         public void CreateEntrance(Direction direction)
         {
             entrances[(int)direction] = new Entrance(EntranceState.OPEN);
+        }
+
+        /// <summary>
+        /// Picks up item from this block and returns it. Item property will return null after this method.
+        /// If there's no item, null is returned.
+        /// </summary>
+        /// <returns>Returns item in this block.</returns>
+        public AbstractItem PickUpItem()
+        {
+            AbstractItem item = Item;
+            Item = null;
+            return item;
         }
 
         /// <summary>

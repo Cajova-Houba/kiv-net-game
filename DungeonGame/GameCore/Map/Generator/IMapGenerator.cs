@@ -1,6 +1,6 @@
-﻿using GameCore.Map;
+﻿
 
-namespace GameCore.Generator
+namespace GameCore.Map.Generator
 {
     /// <summary>
     /// Interface which specifies methods for map generators. 
@@ -14,7 +14,7 @@ namespace GameCore.Generator
         /// <param name="height">Height. Must be greater or equal to 1.</param>
         /// <param name="seed">Seed for random map generation. Use -1 to ignore this.</param>
         /// <returns>Generated map.</returns>
-        Map.Map GenerateMap(int width, int height, int seed);
+        Map GenerateMap(int width, int height, int seed);
 
         /// <summary>
         /// Generates grid with given dimensions. This method should only generate map itself not fill it with items / monsters.

@@ -1,7 +1,7 @@
 ﻿using System;
 using GameCore.Map;
-using GameCore.Objects.Creatures.Actions;
 using System.Collections.Generic;
+using GameCore.Game.Actions;
 
 namespace GameCore.Objects.Creatures
 {

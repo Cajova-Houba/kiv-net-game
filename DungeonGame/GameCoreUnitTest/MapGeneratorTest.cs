@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using GameCore.Generator;
+using GameCore.Map.Generator;
 using GameCore.Map;
 
 namespace GameCoreUnitTest

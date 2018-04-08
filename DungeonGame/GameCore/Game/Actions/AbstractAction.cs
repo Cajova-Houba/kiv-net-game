@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GameCore.Objects.Creatures;
 
-namespace GameCore.Objects.Creatures.Actions
+namespace GameCore.Game.Actions
 {
     /// <summary>
     /// Base class for every action creature (actor) may perform.

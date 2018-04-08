@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace GameCore.Generator
+namespace GameCore.Map.Generator
 {
     /// <summary>
     /// This generator creates map as a simple maze. At least one path exists between every two cells in this maze.
@@ -112,9 +112,9 @@ namespace GameCore.Generator
             toBlock.EntranceInDirection(fromDirection.OppositeDirection()).DemolishWall();
         }
 
-        public Map.Map GenerateMap(int width, int height, int seed)
+        public Map GenerateMap(int width, int height, int seed)
         {
-            Map.Map map = new Map.Map();
+            Map map = new Map();
             map.InitializeMap(GenerateGrid(width, height, seed));
 
             int wx = (width-1)/2,

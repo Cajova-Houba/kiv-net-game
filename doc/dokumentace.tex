@@ -2,7 +2,9 @@
 \usepackage[czech]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
+\usepackage{epstopdf}
 \usepackage{float}
+\graphicspath{{./img/}}
 
 \begin{document}
 	\title{Semestrální práce z předmětu KIV/NET}
@@ -44,7 +46,7 @@
 	\begin{itemize}
 		\item \textit{OTEVŘENÝ}: východ je otevřený a blok je možné tímto východem opustit, nebo do něj přijít.
 		
-		\item \textit{ZAVŘENÝ}: východ je zavřený a k jeho otevření je potřeba získat klíč (a mít jej v inventáři).
+		\item \textit{ZAVŘENÝ}: východ je zavřený a k jeho otevření je potřeba získat klíč (a mít jej v inventáři). Pokud je východ jednou otevřen pomocí klíče, nemůže být už znovu zavřen a každý jím může projít.
 		
 		\item \textit{NEEXISTUJÍCÍ}: východ v tomto směru neexistuje. V uživatelském rozhraní bude reprezentován například zdí.
 	\end{itemize}
@@ -57,14 +59,27 @@
 	\subsection{Komponenta pro práci s herními objekty}
 	Všechny objekty, které mohou být umístěny na mapu, a v případě hráčů a monster se po ní i pohybovat, jsou v rámci aplikace souhrnně nazvané jako 'herní objekty'. Jsou rozděleny do dvou podmnožin: živé a neživé objekty, kde živé objekty představují hráče (člověka i počítač), neživé pak předměty které lze na mapě sebrat (například zbraň).
 	
-	Všechny předměty mají dvě společné vlastnosti: hrací blok, na kterém jsou umístěné a název.
+	Všechny předměty mají dvě společné vlastnosti: hrací blok, na kterém jsou umístění a název. Základní struktura herních objektů je naznačena na obrázku \ref{fig:game-obj}. 
+	
+	\begin{figure}[H]
+		\includegraphics[width=140mm]{core-game-objects-simple}
+		\caption{Struktura herních objektů}
+		\label{fig:game-obj}
+	\end{figure}
 	
 	\subsubsection{Předměty}
+	Předměty může mít hráč buďto nasazené (na obrázku \ref{fig:game-obj} \textit{AbstractItem}), nebo je může nosit v inventáři (na obrázku \ref{fig:game-obj} \textit{AbstractInventoryItem}). 
+	
+	V případě nositelných předmětů se jedná o zbraně a brnění. Ty dávají hráči bonusy k jeho základním schopnostem (zdraví, život, útok) a hráč může mít v jeden okamžik nasazenou pouze jednu zbroj (respektive zbraň).
+	
+	Oproti tomu v inventáři může hráč nosit libovolný počet stejných věcí (počet je omezen kapacitou inventáře). Speciální věc v inventáři je pak klíč, který slouží k odemčení zavřených průchodů mezi herními bloky.
 	
 	\subsubsection{Monstra a hráči}
 	
 	
 	\subsection{Komponenta pro práci s instancí hry}
+	
+	něco o akcích, akce házejí výjimky - reakce na ně v UI
 	
 	\section{Implementace}
 	

@@ -5,7 +5,7 @@ namespace GameCore.Objects.Items
     /// <summary>
     /// Base class for all armors.
     /// </summary>
-    public abstract class AbstractArmor : GameObject, IItem
+    public abstract class AbstractArmor : AbstractItem
     {
         /// <summary>
         /// Defense which is added to player's base defense.

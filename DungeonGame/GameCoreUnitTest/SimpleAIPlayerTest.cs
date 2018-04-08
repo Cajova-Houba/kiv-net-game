@@ -3,9 +3,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GameCore.Map;
 using GameCore.Objects.Creatures;
 using GameCore.Objects.Creatures.AIPlayers;
-using GameCore.Generator;
-using GameCore.Objects.Creatures.Actions;
+using GameCore.Map.Generator;
 using System.Collections.Generic;
+using GameCore.Game.Actions;
 
 namespace GameCoreUnitTest
 {

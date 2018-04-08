@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GameCore.Map;
-using GameCore.Generator;
+using GameCore.Map.Generator;
 
 namespace GameCoreUnitTest
 {

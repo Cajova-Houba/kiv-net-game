@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using GameCore.Map;
+using GameCore.Objects.Creatures;
 
-namespace GameCore.Objects.Creatures.Actions.Exceptions
+namespace GameCore.Game.Actions.Exceptions
 {
     /// <summary>
     /// Exception thrown when actor tries to attack in direction in which there is nothing to attack.

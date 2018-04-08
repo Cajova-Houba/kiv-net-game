@@ -259,3 +259,12 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/doc/dokumentace.synctex.gz
+/doc/dokumentace.pdf
+/doc/dokumentace.aux
+/doc/documentace.tex
+/doc/documentace.synctex.gz
+/doc/documentace.pdf
+/doc/documentace.aux
+/doc/umlet/core-game-objects-simple.svg
+/doc/img/core-game-objects-simple-eps-converted-to.pdf

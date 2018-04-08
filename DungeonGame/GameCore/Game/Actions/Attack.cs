@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using GameCore.Map;
-using GameCore.Objects.Creatures.Actions.Exceptions;
+using GameCore.Game.Actions.Exceptions;
+using GameCore.Objects.Creatures;
 
-namespace GameCore.Objects.Creatures.Actions
+namespace GameCore.Game.Actions
 {
     /// <summary>
     /// Makes the actor attack in given direction.

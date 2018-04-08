@@ -1,7 +1,7 @@
 ﻿using GameCore.Map;
 using System;
 
-namespace GameCore.Generator
+namespace GameCore.Map.Generator
 {
     /// <summary>
     /// This class will generate open map - a map which consists of blocks with all entrances open.
@@ -32,9 +32,9 @@ namespace GameCore.Generator
             return grid;
         }
 
-        public Map.Map GenerateMap(int width, int height, int seed)
+        public Map GenerateMap(int width, int height, int seed)
         {
-            Map.Map map = new Map.Map();
+            Map map = new Map();
             map.InitializeMap(GenerateGrid(width, height, seed));
             map.WinningBlock = map.Grid[(width - 1) / 2, (height - 1) / 2];
 

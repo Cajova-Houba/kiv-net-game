@@ -5,7 +5,7 @@ namespace GameCore.Objects.Items
     /// <summary>
     /// Base class for all weapons.
     /// </summary>
-    public abstract class AbstractWeapon : GameObject, IItem
+    public abstract class AbstractWeapon :  AbstractItem
     {
 
         /// <summary>

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GameCore.Map;
-using GameCore.Generator;
+using GameCore.Map.Generator;
 using GameCore.Objects.Creatures;
-using GameCore.Objects.Creatures.Actions;
+using GameCore.Game.Actions;
 
 namespace GameCoreUnitTest
 {

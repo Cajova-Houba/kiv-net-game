@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using GameCore.Map;
+using GameCore.Objects.Creatures;
 
-namespace GameCore.Objects.Creatures.Actions.Exceptions
+namespace GameCore.Game.Actions.Exceptions
 {
     /// <summary>
     /// An exception thrown when trying to access block in direction which either doesn't exist, is blocked or is occupied by some other creature.

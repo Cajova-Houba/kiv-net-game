@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using GameCore.Map;
 
-namespace GameCore.Generator
+namespace GameCore.Map.Generator
 {
     /// <summary>
     /// Factory class for various map generators.
