@@ -2,23 +2,26 @@
 using System.Collections.Generic;
 using System.Text;
 using GameCore.Map;
+using Newtonsoft.Json;
 
 namespace GameCore.Objects
 {
     /// <summary>
     /// Base class for all objects which can be placed on the map - player, monsters, items, ...
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public abstract class GameObject
     {
         /// <summary>
         /// Object's displayed name.
         /// </summary>
-        public string Name { get; protected set; }
+        [JsonProperty]
+        public string Name { get; set; }
 
         /// <summary>
         /// Object's parent block.
         /// </summary>
-        public MapBlock Position { get; protected set; }
+        public MapBlock Position { get; set; }
 
         /// <summary>
         /// Initializes this game object with name and position.

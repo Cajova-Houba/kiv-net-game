@@ -33,15 +33,16 @@ namespace GameCore.Map
         private AbstractCreature creature;
 
         /// <summary>
-        /// Optional game object placed in this map block.
-        /// </summary>
-        public AbstractItem Item { get; set; }
-
-        /// <summary>
         /// Reference to parent map;
         /// </summary>
         public Map ParentMap { get; protected set; }
 
+        /// <summary>
+        /// Optional game object placed in this map block.
+        /// </summary>
+        [JsonProperty]
+        public AbstractItem Item { get; set; }
+        
         /// <summary>
         /// North entrance to this block.
         /// </summary>

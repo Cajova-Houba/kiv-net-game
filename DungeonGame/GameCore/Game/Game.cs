@@ -84,6 +84,11 @@ namespace GameCore.Game
             // perform player's action first
             foreach(AbstractPlayer player in HumanPlayers)
             {
+                if(!player.Alive)
+                {
+                    continue;
+                }
+
                 player.NextAction?.Execute();
                 if (CheckWinningConditions(player))
                 {
@@ -95,6 +100,11 @@ namespace GameCore.Game
             // AI 'thinking' and actions
             foreach(AbstractPlayer aiPlayer in AiPlayers)
             {
+                if (!aiPlayer.Alive)
+                {
+                    continue;
+                }
+
                 aiPlayer.Think();
                 aiPlayer.NextAction?.Execute();
                 if (CheckWinningConditions(aiPlayer))
@@ -107,6 +117,11 @@ namespace GameCore.Game
             // monster 'thinking' and acitons
             foreach(AbstractCreature monster in Monsters)
             {
+                if(!monster.Alive)
+                {
+                    continue;
+                }
+
                 monster.Think();
                 monster.NextAction?.Execute();
             }

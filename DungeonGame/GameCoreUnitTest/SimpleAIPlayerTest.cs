@@ -88,7 +88,7 @@ namespace GameCoreUnitTest
         {
             int w = 50;
             int h = 50;
-            int maxIter = 50*50+1;
+            int maxIter = 2*(50*50)+1;
             IMapGenerator simpleMapGenerator = new SimpleMapGenerator();
             Map map = simpleMapGenerator.GenerateMap(w, h, IMapGeneratorConstants.NO_SEED);
             AbstractPlayer simpleAIPlayer = new SimpleAIPlayer("Simple maze solver", map.Grid[0, 0]);
