@@ -1,0 +1,17 @@
+﻿<Window x:Class="DungeonGame.MenuWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DungeonGame"
+        mc:Ignorable="d"
+        Title="Welcome to the Dungeon!" Height="400" Width="300
+        ">
+    <StackPanel Orientation="Vertical" Margin="75,50,75,50">
+        <Label Content="Dungeon" HorizontalAlignment="Center"/>
+        <Button Name="newGameBtn" Content="New game" Click="newGameBtn_Click"/>
+        <Button Name="importMapsBtn" Content="Import maps"/>
+        <Button Name="mapeditorBtn" Content="Editor"/>
+        <Button Name="exitBtn" Content="Exit"/>
+    </StackPanel>
+</Window>

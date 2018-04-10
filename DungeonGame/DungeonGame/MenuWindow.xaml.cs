@@ -18,11 +18,19 @@ namespace DungeonGame
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MenuWindow : Window
     {
-        public MainWindow()
+        public MenuWindow()
         {
             InitializeComponent();
+        }
+
+        private void newGameBtn_Click(object sender, RoutedEventArgs e)
+        {
+            GameWindow gameWindow = new GameWindow();
+            App.Current.MainWindow = gameWindow;
+            this.Close();
+            gameWindow.Show();
         }
     }
 }
