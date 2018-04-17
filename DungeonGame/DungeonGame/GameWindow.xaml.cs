@@ -12,6 +12,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using GameCore.Objects.Items;
+using DungeonGame.Model;
+using GameCore.Map;
+using GameCore.Objects.Creatures;
 
 namespace DungeonGame
 {
@@ -21,6 +25,11 @@ namespace DungeonGame
     public partial class GameWindow : Window
     {
 
+        public String PlayerName { get { return "Jméno hráče"; } }
+
+        /// <summary>
+        /// Returns game messages to be displayed in bottom panel.
+        /// </summary>
         public ObservableCollection<String> GameMessages { get {
                 return new ObservableCollection<string>(new String[] {
                     "Enjoy!",
@@ -29,7 +38,35 @@ namespace DungeonGame
                     "Map generated.",
                     "New game initialization."
                 });
-            } set { } }
+            } }
+
+        /// <summary>
+        /// Returns player's inventory.
+        /// </summary>
+        public ObservableCollection<InventoryItemModel> Inventory
+        {
+            get
+            {
+                return new ObservableCollection<InventoryItemModel>(new InventoryItemModel[]
+                {
+                    new InventoryItemModel(){ModelObject = new BasicItem("Test item", new MapBlock(), 10)},
+                    new InventoryItemModel(){ModelObject = new BasicItem("Test item 2", new MapBlock(), 10)},
+                    new InventoryItemModel(){ModelObject = new BasicItem("Some cool item", new MapBlock(), 10)},
+                });
+            }
+        }
+
+
+        /// <summary>
+        /// Returns instance of current player.
+        /// </summary>
+        public AbstractPlayer Player
+        {
+            get
+            {
+                return new HumanPlayer("Test player", new MapBlock());
+            }
+        }
 
         public GameWindow()
         {
@@ -46,4 +83,6 @@ namespace DungeonGame
             gameMap.Background = new ImageBrush(placeholderMap);
         }
     }
+    
+
 }

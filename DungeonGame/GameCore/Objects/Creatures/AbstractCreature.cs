@@ -60,6 +60,25 @@ namespace GameCore.Objects.Creatures
             }
         }
 
+        /// <summary>
+        /// Returns total attack of this creature with all bonuses applied.
+        /// </summary>
+        /// <returns>Total attack value of this creature.</returns>
+        public abstract double TotalAttack { get; }
+
+
+        /// <summary>
+        /// Returns total deffense of this creature with all bonuses applied.
+        /// </summary>
+        /// <returns>Total deffense value of this creature.</returns>
+        public abstract double TotalDeffense { get; }
+
+        /// <summary>
+        /// Returns max possible HP of this creature (so base HP increased / decreased by bonuses / degrading effects).
+        /// </summary>
+        /// <returns>Max possible HP of this creature.</returns>
+        public abstract double MaxHitPoints { get; }
+
         public AbstractCreature(string name, MapBlock position, int baseHitPoints, int baseAttack, int baseDeffense) : base(name, position)
         {
             BaseHitPoints = baseHitPoints;
@@ -102,33 +121,5 @@ namespace GameCore.Objects.Creatures
         /// Leave this method empty for human players as their thinking is replaced by user input.
         /// </summary>
         public abstract void Think();
-
-
-        /// <summary>
-        /// Returns total attack of this creature with all bonuses applied.
-        /// </summary>
-        /// <returns>Total attack value of this creature.</returns>
-        public abstract double TotalAttack();
-
-
-        /// <summary>
-        /// Returns total deffense of this creature with all bonuses applied.
-        /// </summary>
-        /// <returns>Total deffense value of this creature.</returns>
-        public abstract double TotalDeffense();
-
-
-        /// <summary>
-        /// Returns current HP of this creature.
-        /// </summary>
-        /// <returns>Current HP of this creature.</returns>
-        public abstract double CurrentlHitPoints();
-
-
-        /// <summary>
-        /// Returns max possible HP of this creature (so base HP increased / decreased by bonuses / degrading effects).
-        /// </summary>
-        /// <returns>Max possible HP of this creature.</returns>
-        public abstract double MaxHitPoints();
     }
 }

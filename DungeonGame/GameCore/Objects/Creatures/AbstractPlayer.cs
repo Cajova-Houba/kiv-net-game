@@ -55,6 +55,48 @@ namespace GameCore.Objects.Creatures
             }
         }
 
+        public override double MaxHitPoints
+        {
+            get
+            {
+                int baseHp = BaseHitPoints;
+
+                // any effect should be put here in the future
+
+                return baseHp;
+            }
+        }
+
+        public override double TotalAttack
+        {
+            get
+            {
+                int baseAtt = BaseAttack;
+
+                if (Weapon != null )
+                {
+                    baseAtt += Weapon.Damage;
+                }
+
+                return baseAtt;
+            }
+        }
+
+        public override double TotalDeffense
+        {
+            get
+            {
+                int baseDef = BaseDeffense;
+
+                if (Armor != null)
+                {
+                    baseDef += Armor.Defense;
+                }
+
+                return baseDef;
+            }
+        }
+
         /// <summary>
         /// Constructor which initializes player with name, position and default values.
         /// </summary>
@@ -65,47 +107,6 @@ namespace GameCore.Objects.Creatures
             Inventory = new List<AbstractInventoryItem>();
         }
 
-        public override double CurrentlHitPoints()
-        {
-            int currHp = CurrentHitPoints;
-
-            // any effect should be put here in the future
-
-            return currHp;
-        }
-
-        public override double MaxHitPoints()
-        {
-            int baseHp = BaseHitPoints;
-
-            // any effect should be put here in the future
-
-            return baseHp;
-        }
-
-        public override double TotalAttack()
-        {
-            int baseAtt = BaseAttack;
-
-            if (Weapon != null )
-            {
-                baseAtt += Weapon.Damage;
-            }
-
-            return baseAtt;
-        }
-
-        public override double TotalDeffense()
-        {
-            int baseDef = BaseDeffense;
-
-            if (Armor != null)
-            {
-                baseDef += Armor.Defense;
-            }
-
-            return baseDef;
-        }
 
         /// <summary>
         /// Returns true if the number of items in inventory has reached InventorySize.

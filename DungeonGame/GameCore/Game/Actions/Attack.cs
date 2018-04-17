@@ -35,8 +35,8 @@ namespace GameCore.Game.Actions
 
             // calculate attack
             AbstractCreature targetCreature = targetBlock.Creature;
-            double totalAttack = actor.TotalAttack();
-            double totalDeffense = targetCreature.TotalDeffense();
+            double totalAttack = actor.TotalAttack;
+            double totalDeffense = targetCreature.TotalDeffense;
             double totalDamage = Math.Max(0, totalAttack - totalDeffense);
 
 

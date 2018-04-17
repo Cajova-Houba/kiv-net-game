@@ -44,6 +44,33 @@ namespace GameCore.Objects.Creatures
         /// </summary>
         private Boolean goBackwardFlag;
 
+        public override double TotalAttack
+        {
+            get
+            {
+                return BaseAttack;
+            }
+        }
+        
+
+        public override double TotalDeffense
+        {
+            get
+            {
+                return BaseDeffense;
+            }
+        }
+
+        public override double MaxHitPoints
+        {
+            get
+            {
+                return BaseHitPoints;
+            }
+        }
+
+
+
         /// <summary>
         /// Initializes this monster with given values and stack capacity randomly in range [1;10].
         /// </summary>
@@ -159,26 +186,6 @@ namespace GameCore.Objects.Creatures
             }
             return nextDirection;
         }
-
-
-        public override double TotalAttack()
-        {
-            return BaseAttack;
-        }
-
-        public override double TotalDeffense()
-        {
-            return BaseDeffense;
-        }
-
-        public override double CurrentlHitPoints()
-        {
-            return CurrentHitPoints;
-        }
-
-        public override double MaxHitPoints()
-        {
-            return BaseHitPoints;
-        }
+        
     }
 }

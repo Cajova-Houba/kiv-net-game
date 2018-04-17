@@ -5,11 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DungeonGame"
         mc:Ignorable="d"
-        Title="Game" Height="600" Width="740">
+        Title="Game" Height="600" Width="740"
+        MinHeight="600" MinWidth="740">
+    <Window.Resources>
+        <DataTemplate x:Key="inventoryItemTemplate">
+            <Border BorderBrush="Black" BorderThickness="1" DataContext="{Binding}">
+                <StackPanel Orientation="Vertical">
+                    <Image Name="invItemImg" Source="{Binding ItemImage}"/>
+                    <Label HorizontalAlignment="Center" Name="invItemName" Content="{Binding ItemName}"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
+    
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -18,15 +30,28 @@
         <Border BorderThickness="1" BorderBrush="Black" Grid.Row="0" Grid.Column="0">
                 <Canvas Name="gameMap" MinWidth="440" DockPanel.Dock="Left" />
         </Border>
-        <StackPanel Name="controlsPanel" Orientation="Vertical" Margin="10" Grid.Row="0" Grid.Column="1">
-            <WrapPanel Orientation="Vertical" HorizontalAlignment="Center">
+        
+        <!-- right panel -->
+        <Grid Name="controlsGrid" Grid.Row="0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="120"/>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <WrapPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0">
                 <Label Content="Game controls"/>
                 <Button Content="Up"/>
                 <Button Content="Right"/>
                 <Button Content="Down"/>
                 <Button Content="Left"/>
             </WrapPanel>
-            <WrapPanel Orientation="Vertical" HorizontalAlignment="Center">
+
+            <WrapPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="1">
                 <Label Content="Actions"/>
                 <Button Content="Pickup"/>
                 <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -39,10 +64,55 @@
                     <Button Content="Attack"/>
                 </WrapPanel>
             </WrapPanel>
-        </StackPanel>
+
+            <GroupBox Header="{Binding Player.Name}" Grid.Column="0" Grid.Row="2">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Zdraví" Grid.Column="0" Grid.Row="0"/>
+                        <Label Content="{Binding Player.CurrentHitPoints}" Grid.Column="1" Grid.Row="0"/>
+
+                        <Label Content="Útok" Grid.Column="0" Grid.Row="1"/>
+                        <Label Content="{Binding Player.TotalAttack}" Grid.Column="1" Grid.Row="1"/>
+
+                        <Label Content="Obrana" Grid.Column="0" Grid.Row="2"/>
+                        <Label Content="{Binding Player.TotalDeffense}" Grid.Column="1" Grid.Row="2"/>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Inventory" Grid.Row="3" Grid.Column="1">
+                <ListBox Name="inventoryLb"
+                                 MinHeight="95"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ItemTemplate="{StaticResource inventoryItemTemplate}"
+                                 ItemsSource="{Binding Inventory}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" ItemWidth="Auto" ItemHeight="Auto" ></WrapPanel>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <!--<ListBoxItem>hp l</ListBoxItem>
+                            <ListBoxItem>hp lektvar</ListBoxItem>
+                            <ListBoxItem>mana lektvar</ListBoxItem>
+                            <ListBoxItem>klic cerveny</ListBoxItem>
+                            <ListBoxItem>klic modry</ListBoxItem>-->
+                </ListBox>
+            </GroupBox>
+        </Grid>
+        
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2">
             <Label Content="Messages"/>
-            <ListView Name="messageBox" ItemsSource="{Binding GameMessages}" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch" MaxHeight="80">
+            <ListView Name="messageBox" ItemsSource="{Binding GameMessages}" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch" Height="110">
 
             </ListView>
         </StackPanel>
