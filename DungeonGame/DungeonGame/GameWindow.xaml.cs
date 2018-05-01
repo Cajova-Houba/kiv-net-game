@@ -17,6 +17,7 @@ using DungeonGame.Model;
 using GameCore.Map;
 using GameCore.Objects.Creatures;
 using GameCore.Map.Generator;
+using DungeonGame.Render;
 
 namespace DungeonGame
 {
@@ -25,6 +26,13 @@ namespace DungeonGame
     /// </summary>
     public partial class GameWindow : Window
     {
+        public GameWindow(GameViewModel viewModel)
+        {
+            DataContext = viewModel;
+            InitializeComponent();
+            RenderMap();
+        }
+
         public GameWindow()
         {
             InitializeComponent();
@@ -71,13 +79,15 @@ namespace DungeonGame
             {
                 // player is too close to the left border
                 minX = 0;
-                maxX = Math.Min(mapW - 1, 2 * recX + 1);
-            } else if (currPlayerPos.X + recX > mapW - 1)
+                maxX = Math.Min(mapW - 1, 2 * recX );
+            }
+            else if (currPlayerPos.X + recX > mapW - 1)
             {
                 // player is too close to the right border
-                minX = Math.Max(0, mapW - (2 * recX + 1));
+                minX = Math.Max(0, mapW - (2 * recX ) - 1);
                 maxX = mapW - 1;
-            } else
+            }
+            else
             {
                 // player is not too close to left or right border
                 minX = currPlayerPos.X - recX;
@@ -89,12 +99,12 @@ namespace DungeonGame
             {
                 // player is too close to the top border
                 minY = 0;
-                maxY = Math.Min(mapW - 1, 2 * recY + 1);
+                maxY = Math.Min(mapW - 1, 2 * recY );
             }
             else if (currPlayerPos.Y + recY > mapH - 1)
             {
                 // player is too close to the bottom border
-                minY = Math.Max(0, mapH - (2 * recY + 1));
+                minY = Math.Max(0, mapH - (2 * recY ) - 1);
                 maxY = mapH - 1;
             }
             else
@@ -105,174 +115,64 @@ namespace DungeonGame
             }
 
 
-            // render background 
-            gameMapCanvas.Background = new SolidColorBrush(Color.FromRgb(0,0,0));
+            // add black background
+            gameMapCanvas.Background = new SolidColorBrush(Color.FromRgb(0, 0, 0));
 
             // render map blocks
             // each block will be rendered as square
             //double canvasW = gameMapCanvas.Width;
             //double canvasH = gameMapCanvas.Height;
-            double canvasW = 530;
-            double canvasH = 418;
-            int blockCount = Math.Max(maxX + 1 - minX, maxY + 1 - minY);
-            double blockSize = Math.Min(canvasW / (double)blockCount, canvasH / (double)blockCount);
-            gameMapCanvas.Children.Add(new Rectangle() { Height = blockCount*blockSize, Width = blockCount*blockSize, Fill = new SolidColorBrush(Color.FromRgb(255,204,102) )});
+            double canvasW = gameMapCanvas.ActualWidth > 0 ? gameMapCanvas.ActualWidth : gameMapCanvas.MinWidth;
+            double canvasH = gameMapCanvas.ActualHeight > 0 ? gameMapCanvas.ActualHeight : gameMapCanvas.MinHeight;
+            //canvasW = 500;
+            //canvasH = 500;
 
             Map gameMap = viewModel.GameMap;
-            for(int i = minX; i <= maxX; i++)
+            List<Shape> renderedMap = MapRenderer.RenderMapBlocks(gameMap.Grid, canvasW, canvasH, minX, minY, maxX, maxY);
+            gameMapCanvas.Children.Clear();
+            foreach (Shape shape in renderedMap)
             {
-                for(int j = minY; j <= maxY; j++)
-                {
-                    List<Shape> renderedMapBlock = RenderMapBlock(gameMap.Grid[i, j], i * blockSize, j * blockSize, blockSize);
-                    foreach(Shape shape in renderedMapBlock)
-                    {
-                        gameMapCanvas.Children.Add(shape);
-                    }
-                }
+                gameMapCanvas.Children.Add(shape);
             }
         }
 
         /// <summary>
-        /// Renders one map block to the gameCanvas.
+        /// Send move action to the game core.
         /// </summary>
-        /// <param name="mapBlock">Map block to be rendered.</param>
-        /// <param name="x">Top left corner x-coordinate.</param>
-        /// <param name="y">Top left corner y-coordinate.</param>
-        /// <param name="blockSize">Size of the block (=width=height).</param>
-        /// <returns>Block rendered as a set of shapes.</returns>
-        private List<Shape> RenderMapBlock(MapBlock mapBlock, double x, double y, double blockSize)
+        /// <param name="direction">Direciton of the move.</param>
+        private void Move(Direction direction)
         {
-            List<Shape> renderedBlock = new List<Shape>();
-            double innerMargin = 2;
-            x += innerMargin;
-            y += innerMargin;
-            blockSize -= 2 * innerMargin;
-            // if there is entrace, draw it as line-empty space-line
-            double entranceSize = blockSize / 3;
-            renderedBlock.AddRange(RenderHorizontalEntrance(mapBlock.North, x, y, entranceSize));
-            renderedBlock.AddRange(RenderHorizontalEntrance(mapBlock.South, x, y+blockSize, entranceSize));
-            renderedBlock.AddRange(RenderVerticalEntrance(mapBlock.East, x+blockSize, y, entranceSize));
-            renderedBlock.AddRange(RenderVerticalEntrance(mapBlock.West, x, y, entranceSize));
-
-            if(mapBlock.Creature != null)
+            GameViewModel viewModel = (GameViewModel)DataContext;
+            viewModel.Move(direction);
+            try
             {
-                renderedBlock.Add(RenderCreature(mapBlock.Creature, x, y, blockSize));
-            }
-
-            return renderedBlock;
-        }
-
-        /// <summary>
-        /// Renders horizontal entrance.
-        /// </summary>
-        /// <param name="entrance">Entrance to be rendered. May be null</param>
-        /// <param name="x">X1 coordinate.</param> 
-        /// <param name="y">X2 coordinate.</param>
-        /// <param name="entranceSize">Size of the entrance (if no entrance, line 3*entranceSize long is returned).</param>
-        /// <returns>Entrance rendered as lines.</returns>
-        private List<Line> RenderHorizontalEntrance(Entrance entrance, double x, double y, double entranceSize)
-        {
-            List<Line> entranceLines = new List<Line>();
-            Brush b = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-            if (entrance != null && entrance.IsOpen())
+                viewModel.GameInstance.GameLoopStep();
+                RenderMap();
+            } catch (Exception ex)
             {
-                // line - nothing - line
-                entranceLines.Add(new Line() { X1 = x, Y1 = y, X2 = x + entranceSize, Y2 = y , Stroke = b, StrokeThickness = 1});
-                entranceLines.Add(new Line() { X1 = x + 2 * entranceSize, Y1 = y, X2 = x + 3 * entranceSize, Y2 = y, Stroke = b, StrokeThickness = 1 });
-            }
-            else
-            {
-                entranceLines.Add(new Line() { X1 = x, Y1 = y, X2 = x + entranceSize*3, Y2 = y, Stroke = b, StrokeThickness = 1 });
-            }
-            return entranceLines;
-        }
-
-        /// <summary>
-        /// Renders vertical entrance.
-        /// </summary>
-        /// <param name="entrance">Entrance to be rendered. May be null.</param>
-        /// <param name="x">X1 coordinate.</param>
-        /// <param name="y">X2 coordinate.</param>
-        /// <param name="entranceSize">Size of the entrance (if no entrance, line 3*entranceSize long is returned).</param>
-        /// <returns>Entrance rendered as lines.</returns>
-        private List<Line> RenderVerticalEntrance(Entrance entrance, double x, double y, double entranceSize)
-        {
-            List<Line> entranceLines = new List<Line>();
-            Brush b = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-            if (entrance != null && entrance.IsOpen())
-            {
-                // line - nothing - line
-                entranceLines.Add(new Line() { X1 = x, Y1 = y, X2 = x, Y2 = y + entranceSize, Stroke = b, StrokeThickness = 1 });
-                entranceLines.Add(new Line() { X1 = x, Y1 = y + 2 * entranceSize, X2 = x, Y2 = y + 3 * entranceSize, Stroke = b, StrokeThickness = 1 });
-            } else
-            {
-                entranceLines.Add(new Line() { X1 = x, Y1 = y, X2 = x, Y2 = y + 3 * entranceSize, Stroke = b, StrokeThickness = 1 });
-            }
-
-            return entranceLines;
-        }
-
-        /// <summary>
-        /// Renders creature as a path.
-        /// </summary>
-        /// <param name="creature">Creature to be rendered.</param>
-        /// <param name="x">Top corner x-coordinate of map block.</param>
-        /// <param name="y">Top corner y-coordinate of map block.</param>
-        /// <param name="blockSize">Size of the map block.</param>
-        /// <returns></returns>
-        private Path RenderCreature(AbstractCreature creature, double x, double y, double blockSize)
-        {
-            if (creature is AbstractPlayer)
-            {
-                return RenderPlayer((AbstractPlayer)creature, x, y, blockSize);
-            } else
-            {
-                return new Path();
+                viewModel.GameMessages.Add(ex.Message);
             }
         }
 
-        /// <summary>
-        /// Renders player as a path.
-        /// </summary>
-        /// <param name="player">Player to be rendered.</param>
-        /// <param name="x">Top left corner x-coordinate of map block.</param>
-        /// <param name="y">Top left cornet y-coordinate of map block.</param>
-        /// <param name="blockSize">Size of the block.</param>
-        /// <returns></returns>
-        private Path RenderPlayer(AbstractPlayer player, double x, double y, double blockSize)
+        private void UpButtonClick(object sender, RoutedEventArgs e)
         {
-            Path renderedPlayer = new Path();
+            Move(Direction.NORTH);
+        }
 
-            LineGeometry firstLeg = new LineGeometry(new Point(1 / 3.0, 1), new Point(0.5, 2 / 3.0));
-            LineGeometry secondLeg = new LineGeometry(new Point(2 / 3.0, 1), new Point(0.5, 2 / 3.0));
-            LineGeometry body = new LineGeometry(new Point(0.5, 2 / 3.0), new Point(0.5, 1 / 6.0));
-            LineGeometry firstHand = new LineGeometry(new Point(0.5, 1 / 3.0), new Point(1 / 3.0, 0.5));
-            LineGeometry secondHand = new LineGeometry(new Point(0.5, 1 / 3.0), new Point(2 / 3.0, 0.5));
-            EllipseGeometry head = new EllipseGeometry(new Point(0.5, 1 / 6.0), 1 / 10.0, 1 / 10.0);
+        private void RightButtonClick(object sender, RoutedEventArgs e)
+        {
+            Move(Direction.EAST);
+        }
 
-            GeometryGroup group = new GeometryGroup();
-            group.Children.Add(firstLeg);
-            group.Children.Add(secondLeg);
-            group.Children.Add(body);
-            group.Children.Add(firstHand);
-            group.Children.Add(secondHand);
-            group.Children.Add(head);
+        private void DownButtonClick(object sender, RoutedEventArgs e)
+        {
+            Move(Direction.SOUTH);
+        }
 
-            TransformGroup transformGroup = new TransformGroup();
-            transformGroup.Children.Add(new ScaleTransform(blockSize, blockSize));
-            transformGroup.Children.Add(new TranslateTransform(x, y));
-            group.Transform = transformGroup;
-
-            renderedPlayer.Data = group;
-            renderedPlayer.Stroke = new SolidColorBrush(Color.FromRgb(0, 153, 51));
-            renderedPlayer.StrokeThickness = 1;
-            renderedPlayer.Fill = new SolidColorBrush(Color.FromRgb(0, 153, 51));
-
-
-
-            return renderedPlayer;
+        private void LeftButtonClick(object sender, RoutedEventArgs e)
+        {
+            Move(Direction.WEST);
         }
     }
-    
 
 }

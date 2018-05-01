@@ -11,18 +11,18 @@ namespace GameCore.Game
         /// <summary>
         /// Human players present in game.
         /// </summary>
-        public LinkedList<AbstractPlayer> HumanPlayers { get; protected set; }
+        public List<AbstractPlayer> HumanPlayers { get; protected set; }
 
         /// <summary>
         /// AI players (same as human but controlled by computer).
         /// </summary>
-        public LinkedList<AbstractPlayer> AiPlayers { get; protected set; }
+        public List<AbstractPlayer> AiPlayers { get; protected set; }
 
         /// <summary>
         /// Monsters - spiders, rats, ... stupid but possibly deadly to both
         /// human and AI players.
         /// </summary>
-        public LinkedList<AbstractCreature> Monsters { get; protected set; }
+        public List<AbstractCreature> Monsters { get; protected set; }
 
         /// <summary>
         /// Game map. 
@@ -44,9 +44,9 @@ namespace GameCore.Game
         /// </summary>
         public Game()
         {
-            HumanPlayers = new LinkedList<AbstractPlayer>();
-            AiPlayers = new LinkedList<AbstractPlayer>();
-            Monsters = new LinkedList<AbstractCreature>();
+            HumanPlayers = new List<AbstractPlayer>();
+            AiPlayers = new List<AbstractPlayer>();
+            Monsters = new List<AbstractCreature>();
         }
         
         /// <summary>
@@ -55,7 +55,7 @@ namespace GameCore.Game
         /// <param name="humanPlayer">Human player to be added.</param>
         public void AddHumanPlayer(AbstractPlayer humanPlayer)
         {
-            HumanPlayers.AddLast(humanPlayer);
+            HumanPlayers.Add(humanPlayer);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace GameCore.Game
         /// <param name="aiPlayer">AI player to be added.</param>
         public void AddAIPlayer(AbstractPlayer aiPlayer)
         {
-            AiPlayers.AddLast(aiPlayer);
+            AiPlayers.Add(aiPlayer);
         }
         
         /// <summary>
@@ -73,7 +73,7 @@ namespace GameCore.Game
         /// <param name="monster">Monster to be added.</param>
         public void AddMonster(AbstractCreature monster)
         {
-            Monsters.AddLast(monster);
+            Monsters.Add(monster);
         }
 
         /// <summary>

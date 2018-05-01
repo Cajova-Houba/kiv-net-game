@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:DungeonGame"
         xmlns:Model="clr-namespace:DungeonGame.Model" x:Class="DungeonGame.GameWindow"
         mc:Ignorable="d"
-        Title="Game" Height="600" Width="740"
-        MinHeight="600" MinWidth="740">
+        Title="Game" 
+        Height="650" Width="720"
+        MinHeight="650" MinWidth="720">
     <Window.Resources>
         <DataTemplate x:Key="inventoryItemTemplate">
             <Border BorderBrush="Black" BorderThickness="1" DataContext="{Binding}">
@@ -19,21 +20,21 @@
         </DataTemplate>
     </Window.Resources>
 
-    <Window.DataContext>
-        <Model:GameViewModel/>
-    </Window.DataContext>
+    <!--<Window.DataContext>-->
+        <!--<Model:GameViewModel/>
+    </Window.DataContext>-->
 
     <Grid Margin="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="*" MinHeight="500"/>
+            <RowDefinition Height="150" MinHeight="150"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*" MinWidth="500"/>
+            <ColumnDefinition Width="220" MinWidth="220"/>
         </Grid.ColumnDefinitions>
         <Border BorderThickness="1" BorderBrush="Black" Grid.Row="0" Grid.Column="0">
-            <Canvas x:Name="gameMapCanvas" MinWidth="440" DockPanel.Dock="Left" />
+            <Canvas x:Name="gameMapCanvas" MinWidth="500" MinHeight="500" DockPanel.Dock="Left" />
         </Border>
 
         <!-- right panel -->
@@ -44,16 +45,16 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="120"/>
                 <RowDefinition Height="80"/>
-                <RowDefinition Height="100"/>
+                <RowDefinition Height="125"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <WrapPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0">
                 <Label Content="Game controls"/>
-                <Button Content="Up"/>
-                <Button Content="Right"/>
-                <Button Content="Down"/>
-                <Button Content="Left"/>
+                <Button Content="Up" Click="UpButtonClick"/>
+                <Button Content="Right" Click="RightButtonClick"/>
+                <Button Content="Down" Click="DownButtonClick"/>
+                <Button Content="Left" Click="LeftButtonClick"/>
             </WrapPanel>
 
             <WrapPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="1">
@@ -81,6 +82,7 @@
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
+                            <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Label Content="Zdraví" Grid.Column="0" Grid.Row="0"/>
                         <Label Content="{Binding Player.CurrentHitPoints}" Grid.Column="1" Grid.Row="0"/>
@@ -90,6 +92,9 @@
 
                         <Label Content="Obrana" Grid.Column="0" Grid.Row="2"/>
                         <Label Content="{Binding Player.TotalDeffense}" Grid.Column="1" Grid.Row="2"/>
+
+                        <Label Content="Pozice" Grid.Column="0" Grid.Row="3"/>
+                        <Label Content="{Binding Player.Position}" Grid.Column="1" Grid.Row="3"/>
                     </Grid>
                 </StackPanel>
             </GroupBox>
