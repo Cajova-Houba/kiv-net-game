@@ -50,6 +50,8 @@ namespace DungeonGame.Render.Configuration
         // nice, isn't it?
         public const string HUMAN_PLAYER_PATH = "M 0.333,1 L 0.5,0.667 L 0.5,0.267 M 0.333,0.5 L 0.5,0.333 L 0.667,0.5 M 0.667,1 L 0.5,0.667 M 0.4,0.167 A 0.1,0.1 1 1 0 0.6,0.167  A 0.1,0.1 1 1 0 0.4,0.167";
         public const string AI_PLAYER_PATH = "M 0.333,1 L 0.5,0.667 L 0.5,0.267 M 0.333,0.5 L 0.5,0.333 L 0.667,0.5 M 0.667,1 L 0.5,0.667 M 0.4,0.167 A 0.1,0.1 1 1 0 0.6,0.167  A 0.1,0.1 1 1 0 0.4,0.167";
+        public const string FINAL_ROOM_COLOR = "#c10707";
+        public const string ROOM_COLOR = "#000000";
     }
 
     /// <summary>
@@ -69,9 +71,55 @@ namespace DungeonGame.Render.Configuration
         public const string AI_PLAYER_PATH_ID = "ai_player_path";
 
         /// <summary>
+        /// Unique id to identify border color of the final room property in configuration dictionary.
+        /// </summary>
+        public const string FINAL_ROOM_COLOR_ID = "final_room_color";
+
+        /// <summary>
+        /// Unique id to identify border color ofregular room in configuration dictionary.
+        /// </summary>
+        public const string ROOM_COLOR_ID = "room_color";
+
+        /// <summary>
         /// All configuration this object holds.
         /// </summary>
         public Dictionary<String, Object> AvailableConfiguration { get; protected set; }
+
+        /// <summary>
+        /// Returns border color of regular room in string format.
+        /// Preferred format is #rrggbb.
+        /// </summary>
+        public String RoomColor
+        {
+            get
+            {
+                if (AvailableConfiguration.ContainsKey(ROOM_COLOR_ID))
+                {
+                    return (String)AvailableConfiguration[ROOM_COLOR_ID];
+                } else
+                {
+                    return DefaultRenderConfigurationConstatnts.ROOM_COLOR;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the final room color in string format.
+        /// Preferred format is #rrggbb.
+        /// </summary>
+        public String FinalRoomColor
+        {
+            get
+            {
+                if (AvailableConfiguration.ContainsKey(FINAL_ROOM_COLOR_ID))
+                {
+                    return (String)AvailableConfiguration[FINAL_ROOM_COLOR_ID];
+                } else
+                {
+                    return DefaultRenderConfigurationConstatnts.FINAL_ROOM_COLOR;
+                }
+            }
+        }
 
         /// <summary>
         /// Vector path in wpf markup syntax for rendering human players.

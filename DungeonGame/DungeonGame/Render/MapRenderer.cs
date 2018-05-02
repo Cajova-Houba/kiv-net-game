@@ -13,7 +13,7 @@ using System.Windows.Shapes;
 namespace DungeonGame.Render
 {
     /// <summary>
-    /// Class for rendering map.
+    /// Class for rendering map. There should be one renderer per game instance.
     /// </summary>
     public class MapRenderer
     {
@@ -23,12 +23,24 @@ namespace DungeonGame.Render
         private RenderConfiguration configuration;
 
         /// <summary>
+        /// X coordinate of the winning block.
+        /// </summary>
+        private int finalBlockX;
+
+        /// <summary>
+        /// Y coordinate of the winning block.
+        /// </summary>
+        private int finalBlockY;
+
+        /// <summary>
         /// Initializes this map renderer with configuration.
         /// </summary>
         /// <param name="renderConfiguration"></param>
-        public MapRenderer(RenderConfiguration renderConfiguration)
+        public MapRenderer(RenderConfiguration renderConfiguration, MapBlock winningBlock)
         {
             configuration = renderConfiguration;
+            this.finalBlockX = winningBlock.X;
+            this.finalBlockY = winningBlock.Y;
         }
 
         /// <summary>
@@ -79,10 +91,28 @@ namespace DungeonGame.Render
             blockSize -= 2 * innerMargin;
             // if there is entrace, draw it as line-empty space-line
             double entranceSize = blockSize / 3;
-            renderedBlock.AddRange(RenderHorizontalEntrance(mapBlock.North, x, y, entranceSize));
-            renderedBlock.AddRange(RenderHorizontalEntrance(mapBlock.South, x, y + blockSize, entranceSize));
-            renderedBlock.AddRange(RenderVerticalEntrance(mapBlock.East, x + blockSize, y, entranceSize));
-            renderedBlock.AddRange(RenderVerticalEntrance(mapBlock.West, x, y, entranceSize));
+
+            // decide border color
+            Color roomBorderColor;
+            try
+            {
+                if (mapBlock.X == finalBlockX && mapBlock.Y == finalBlockY)
+                {
+                    roomBorderColor = (Color)ColorConverter.ConvertFromString(configuration.FinalRoomColor);
+                } else
+                {
+                    roomBorderColor = (Color)ColorConverter.ConvertFromString(configuration.RoomColor);
+                }
+            } catch(Exception ex)
+            {
+                // todo: log
+                roomBorderColor = Color.FromRgb(0, 0, 0);
+            }
+
+            renderedBlock.AddRange(RenderHorizontalEntrance(mapBlock.North, x, y, entranceSize, roomBorderColor));
+            renderedBlock.AddRange(RenderHorizontalEntrance(mapBlock.South, x, y + blockSize, entranceSize, roomBorderColor));
+            renderedBlock.AddRange(RenderVerticalEntrance(mapBlock.East, x + blockSize, y, entranceSize, roomBorderColor));
+            renderedBlock.AddRange(RenderVerticalEntrance(mapBlock.West, x, y, entranceSize, roomBorderColor));
 
             if (mapBlock.Creature != null)
             {
@@ -99,11 +129,12 @@ namespace DungeonGame.Render
         /// <param name="x">X1 coordinate.</param> 
         /// <param name="y">X2 coordinate.</param>
         /// <param name="entranceSize">Size of the entrance (if no entrance, line 3*entranceSize long is returned).</param>
+        /// <param name="color">Color of this entrance (not lock).</param>
         /// <returns>Entrance rendered as lines.</returns>
-        private List<Line> RenderHorizontalEntrance(Entrance entrance, double x, double y, double entranceSize)
+        private List<Line> RenderHorizontalEntrance(Entrance entrance, double x, double y, double entranceSize, Color color)
         {
             List<Line> entranceLines = new List<Line>();
-            Brush b = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+            Brush b = new SolidColorBrush(color);
             if (entrance != null && entrance.IsOpen())
             {
                 // line - nothing - line
@@ -124,11 +155,12 @@ namespace DungeonGame.Render
         /// <param name="x">X1 coordinate.</param>
         /// <param name="y">X2 coordinate.</param>
         /// <param name="entranceSize">Size of the entrance (if no entrance, line 3*entranceSize long is returned).</param>
+        /// <param name="color">Color to render this entrance (not lock).</param>
         /// <returns>Entrance rendered as lines.</returns>
-        private List<Line> RenderVerticalEntrance(Entrance entrance, double x, double y, double entranceSize)
+        private List<Line> RenderVerticalEntrance(Entrance entrance, double x, double y, double entranceSize, Color color)
         {
             List<Line> entranceLines = new List<Line>();
-            Brush b = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+            Brush b = new SolidColorBrush(color);
             if (entrance != null && entrance.IsOpen())
             {
                 // line - nothing - line
@@ -200,7 +232,6 @@ namespace DungeonGame.Render
             renderedPlayer.Stroke = new SolidColorBrush(Color.FromRgb(0, 153, 51));
             //renderedPlayer.StrokeThickness = 1;
             //renderedPlayer.Fill = new SolidColorBrush(Color.FromRgb(0, 153, 51));
-
 
 
             return renderedPlayer;

@@ -33,7 +33,7 @@ namespace DungeonGame
         {
             DataContext = viewModel;
             InitializeComponent();
-            mapRenderer = new MapRenderer(new RenderConfiguration());
+            mapRenderer = new MapRenderer(new RenderConfiguration(), viewModel.GameInstance.GameMap.WinningBlock);
             RenderMap();
         }
 
