@@ -18,6 +18,7 @@ using GameCore.Map;
 using GameCore.Objects.Creatures;
 using GameCore.Map.Generator;
 using DungeonGame.Render;
+using DungeonGame.Render.Configuration;
 
 namespace DungeonGame
 {
@@ -26,10 +27,13 @@ namespace DungeonGame
     /// </summary>
     public partial class GameWindow : Window
     {
+        private MapRenderer mapRenderer;
+
         public GameWindow(GameViewModel viewModel)
         {
             DataContext = viewModel;
             InitializeComponent();
+            mapRenderer = new MapRenderer(new RenderConfiguration());
             RenderMap();
         }
 
@@ -128,7 +132,7 @@ namespace DungeonGame
             //canvasH = 500;
 
             Map gameMap = viewModel.GameMap;
-            List<Shape> renderedMap = MapRenderer.RenderMapBlocks(gameMap.Grid, canvasW, canvasH, minX, minY, maxX, maxY);
+            List<Shape> renderedMap = mapRenderer.RenderMapBlocks(gameMap.Grid, canvasW, canvasH, minX, minY, maxX, maxY);
             gameMapCanvas.Children.Clear();
             foreach (Shape shape in renderedMap)
             {

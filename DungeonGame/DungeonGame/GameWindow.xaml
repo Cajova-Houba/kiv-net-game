@@ -34,7 +34,9 @@
             <ColumnDefinition Width="220" MinWidth="220"/>
         </Grid.ColumnDefinitions>
         <Border BorderThickness="1" BorderBrush="Black" Grid.Row="0" Grid.Column="0">
-            <Canvas x:Name="gameMapCanvas" MinWidth="500" MinHeight="500" DockPanel.Dock="Left" />
+            <Canvas x:Name="gameMapCanvas" MinWidth="500" MinHeight="500" DockPanel.Dock="Left" >
+                <Path Data="M 33.3,100 L 50,66.7 L 50,26.7 M 33.3,50 L 50,33.3 L 66.7,50 M 66.7,100 L 50,66.7 M 40,16.7 A 10,10 1 1 0 60,16.7  A 10,10 1 1 0 40,16.7"/>
+            </Canvas>
         </Border>
 
         <!-- right panel -->

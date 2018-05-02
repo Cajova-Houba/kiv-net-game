@@ -1,4 +1,5 @@
-﻿using GameCore.Map;
+﻿using DungeonGame.Render.Configuration;
+using GameCore.Map;
 using GameCore.Objects.Creatures;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,24 @@ using System.Windows.Shapes;
 namespace DungeonGame.Render
 {
     /// <summary>
-    /// Library class for rendering map.
+    /// Class for rendering map.
     /// </summary>
     public class MapRenderer
     {
+        /// <summary>
+        /// Configuration used for rendering.
+        /// </summary>
+        private RenderConfiguration configuration;
+
+        /// <summary>
+        /// Initializes this map renderer with configuration.
+        /// </summary>
+        /// <param name="renderConfiguration"></param>
+        public MapRenderer(RenderConfiguration renderConfiguration)
+        {
+            configuration = renderConfiguration;
+        }
+
         /// <summary>
         /// Render map (with background) and returns it as a set of shapes.
         /// </summary>
@@ -27,7 +42,7 @@ namespace DungeonGame.Render
         /// <param name="maxX">Max x coordinate of mapGrid to be rendered.</param>
         /// <param name="maxY">Max y coordinate of mapGrid to be rendered.</param>
         /// <returns>Map rendered as a list of shapes.</returns>
-        public static List<Shape> RenderMapBlocks(MapBlock[,] mapGrid, double canvasW, double canvasH, int minX, int minY, int maxX, int maxY)
+        public List<Shape> RenderMapBlocks(MapBlock[,] mapGrid, double canvasW, double canvasH, int minX, int minY, int maxX, int maxY)
         {
             List<Shape> shapes = new List<Shape>();
             
@@ -55,7 +70,7 @@ namespace DungeonGame.Render
         /// <param name="y">Top left corner y-coordinate.</param>
         /// <param name="blockSize">Size of the block (=width=height).</param>
         /// <returns>Block rendered as a set of shapes.</returns>
-        private static List<Shape> RenderMapBlock(MapBlock mapBlock, double x, double y, double blockSize)
+        private List<Shape> RenderMapBlock(MapBlock mapBlock, double x, double y, double blockSize)
         {
             List<Shape> renderedBlock = new List<Shape>();
             double innerMargin = 2;
@@ -85,7 +100,7 @@ namespace DungeonGame.Render
         /// <param name="y">X2 coordinate.</param>
         /// <param name="entranceSize">Size of the entrance (if no entrance, line 3*entranceSize long is returned).</param>
         /// <returns>Entrance rendered as lines.</returns>
-        private static List<Line> RenderHorizontalEntrance(Entrance entrance, double x, double y, double entranceSize)
+        private List<Line> RenderHorizontalEntrance(Entrance entrance, double x, double y, double entranceSize)
         {
             List<Line> entranceLines = new List<Line>();
             Brush b = new SolidColorBrush(Color.FromRgb(0, 0, 0));
@@ -110,7 +125,7 @@ namespace DungeonGame.Render
         /// <param name="y">X2 coordinate.</param>
         /// <param name="entranceSize">Size of the entrance (if no entrance, line 3*entranceSize long is returned).</param>
         /// <returns>Entrance rendered as lines.</returns>
-        private static List<Line> RenderVerticalEntrance(Entrance entrance, double x, double y, double entranceSize)
+        private List<Line> RenderVerticalEntrance(Entrance entrance, double x, double y, double entranceSize)
         {
             List<Line> entranceLines = new List<Line>();
             Brush b = new SolidColorBrush(Color.FromRgb(0, 0, 0));
@@ -136,7 +151,7 @@ namespace DungeonGame.Render
         /// <param name="y">Top corner y-coordinate of map block.</param>
         /// <param name="blockSize">Size of the map block.</param>
         /// <returns></returns>
-        private static Path RenderCreature(AbstractCreature creature, double x, double y, double blockSize)
+        private Path RenderCreature(AbstractCreature creature, double x, double y, double blockSize)
         {
             if (creature is AbstractPlayer)
             {
@@ -156,24 +171,25 @@ namespace DungeonGame.Render
         /// <param name="y">Top left cornet y-coordinate of map block.</param>
         /// <param name="blockSize">Size of the block.</param>
         /// <returns></returns>
-        private static Path RenderPlayer(AbstractPlayer player, double x, double y, double blockSize)
+        private Path RenderPlayer(AbstractPlayer player, double x, double y, double blockSize)
         {
             Path renderedPlayer = new Path();
 
-            LineGeometry firstLeg = new LineGeometry(new Point(1 / 3.0, 1), new Point(0.5, 2 / 3.0));
-            LineGeometry secondLeg = new LineGeometry(new Point(2 / 3.0, 1), new Point(0.5, 2 / 3.0));
-            LineGeometry body = new LineGeometry(new Point(0.5, 2 / 3.0), new Point(0.5, 1 / 6.0));
-            LineGeometry firstHand = new LineGeometry(new Point(0.5, 1 / 3.0), new Point(1 / 3.0, 0.5));
-            LineGeometry secondHand = new LineGeometry(new Point(0.5, 1 / 3.0), new Point(2 / 3.0, 0.5));
-            EllipseGeometry head = new EllipseGeometry(new Point(0.5, 1 / 6.0), 1 / 10.0, 1 / 10.0);
+            //LineGeometry firstLeg = new LineGeometry(new Point(1 / 3.0, 1), new Point(0.5, 2 / 3.0));
+            //LineGeometry secondLeg = new LineGeometry(new Point(2 / 3.0, 1), new Point(0.5, 2 / 3.0));
+            //LineGeometry body = new LineGeometry(new Point(0.5, 2 / 3.0), new Point(0.5, 1 / 6.0));
+            //LineGeometry firstHand = new LineGeometry(new Point(0.5, 1 / 3.0), new Point(1 / 3.0, 0.5));
+            //LineGeometry secondHand = new LineGeometry(new Point(0.5, 1 / 3.0), new Point(2 / 3.0, 0.5));
+            //EllipseGeometry head = new EllipseGeometry(new Point(0.5, 1 / 6.0), 1 / 10.0, 1 / 10.0);
 
             GeometryGroup group = new GeometryGroup();
-            group.Children.Add(firstLeg);
-            group.Children.Add(secondLeg);
-            group.Children.Add(body);
-            group.Children.Add(firstHand);
-            group.Children.Add(secondHand);
-            group.Children.Add(head);
+            //group.Children.Add(firstLeg);
+            //group.Children.Add(secondLeg);
+            //group.Children.Add(body);
+            //group.Children.Add(firstHand);
+            //group.Children.Add(secondHand);
+            //group.Children.Add(head);
+            group.Children.Add(Geometry.Parse(configuration.HumanPlayerPath));
 
             TransformGroup transformGroup = new TransformGroup();
             transformGroup.Children.Add(new ScaleTransform(blockSize, blockSize));
@@ -182,8 +198,8 @@ namespace DungeonGame.Render
 
             renderedPlayer.Data = group;
             renderedPlayer.Stroke = new SolidColorBrush(Color.FromRgb(0, 153, 51));
-            renderedPlayer.StrokeThickness = 1;
-            renderedPlayer.Fill = new SolidColorBrush(Color.FromRgb(0, 153, 51));
+            //renderedPlayer.StrokeThickness = 1;
+            //renderedPlayer.Fill = new SolidColorBrush(Color.FromRgb(0, 153, 51));
 
 
 
