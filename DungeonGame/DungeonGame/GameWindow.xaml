@@ -34,9 +34,7 @@
             <ColumnDefinition Width="220" MinWidth="220"/>
         </Grid.ColumnDefinitions>
         <Border BorderThickness="1" BorderBrush="Black" Grid.Row="0" Grid.Column="0">
-            <Canvas x:Name="gameMapCanvas" MinWidth="500" MinHeight="500" DockPanel.Dock="Left" >
-                <Path Data="M 33.3,100 L 50,66.7 L 50,26.7 M 33.3,50 L 50,33.3 L 66.7,50 M 66.7,100 L 50,66.7 M 40,16.7 A 10,10 1 1 0 60,16.7  A 10,10 1 1 0 40,16.7"/>
-            </Canvas>
+            <Canvas x:Name="gameMapCanvas" MinWidth="500" MinHeight="500" DockPanel.Dock="Left" />
         </Border>
 
         <!-- right panel -->
@@ -87,16 +85,16 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Label Content="Zdraví" Grid.Column="0" Grid.Row="0"/>
-                        <Label Content="{Binding Player.CurrentHitPoints}" Grid.Column="1" Grid.Row="0"/>
+                        <Label Content="{Binding CurrentPlayerHP, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0"/>
 
                         <Label Content="Útok" Grid.Column="0" Grid.Row="1"/>
-                        <Label Content="{Binding Player.TotalAttack}" Grid.Column="1" Grid.Row="1"/>
+                        <Label Content="{Binding CurrentPlayerTotalAttack, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1"/>
 
                         <Label Content="Obrana" Grid.Column="0" Grid.Row="2"/>
-                        <Label Content="{Binding Player.TotalDeffense}" Grid.Column="1" Grid.Row="2"/>
+                        <Label Content="{Binding CurrentPlayerTotalDeffense, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2"/>
 
                         <Label Content="Pozice" Grid.Column="0" Grid.Row="3"/>
-                        <Label Content="{Binding Player.Position}" Grid.Column="1" Grid.Row="3"/>
+                        <Label Content="{Binding CurrentPlayerPosition, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="3"/>
                     </Grid>
                 </StackPanel>
             </GroupBox>

@@ -150,7 +150,7 @@ namespace DungeonGame
             viewModel.Move(direction);
             try
             {
-                viewModel.GameInstance.GameLoopStep();
+                viewModel.GameLoopStep();
                 RenderMap();
             } catch (Exception ex)
             {

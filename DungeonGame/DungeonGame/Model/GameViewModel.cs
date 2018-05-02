@@ -52,8 +52,77 @@ namespace DungeonGame.Model
         
         /// <summary>
         /// Returns instance of current player.
+        /// May return null.
         /// </summary>
-        public AbstractPlayer Player { get; protected set; }
+        public AbstractPlayer Player {
+            get {
+                if (GameInstance != null && GameInstance.HumanPlayers != null && GameInstance.HumanPlayers.Count > 0)
+                {
+                    return GameInstance.HumanPlayers[0];
+                } else
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns current player HP.
+        /// </summary>
+        public int CurrentPlayerHP
+        {
+            get
+            {
+                if (Player != null)
+                {
+                    return Player.CurrentHitPoints;
+                } else
+                {
+                    return 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns current player total attack.
+        /// </summary>
+        public double CurrentPlayerTotalAttack
+        {
+            get
+            {
+                return Player == null ? 0 : Player.TotalAttack;
+            }
+        }
+
+        /// <summary>
+        /// Returns current player total deffense.
+        /// </summary>
+        public double CurrentPlayerTotalDeffense
+        {
+            get
+            {
+                return Player == null ? 0 : Player.TotalDeffense;
+            }
+        }
+
+        /// <summary>
+        /// Returns current player position as "X,Y" string.
+        /// </summary>
+        public String CurrentPlayerPosition
+        {
+            get
+            {
+                if (Player == null || Player.Position == null)
+                {
+                    return "-";
+                } else
+                {
+                    MapBlock pos = Player.Position;
+                    return $"{pos.X},{pos.Y}";
+                }
+            }
+        }
+
 
         public Game GameInstance { get; protected set; }
 
@@ -66,9 +135,9 @@ namespace DungeonGame.Model
             GameMap = game.GameMap;
             if (game.HumanPlayers.Count > 0)
             {
-                Player = game.HumanPlayers[0];
+                AbstractPlayer player = game.HumanPlayers[0];
                 Inventory = new ObservableCollection<InventoryItemModel>();
-                foreach (AbstractInventoryItem invItem in Player.Inventory)
+                foreach (AbstractInventoryItem invItem in player.Inventory)
                 {
                     Inventory.Add(new InventoryItemModel() { ModelObject = invItem });
                 }
@@ -81,7 +150,7 @@ namespace DungeonGame.Model
         {
             // game initialization will be somehow placed here
             GameMap = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(20, 20, MAP_SEED);
-            Player = new HumanPlayer("Test player", GameMap.Grid[2,2]);
+            AbstractPlayer player = new HumanPlayer("Test player", GameMap.Grid[2,2]);
             Player.Inventory.AddRange(new BasicItem[]
             {
                 new BasicItem("Test item", new MapBlock(), 10),
@@ -89,10 +158,14 @@ namespace DungeonGame.Model
                 new BasicItem("Some cool item", new MapBlock(), 10)
             });
             Inventory = new ObservableCollection<InventoryItemModel>();
-            foreach(AbstractInventoryItem invItem in Player.Inventory)
+            foreach(AbstractInventoryItem invItem in player.Inventory)
             {
                 Inventory.Add(new InventoryItemModel() { ModelObject = invItem });
             }
+
+            GameInstance = new Game();
+            GameInstance.GameMap = GameMap;
+            GameInstance.AddHumanPlayer(player);
         }
 
         /// <summary>
@@ -110,7 +183,10 @@ namespace DungeonGame.Model
         public void GameLoopStep()
         {
             GameInstance?.GameLoopStep();
-            OnPropertyChanged("Player.Position");
+            OnPropertyChanged("CurrentPlayerHP");
+            OnPropertyChanged("CurrentPlayerPosition");
+            OnPropertyChanged("CurrentPlayerTotalAttack");
+            OnPropertyChanged("CurrentPlayerTotalDeffense");
             OnPropertyChanged("Inventory");
         }
 
