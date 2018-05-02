@@ -132,7 +132,7 @@ namespace DungeonGame
             //canvasH = 500;
 
             Map gameMap = viewModel.GameMap;
-            List<Shape> renderedMap = mapRenderer.RenderMapBlocks(gameMap.Grid, canvasW, canvasH, minX, minY, maxX, maxY);
+            List<Shape> renderedMap = mapRenderer.RenderMapBlocks(gameMap.Grid, currPlayerPos, canvasW, canvasH, minX, minY, maxX, maxY);
             gameMapCanvas.Children.Clear();
             foreach (Shape shape in renderedMap)
             {

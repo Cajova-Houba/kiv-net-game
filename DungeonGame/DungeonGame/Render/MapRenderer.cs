@@ -18,6 +18,16 @@ namespace DungeonGame.Render
     public class MapRenderer
     {
         /// <summary>
+        /// Default height and width of one map block.
+        /// </summary>
+        public const double DEF_BLOCK_SIZE = 100;
+
+        /// <summary>
+        /// Actual height and width of one block.
+        /// </summary>
+        private double blockSize;
+
+        /// <summary>
         /// Configuration used for rendering.
         /// </summary>
         private RenderConfiguration configuration;
@@ -39,6 +49,7 @@ namespace DungeonGame.Render
         public MapRenderer(RenderConfiguration renderConfiguration, MapBlock winningBlock)
         {
             configuration = renderConfiguration;
+            blockSize = DEF_BLOCK_SIZE;
             this.finalBlockX = winningBlock.X;
             this.finalBlockY = winningBlock.Y;
         }
@@ -47,6 +58,7 @@ namespace DungeonGame.Render
         /// Render map (with background) and returns it as a set of shapes.
         /// </summary>
         /// <param name="mapGrid">Map to be rendered.</param>
+        /// <param name="centerBlock">Center block to render map around.</param>
         /// <param name="canvasW">Width of target canvas.</param>
         /// <param name="canvasH">Height of target canvas.</param>
         /// <param name="minX">Min x coordinate of mapGrid to be rendered.</param>
@@ -54,14 +66,22 @@ namespace DungeonGame.Render
         /// <param name="maxX">Max x coordinate of mapGrid to be rendered.</param>
         /// <param name="maxY">Max y coordinate of mapGrid to be rendered.</param>
         /// <returns>Map rendered as a list of shapes.</returns>
-        public List<Shape> RenderMapBlocks(MapBlock[,] mapGrid, double canvasW, double canvasH, int minX, int minY, int maxX, int maxY)
+        public List<Shape> RenderMapBlocks(MapBlock[,] mapGrid, MapBlock centerBlock, double canvasW, double canvasH, int minX, int minY, int maxX, int maxY)
         {
             List<Shape> shapes = new List<Shape>();
             
-            int blockCount = Math.Max(maxX + 1 - minX, maxY + 1 - minY);
-            double blockSize = Math.Min(canvasW / (double)blockCount, canvasH / (double)blockCount);
-            shapes.Add(new Rectangle() { Height = blockCount * blockSize, Width = blockCount * blockSize, Fill = new SolidColorBrush(Color.FromRgb(255, 204, 102)) });
+            // target area is too small to render anything
+            if (canvasW < this.blockSize || canvasH < this.blockSize)
+            {
+                return shapes;
+            }
 
+            int verticalBlockCount = (int)Math.Min((double)mapGrid.GetLength(1), canvasH / blockSize);
+            int horizontalBlockCount = (int)Math.Min((double)mapGrid.GetLength(0), canvasW / blockSize);
+            shapes.Add(new Rectangle() { Height = verticalBlockCount * blockSize, Width = horizontalBlockCount * blockSize, Fill = new SolidColorBrush(Color.FromRgb(255, 204, 102)) });
+
+            minX = GetMinX(centerBlock, horizontalBlockCount);
+            maxX = GetMaxX(mapGrid, centerBlock, horizontalBlockCount);
             for (int i = minX; i <= maxX; i++)
             {
                 for (int j = minY; j <= maxY; j++)
@@ -72,6 +92,34 @@ namespace DungeonGame.Render
             }
 
             return shapes;
+        }
+
+        /// <summary>
+        /// Returns X coordinate of the left most displayable block from map grid.
+        /// </summary>
+        /// <param name="centerBlock">Map will be rendered around this block.</param>
+        /// <returns>X coordinate of the left most displayed map block. Minimal returned value is 0.</returns>
+        private int GetMinX(MapBlock centerBlock, int horizontalBlockCount)
+        {
+            int numOfLeftBlocks = horizontalBlockCount / 2;
+            return Math.Max(0,
+                    centerBlock.X - numOfLeftBlocks
+                );
+        }
+
+        /// <summary>
+        /// Returns X coordinate of the right most displayed map block. Max returned value is width of mapGrid.
+        /// </summary>
+        /// <param name="mapGrid">Map.</param>
+        /// <param name="centerBlock">Center point to render map around.</param>
+        /// <param name="horizontalBlockCount">Number of rendered blocks in horziontal direction.</param>
+        /// <returns>X coordinate of the right most displayed map block. Max returned value is width of mapGrid.</returns>
+        private int GetMaxX(MapBlock[,] mapGrid, MapBlock centerBlock, int horizontalBlockCount)
+        {
+            int numOfRightBlocks = (int)Math.Ceiling(horizontalBlockCount / 2.0) - 1;
+            return Math.Min(mapGrid.GetLength(0) -1 ,
+                    centerBlock.X + numOfRightBlocks
+                );
         }
 
         /// <summary>

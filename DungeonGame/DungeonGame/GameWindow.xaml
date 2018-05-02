@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:DungeonGame"
         xmlns:Model="clr-namespace:DungeonGame.Model" x:Class="DungeonGame.GameWindow"
         mc:Ignorable="d"
-        Title="Game" 
-        Height="650" Width="720"
-        MinHeight="650" MinWidth="720">
+        Title="Game"
+        Height="651" Width="741"
+        MinHeight="651" MinWidth="721">
     <Window.Resources>
         <DataTemplate x:Key="inventoryItemTemplate">
             <Border BorderBrush="Black" BorderThickness="1" DataContext="{Binding}">
@@ -30,17 +30,17 @@
             <RowDefinition Height="150" MinHeight="150"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="500"/>
-            <ColumnDefinition Width="220" MinWidth="220"/>
+            <ColumnDefinition Width="*" MinWidth="501"/>
+            <ColumnDefinition Width="230" MinWidth="230"/>
         </Grid.ColumnDefinitions>
         <Border BorderThickness="1" BorderBrush="Black" Grid.Row="0" Grid.Column="0">
-            <Canvas x:Name="gameMapCanvas" MinWidth="500" MinHeight="500" DockPanel.Dock="Left" />
+            <Canvas x:Name="gameMapCanvas" MinWidth="500" MinHeight="501" DockPanel.Dock="Left" />
         </Border>
 
         <!-- right panel -->
         <Grid x:Name="controlsGrid" Grid.Row="0" Grid.Column="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="220"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="120"/>
