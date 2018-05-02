@@ -61,12 +61,8 @@ namespace DungeonGame.Render
         /// <param name="centerBlock">Center block to render map around.</param>
         /// <param name="canvasW">Width of target canvas.</param>
         /// <param name="canvasH">Height of target canvas.</param>
-        /// <param name="minX">Min x coordinate of mapGrid to be rendered.</param>
-        /// <param name="minY">Min y coordinate of mapGrid to be rendered.</param>
-        /// <param name="maxX">Max x coordinate of mapGrid to be rendered.</param>
-        /// <param name="maxY">Max y coordinate of mapGrid to be rendered.</param>
         /// <returns>Map rendered as a list of shapes.</returns>
-        public List<Shape> RenderMapBlocks(MapBlock[,] mapGrid, MapBlock centerBlock, double canvasW, double canvasH, int minX, int minY, int maxX, int maxY)
+        public List<Shape> RenderMapBlocks(MapBlock[,] mapGrid, MapBlock centerBlock, double canvasW, double canvasH)
         {
             List<Shape> shapes = new List<Shape>();
             
@@ -80,13 +76,13 @@ namespace DungeonGame.Render
             int horizontalBlockCount = (int)Math.Min((double)mapGrid.GetLength(0), canvasW / blockSize);
             shapes.Add(new Rectangle() { Height = verticalBlockCount * blockSize, Width = horizontalBlockCount * blockSize, Fill = new SolidColorBrush(Color.FromRgb(255, 204, 102)) });
 
-            minX = GetMinX(centerBlock, horizontalBlockCount);
-            maxX = GetMaxX(mapGrid, centerBlock, horizontalBlockCount);
-            for (int i = minX; i <= maxX; i++)
+            int[] xBoundaries = GetXBoundaries(mapGrid, centerBlock, horizontalBlockCount);
+            int[] yBoundaries = GetYBoundaries(mapGrid, centerBlock, verticalBlockCount);
+            for (int i = xBoundaries[0]; i <= xBoundaries[1]; i++)
             {
-                for (int j = minY; j <= maxY; j++)
+                for (int j = yBoundaries[0]; j <= yBoundaries[1]; j++)
                 {
-                    List<Shape> renderedMapBlock = RenderMapBlock(mapGrid[i, j], (i-minX) * blockSize, (j-minY) * blockSize, blockSize);
+                    List<Shape> renderedMapBlock = RenderMapBlock(mapGrid[i, j], (i-xBoundaries[0]) * blockSize, (j-yBoundaries[0]) * blockSize, blockSize);
                     shapes.AddRange(renderedMapBlock);
                 }
             }
@@ -95,31 +91,81 @@ namespace DungeonGame.Render
         }
 
         /// <summary>
-        /// Returns X coordinate of the left most displayable block from map grid.
+        /// Returns horizontal boundaries for rendering map blocks around center block.
+        /// [minX,maxX].
         /// </summary>
-        /// <param name="centerBlock">Map will be rendered around this block.</param>
-        /// <returns>X coordinate of the left most displayed map block. Minimal returned value is 0.</returns>
-        private int GetMinX(MapBlock centerBlock, int horizontalBlockCount)
+        /// <param name="map">Map.</param>
+        /// <param name="centerBlock">Center blocks.</param>
+        /// <param name="horizontalBlockCount">Number of blocks to be rendered in horizontal direction.</param>
+        /// <returns>Array with two items. First is the X coordinate of the leftmost block to be rendered, second is the X coordinate of the rightmost block to be rendered.</returns>
+        private int[] GetXBoundaries(MapBlock[,] map, MapBlock centerBlock, int horizontalBlockCount)
         {
+            int[] boundaries = new int[2];
+
+            // number of blocks on each side from center block
             int numOfLeftBlocks = horizontalBlockCount / 2;
-            return Math.Max(0,
-                    centerBlock.X - numOfLeftBlocks
-                );
+            int numOfRightBlocks = (int)Math.Ceiling(horizontalBlockCount / 2.0) - 1;
+
+            // too close to the right border
+            if (centerBlock.X + numOfRightBlocks >= map.GetLength(0))
+            {
+                boundaries[1] = map.GetLength(0) - 1;
+                boundaries[0] = map.GetLength(0) - horizontalBlockCount;
+
+            // too close to the left border
+            } else if (centerBlock.X - numOfLeftBlocks < 0)
+            {
+                boundaries[0] = 0;
+                boundaries[1] = horizontalBlockCount-1;
+
+            // ok, somewhere in the middle
+            } else
+            {
+                boundaries[0] = centerBlock.X - numOfLeftBlocks;
+                boundaries[1] = centerBlock.X + numOfRightBlocks;
+            }
+
+            return boundaries;
         }
 
         /// <summary>
-        /// Returns X coordinate of the right most displayed map block. Max returned value is width of mapGrid.
+        /// Returns vertical boundaries for rendering map blocks around center block.
+        /// [minY,maxY].
         /// </summary>
-        /// <param name="mapGrid">Map.</param>
-        /// <param name="centerBlock">Center point to render map around.</param>
-        /// <param name="horizontalBlockCount">Number of rendered blocks in horziontal direction.</param>
-        /// <returns>X coordinate of the right most displayed map block. Max returned value is width of mapGrid.</returns>
-        private int GetMaxX(MapBlock[,] mapGrid, MapBlock centerBlock, int horizontalBlockCount)
+        /// <param name="map">Map.</param>
+        /// <param name="centerBlock">Center block.</param>
+        /// <param name="verticalBlockCount">NUmber of blocks to be rendered in vertical direction.</param>
+        /// <returns>Array with two items. First is the Y coordinate of the top block to be rendered, second is the Y coordinate of the bottom block to be rendered.</returns>
+        private int[] GetYBoundaries(MapBlock[,] map, MapBlock centerBlock, int verticalBlockCount)
         {
-            int numOfRightBlocks = (int)Math.Ceiling(horizontalBlockCount / 2.0) - 1;
-            return Math.Min(mapGrid.GetLength(0) -1 ,
-                    centerBlock.X + numOfRightBlocks
-                );
+            int[] boundaries = new int[2];
+
+            // number of blocks on each side from center block
+            int numOfTopBlocks = verticalBlockCount / 2;
+            int numOfBottomBlocks = (int)Math.Ceiling(verticalBlockCount / 2.0) - 1;
+
+            // too close to the top border
+            if (centerBlock.Y - numOfTopBlocks < 0)
+            {
+                boundaries[0] = 0;
+                boundaries[1] = verticalBlockCount - 1;
+
+
+            // too close to the bottom border
+            } else if (centerBlock.Y + numOfBottomBlocks >= map.GetLength(1))
+            {
+                boundaries[0] = map.GetLength(1) - verticalBlockCount;
+                boundaries[1] = map.GetLength(1) - 1;
+
+
+            // ok, somewhere in the middle
+            } else
+            {
+                boundaries[0] = centerBlock.Y - numOfTopBlocks;
+                boundaries[1] = centerBlock.Y + numOfBottomBlocks;
+            }
+
+            return boundaries;
         }
 
         /// <summary>
@@ -233,9 +279,13 @@ namespace DungeonGame.Render
         /// <returns></returns>
         private Path RenderCreature(AbstractCreature creature, double x, double y, double blockSize)
         {
-            if (creature is AbstractPlayer)
+            if (creature is HumanPlayer)
             {
-                return RenderPlayer((AbstractPlayer)creature, x, y, blockSize);
+                return RenderHumanPlayer((AbstractPlayer)creature, x, y, blockSize);
+            }
+            else if (creature is AbstractPlayer)
+            {
+                return RenderAIPlayer((AbstractPlayer)creature, x, y, blockSize);
             }
             else
             {
@@ -244,31 +294,47 @@ namespace DungeonGame.Render
         }
 
         /// <summary>
-        /// Renders player as a path.
+        /// Renders AI player as a path.
         /// </summary>
         /// <param name="player">Player to be rendered.</param>
         /// <param name="x">Top left corner x-coordinate of map block.</param>
         /// <param name="y">Top left cornet y-coordinate of map block.</param>
         /// <param name="blockSize">Size of the block.</param>
         /// <returns></returns>
-        private Path RenderPlayer(AbstractPlayer player, double x, double y, double blockSize)
+        private Path RenderAIPlayer(AbstractPlayer player, double x, double y, double blockSize)
         {
             Path renderedPlayer = new Path();
 
-            //LineGeometry firstLeg = new LineGeometry(new Point(1 / 3.0, 1), new Point(0.5, 2 / 3.0));
-            //LineGeometry secondLeg = new LineGeometry(new Point(2 / 3.0, 1), new Point(0.5, 2 / 3.0));
-            //LineGeometry body = new LineGeometry(new Point(0.5, 2 / 3.0), new Point(0.5, 1 / 6.0));
-            //LineGeometry firstHand = new LineGeometry(new Point(0.5, 1 / 3.0), new Point(1 / 3.0, 0.5));
-            //LineGeometry secondHand = new LineGeometry(new Point(0.5, 1 / 3.0), new Point(2 / 3.0, 0.5));
-            //EllipseGeometry head = new EllipseGeometry(new Point(0.5, 1 / 6.0), 1 / 10.0, 1 / 10.0);
+            GeometryGroup group = new GeometryGroup();
+            group.Children.Add(Geometry.Parse(configuration.AIPLayerPath));
+
+            TransformGroup transformGroup = new TransformGroup();
+            transformGroup.Children.Add(new ScaleTransform(blockSize, blockSize));
+            transformGroup.Children.Add(new TranslateTransform(x, y));
+            group.Transform = transformGroup;
+
+            renderedPlayer.Data = group;
+            renderedPlayer.Stroke = new SolidColorBrush(Color.FromRgb(200, 0, 20));
+            //renderedPlayer.StrokeThickness = 1;
+            //renderedPlayer.Fill = new SolidColorBrush(Color.FromRgb(0, 153, 51));
+
+
+            return renderedPlayer;
+        }
+
+        /// <summary>
+        /// Renders human player as a path.
+        /// </summary>
+        /// <param name="player">Player to be rendered.</param>
+        /// <param name="x">Top left corner x-coordinate of map block.</param>
+        /// <param name="y">Top left cornet y-coordinate of map block.</param>
+        /// <param name="blockSize">Size of the block.</param>
+        /// <returns></returns>
+        private Path RenderHumanPlayer(AbstractPlayer player, double x, double y, double blockSize)
+        {
+            Path renderedPlayer = new Path();
 
             GeometryGroup group = new GeometryGroup();
-            //group.Children.Add(firstLeg);
-            //group.Children.Add(secondLeg);
-            //group.Children.Add(body);
-            //group.Children.Add(firstHand);
-            //group.Children.Add(secondHand);
-            //group.Children.Add(head);
             group.Children.Add(Geometry.Parse(configuration.HumanPlayerPath));
 
             TransformGroup transformGroup = new TransformGroup();

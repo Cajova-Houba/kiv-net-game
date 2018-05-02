@@ -57,11 +57,6 @@ namespace DungeonGame
         /// </summary>
         private void RenderMap()
         {
-            // 5x5 block around player
-            // 2 + player block + 2 = 2*rec + 1
-            int recX = 2;
-            int recY = 2;
-
             GameViewModel viewModel = (GameViewModel)DataContext;
             // get current player position
             MapBlock currPlayerPos = viewModel.Player.Position;
@@ -76,63 +71,17 @@ namespace DungeonGame
                 // nothing to render
                 return;
             }
-            int minX, maxX, minY, maxY;
-
-            // min/max x boundaries
-            if (currPlayerPos.X - recX < 0)
-            {
-                // player is too close to the left border
-                minX = 0;
-                maxX = Math.Min(mapW - 1, 2 * recX );
-            }
-            else if (currPlayerPos.X + recX > mapW - 1)
-            {
-                // player is too close to the right border
-                minX = Math.Max(0, mapW - (2 * recX ) - 1);
-                maxX = mapW - 1;
-            }
-            else
-            {
-                // player is not too close to left or right border
-                minX = currPlayerPos.X - recX;
-                maxX = currPlayerPos.X + recX;
-            }
-
-            // min/max y boundaries
-            if (currPlayerPos.Y - recY < 0)
-            {
-                // player is too close to the top border
-                minY = 0;
-                maxY = Math.Min(mapW - 1, 2 * recY );
-            }
-            else if (currPlayerPos.Y + recY > mapH - 1)
-            {
-                // player is too close to the bottom border
-                minY = Math.Max(0, mapH - (2 * recY ) - 1);
-                maxY = mapH - 1;
-            }
-            else
-            {
-                // player is not too close to bottom or top border
-                minY = currPlayerPos.Y - recY;
-                maxY = currPlayerPos.Y + recY;
-            }
-
-
+            
             // add black background
             gameMapCanvas.Background = new SolidColorBrush(Color.FromRgb(0, 0, 0));
 
             // render map blocks
             // each block will be rendered as square
-            //double canvasW = gameMapCanvas.Width;
-            //double canvasH = gameMapCanvas.Height;
             double canvasW = gameMapCanvas.ActualWidth > 0 ? gameMapCanvas.ActualWidth : gameMapCanvas.MinWidth;
             double canvasH = gameMapCanvas.ActualHeight > 0 ? gameMapCanvas.ActualHeight : gameMapCanvas.MinHeight;
-            //canvasW = 500;
-            //canvasH = 500;
 
             Map gameMap = viewModel.GameMap;
-            List<Shape> renderedMap = mapRenderer.RenderMapBlocks(gameMap.Grid, currPlayerPos, canvasW, canvasH, minX, minY, maxX, maxY);
+            List<Shape> renderedMap = mapRenderer.RenderMapBlocks(gameMap.Grid, currPlayerPos, canvasW, canvasH);
             gameMapCanvas.Children.Clear();
             foreach (Shape shape in renderedMap)
             {
@@ -151,10 +100,12 @@ namespace DungeonGame
             try
             {
                 viewModel.GameLoopStep();
-                RenderMap();
             } catch (Exception ex)
             {
                 viewModel.GameMessages.Add(ex.Message);
+            } finally
+            {
+                RenderMap();
             }
         }
 

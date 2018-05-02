@@ -3,6 +3,7 @@ using GameCore.Game;
 using GameCore.Map;
 using GameCore.Map.Generator;
 using GameCore.Objects.Creatures;
+using GameCore.Objects.Creatures.AIPlayers;
 using GameCore.Objects.Items;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,7 @@ namespace DungeonGame
 
             Game game = new Game() { GameMap = gameMap };
             game.AddHumanPlayer(player);
+            game.AddAIPlayer(AIPlayerFactory.CreateSimpleAIPLayer("Test AI Player", gameMap.Grid[3, 3]));
 
             return game;
         }
