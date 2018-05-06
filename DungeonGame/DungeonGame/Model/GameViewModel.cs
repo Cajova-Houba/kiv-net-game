@@ -23,6 +23,7 @@ namespace DungeonGame.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private ObservableCollection<String> gameMessages;
         /// <summary>
         /// Returns game messages to be displayed in bottom panel.
         /// </summary>
@@ -30,13 +31,18 @@ namespace DungeonGame.Model
         {
             get
             {
-                return new ObservableCollection<string>(new String[] {
-                    "Enjoy!",
-                    "Game started.",
-                    "Players generated.",
-                    "Map generated.",
-                    "New game initialization."
-                });
+                if (gameMessages == null)
+                {
+                    gameMessages = new ObservableCollection<string>(new String[] {
+                        "Enjoy!",
+                        "Game started.",
+                        "Players generated.",
+                        "Map generated.",
+                        "New game initialization."
+                    });
+                }
+
+                return gameMessages;
             }
         }
         
@@ -188,6 +194,16 @@ namespace DungeonGame.Model
             OnPropertyChanged("CurrentPlayerTotalAttack");
             OnPropertyChanged("CurrentPlayerTotalDeffense");
             OnPropertyChanged("Inventory");
+        }
+
+        /// <summary>
+        /// Adds message and calls OnPropertyChanged.
+        /// </summary>
+        /// <param name="message"></param>
+        public void AddGameMessage(string message)
+        {
+            GameMessages.Add(message);
+            OnPropertyChanged("GameMessages");
         }
 
         protected void OnPropertyChanged(string name)

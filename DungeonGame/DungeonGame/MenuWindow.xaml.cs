@@ -5,6 +5,7 @@ using GameCore.Map.Generator;
 using GameCore.Objects.Creatures;
 using GameCore.Objects.Creatures.AIPlayers;
 using GameCore.Objects.Items;
+using GameCore.Objects.Items.Armors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,7 @@ namespace DungeonGame
             Game game = new Game() { GameMap = gameMap };
             game.AddHumanPlayer(player);
             game.AddAIPlayer(AIPlayerFactory.CreateSimpleAIPLayer("Test AI Player", gameMap.Grid[3, 3]));
+            new LeatherArmor("Leather armor", game.GameMap.Grid[1, 1]);
 
             return game;
         }

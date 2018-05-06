@@ -102,7 +102,7 @@ namespace DungeonGame
                 viewModel.GameLoopStep();
             } catch (Exception ex)
             {
-                viewModel.GameMessages.Add(ex.Message);
+                viewModel.AddGameMessage(ex.Message);
             } finally
             {
                 RenderMap();

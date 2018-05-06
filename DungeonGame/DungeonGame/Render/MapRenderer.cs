@@ -1,6 +1,7 @@
 ﻿using DungeonGame.Render.Configuration;
 using GameCore.Map;
 using GameCore.Objects.Creatures;
+using GameCore.Objects.Items;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -213,6 +214,11 @@ namespace DungeonGame.Render
                 renderedBlock.Add(RenderCreature(mapBlock.Creature, x, y, blockSize));
             }
 
+            if (mapBlock.Item != null)
+            {
+                renderedBlock.Add(RenderItem(mapBlock.Item, x, y, blockSize));
+            }
+
             return renderedBlock;
         }
 
@@ -270,11 +276,58 @@ namespace DungeonGame.Render
         }
 
         /// <summary>
+        /// Renders item as a path.
+        /// 
+        /// Item will be rendered in the top left corner (with dimensions (1/3)*blockSize x (1/3)*blockSize) of of the block.
+        /// </summary>
+        /// <param name="item">Item to be rendered.</param>
+        /// <param name="x">Top left corner x-coordinate of map block.</param>
+        /// <param name="y">Top left corner y-coordinate of map block.</param>
+        /// <param name="blockSize">Height and width of the block.</param>
+        /// <returns>Item rendered as path.</returns>
+        private Path RenderItem(AbstractItem item, double x, double y, double blockSize)
+        {
+            if (item is AbstractArmor)
+            {
+                return RenderArmor((AbstractArmor)item, x, y, blockSize);
+            } else
+            {
+                return new Path();
+            }
+        }
+
+        /// <summary>
+        /// Renders armor as a path.
+        /// <param name="item">Armor to be rendered.</param>
+        /// <param name="x">Top left corner x-coordinate of map block.</param>
+        /// <param name="y">Top left corner y-coordinate of map block.</param>
+        /// <param name="blockSize">Height and width of the block.</param>
+        /// <returns>Armor rendered as path.</returns>
+        private Path RenderArmor(AbstractArmor armor, double x, double y, double blockSize)
+        {
+            Path renderedArmor = new Path();
+
+            GeometryGroup group = new GeometryGroup();
+            group.Children.Add(Geometry.Parse(configuration.ArmorPath));
+
+            TransformGroup transformGroup = new TransformGroup();
+            transformGroup.Children.Add(new ScaleTransform(blockSize/3, blockSize/3));
+            transformGroup.Children.Add(new TranslateTransform(x, y));
+            group.Transform = transformGroup;
+
+            renderedArmor.Data = group;
+            renderedArmor.Stroke = new SolidColorBrush(Color.FromRgb(0,0,0));
+
+
+            return renderedArmor;
+        }
+
+        /// <summary>
         /// Renders creature as a path.
         /// </summary>
         /// <param name="creature">Creature to be rendered.</param>
-        /// <param name="x">Top corner x-coordinate of map block.</param>
-        /// <param name="y">Top corner y-coordinate of map block.</param>
+        /// <param name="x">Top left corner x-coordinate of map block.</param>
+        /// <param name="y">Top left corner y-coordinate of map block.</param>
         /// <param name="blockSize">Size of the map block.</param>
         /// <returns></returns>
         private Path RenderCreature(AbstractCreature creature, double x, double y, double blockSize)
