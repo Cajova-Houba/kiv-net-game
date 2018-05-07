@@ -55,6 +55,7 @@ namespace DungeonGame
             Game game = new Game() { GameMap = gameMap };
             game.AddHumanPlayer(player);
             game.AddAIPlayer(AIPlayerFactory.CreateSimpleAIPLayer("Test AI Player", gameMap.Grid[1, 1]));
+            game.AddAIPlayer(AIPlayerFactory.CreateSimpleAIPLayer("Test AI Player 2", gameMap.Grid[6, 6]));
             new LeatherArmor("Leather armor", game.GameMap.Grid[1, 1]);
 
             return game;

@@ -14,6 +14,20 @@ namespace GameCore.Objects.Creatures.AIPlayers
     /// </summary>
     public class SimpleAIPlayer : AbstractPlayer
     {
+        /// <summary>
+        /// Default AI speed measured in actions per seconds.
+        /// </summary>
+        public const double DEF_AI_SPEED = 1.0/2;
+
+        /// <summary>
+        /// Time of the last action. Used to set speed of "action per seconds".
+        /// </summary>
+        private double lastActionTime;
+
+        /// <summary>
+        /// Speed of this AI, measured in actions per second.
+        /// </summary>
+        private double aiSpeed;
 
         private Stack<VisitedBlock> blockStack;
         private HashSet<VisitedBlock> visitedBlocks;
@@ -23,11 +37,21 @@ namespace GameCore.Objects.Creatures.AIPlayers
             blockStack = new Stack<VisitedBlock>();
             blockStack.Push(new VisitedBlock(position));
             visitedBlocks = new HashSet<VisitedBlock>();
+            lastActionTime = 0;
+            aiSpeed = DEF_AI_SPEED;
         }
 
         public override void Think()
         {
             // TODO: algorithm is not optimal because when returning from child to parent, child nodes will be listed again (not so big problem, but it something to improve)
+
+            // timing
+            double currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            double mspa = 1000 / aiSpeed;
+            if ((currentTime - lastActionTime) < mspa)
+            {
+                return;
+            }
 
             Map.Map map = Position.ParentMap;
 
@@ -88,6 +112,8 @@ namespace GameCore.Objects.Creatures.AIPlayers
                     NextAction = new Move() { Actor = this, Direction = DirectionMethods.GetDirection(Position, nextBlock) };
                 }
             }
+
+            lastActionTime = currentTime;
         }
     }
 

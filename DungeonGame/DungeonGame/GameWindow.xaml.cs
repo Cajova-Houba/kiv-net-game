@@ -32,21 +32,15 @@ namespace DungeonGame
     {
         private IMapRenderer mapRenderer;
 
-        /// <summary>
-        /// Buffer for map canvas. One thread will render map after game loop,
-        /// another one will then pull items from this buffer and puts them to canvas. 
-        /// </summary>
-        protected List<UIElement> canvasBuffer;
-
         protected DispatcherTimer renderToCanvasTimer;
 
-        protected Thread renderToCanvasThread;
-
-        protected Thread gameThread;
+        protected DispatcherTimer gameLoopStepTimer;
 
         protected GameViewModel viewModel;
 
-        protected int lastTimeCanvasRendered;
+        protected double lastTimeCanvasRendered;
+
+        protected double lastTimeGameLoopStep;
 
         public GameWindow(GameViewModel viewModel)
         {
@@ -54,56 +48,40 @@ namespace DungeonGame
             this.viewModel = viewModel;
             InitializeComponent();
             mapRenderer = new VectorMapRenderer(new RenderConfiguration());
-            canvasBuffer = new List<UIElement>();
-            //RenderMap();
-            //renderToCanvasThread = new Thread(RenderMapFromBufferToCanvas);
-            //renderToCanvasThread.SetApartmentState(ApartmentState.STA);
 
             renderToCanvasTimer = new DispatcherTimer();
             renderToCanvasTimer.Tick += RenderMapFromBufferToCanvas;
             renderToCanvasTimer.Interval = new TimeSpan(100);
             lastTimeCanvasRendered = 0;
 
-            gameThread = new Thread(PerformGameLoopStep);
-            gameThread.SetApartmentState(ApartmentState.STA);
+            gameLoopStepTimer = new DispatcherTimer();
+            gameLoopStepTimer.Tick += PerformGameLoopStep;
+            gameLoopStepTimer.Interval = new TimeSpan(100);
+            lastTimeGameLoopStep = 0;
 
-            //renderToCanvasThread.Start();
             renderToCanvasTimer.Start();
-            gameThread.Start();
+            gameLoopStepTimer.Start();
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            if (renderToCanvasThread != null && renderToCanvasThread.IsAlive)
-            {
-                renderToCanvasThread.Abort();
-            }
 
             if(renderToCanvasTimer != null && renderToCanvasTimer.IsEnabled)
             {
                 renderToCanvasTimer.Stop();
             }
 
-            if (gameThread.IsAlive)
+            if (gameLoopStepTimer != null && gameLoopStepTimer.IsEnabled)
             {
-                gameThread.Abort();
+                gameLoopStepTimer.Stop();
             }
         }
 
         public GameWindow()
         {
             InitializeComponent();
-            //DrawPlaceholderMap();
             RenderMap();
-        }
-
-        private void DrawPlaceholderMap()
-        {
-            //Uri mapResourceUri = new Uri(@"\img\map-placeholder.jpg");
-            Uri mapResourceUri = new Uri("pack://application:,,,/img/map-placeholder.jpg");
-            BitmapImage placeholderMap = new BitmapImage(mapResourceUri);
-            gameMapCanvas.Background = new ImageBrush(placeholderMap);
         }
         
         /// <summary>
@@ -118,7 +96,7 @@ namespace DungeonGame
             double mspf = 1000.0 / fps;
 
             // last time map was rendered
-            int lastTime = lastTimeCanvasRendered;
+            double lastTime = lastTimeCanvasRendered;
             
             //current time
             double currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
@@ -142,56 +120,55 @@ namespace DungeonGame
                 });
 
                 // update last rendered time
-                lastTimeCanvasRendered += (int)currentTime;
+                lastTimeCanvasRendered = currentTime;
             }
         }
 
         /// <summary>
         /// Thread body which performs one game loop step and renders map to buffer.
         /// </summary>
-        private void PerformGameLoopStep()
+        private void PerformGameLoopStep(object sender, EventArgs e)
         {
-            // perform 1 game loop step every 5 per seconds => 0.2 game loop steps per second
-            double gsps = 1.0/5;
+            // game loop steps per second
+            double gsps = 10;
 
             // milliseconds per game loop step
             double mspgs = 1000.0 / gsps;
 
             // last time game loop step was performed
-            int lastTime = 0;
+            double lastTime = lastTimeGameLoopStep;
+            
+            GameViewModel gameView = viewModel;
 
-            // game step loop
-            bool stopLoop = false;
-            while (!stopLoop)
+            //current time
+            // todo: fix time measurement
+            double currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+            if ((currentTime - lastTime) >= mspgs)
             {
-                GameViewModel gameView = viewModel;
-
-                //current time
-                // todo: fix time measurement
-                double currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-
-                if ((currentTime - lastTime) >= mspgs)
-                {
-                    // lock game view and perform game loop step and update properties
-                    while (!Monitor.TryEnter(gameView))
-                    {
-                        Thread.Sleep(100);
-                    }
-                    try
-                    {
-                        gameView.GameLoopStep();
-                    } catch(Exception ex)
-                    {
-                        // todo: something
-                    }
-                    gameView.NotifyPropertyChanges();
-                    stopLoop = gameView.GameInstance.IsWinner;
-                    Monitor.Exit(gameView);
-                }
-                else
+                while (!Monitor.TryEnter(gameView))
                 {
                     Thread.Sleep(100);
                 }
+                try
+                {
+                    gameView.GameLoopStep();
+                } catch(Exception ex)
+                {
+                    // todo: something
+                }
+                if (gameView.GameInstance.IsWinner)
+                {
+                    ((DispatcherTimer)sender).Stop();
+                    viewModel.AddGameMessage($"Player {gameView.GameInstance.Winner.Name} has won!");
+                }
+                lastTimeGameLoopStep = currentTime;
+                Application.Current.Dispatcher.Invoke(() => {
+                    viewModel = gameView;
+                    DataContext = viewModel;
+                    gameView.NotifyPropertyChanges();
+                });
+                Monitor.Exit(gameView);
             }
         }
 
