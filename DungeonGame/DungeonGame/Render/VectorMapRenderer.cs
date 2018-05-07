@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace DungeonGame.Render
 {
     /// <summary>
-    /// Class for rendering map. There should be one renderer per game instance.
+    /// Class for rendering map which uses vector UI components. Must be called from STA thread.
+    /// 
     /// </summary>
     public class VectorMapRenderer : IMapRenderer
     {
-
         /// <summary>
         /// Actual height and width of one block.
         /// </summary>
@@ -30,25 +30,13 @@ namespace DungeonGame.Render
         private RenderConfiguration configuration;
 
         /// <summary>
-        /// X coordinate of the winning block.
-        /// </summary>
-        private int finalBlockX;
-
-        /// <summary>
-        /// Y coordinate of the winning block.
-        /// </summary>
-        private int finalBlockY;
-
-        /// <summary>
         /// Initializes this map renderer with configuration.
         /// </summary>
         /// <param name="renderConfiguration"></param>
-        public VectorMapRenderer(RenderConfiguration renderConfiguration, MapBlock winningBlock)
+        public VectorMapRenderer(RenderConfiguration renderConfiguration)
         {
             configuration = renderConfiguration;
             blockSize = MapRendererConstants.DEF_BLOCK_SIZE;
-            this.finalBlockX = winningBlock.X;
-            this.finalBlockY = winningBlock.Y;
         }
 
         /// <summary>
@@ -59,7 +47,7 @@ namespace DungeonGame.Render
         /// <param name="canvasW">Width of target canvas.</param>
         /// <param name="canvasH">Height of target canvas.</param>
         /// <returns>Map rendered as a list of shapes.</returns>
-        public List<UIElement> RenderMap(MapBlock[,] mapGrid, MapBlock centerBlock, double canvasW, double canvasH)
+        public List<UIElement> RenderMap(Map map, MapBlock centerBlock, double canvasW, double canvasH)
         {
             List<UIElement> renderedMap = new List<UIElement>();
             
@@ -69,6 +57,7 @@ namespace DungeonGame.Render
                 return renderedMap;
             }
 
+            MapBlock[,] mapGrid = map.Grid;
             int verticalBlockCount = (int)Math.Min((double)mapGrid.GetLength(1), canvasH / blockSize);
             int horizontalBlockCount = (int)Math.Min((double)mapGrid.GetLength(0), canvasW / blockSize);
             renderedMap.Add(new Rectangle() { Height = verticalBlockCount * blockSize, Width = horizontalBlockCount * blockSize, Fill = new SolidColorBrush(Color.FromRgb(255, 204, 102)) });
@@ -79,7 +68,7 @@ namespace DungeonGame.Render
             {
                 for (int j = yBoundaries[0]; j <= yBoundaries[1]; j++)
                 {
-                    List<Shape> renderedMapBlock = RenderMapBlock(mapGrid[i, j], (i-xBoundaries[0]) * blockSize, (j-yBoundaries[0]) * blockSize, blockSize);
+                    List<Shape> renderedMapBlock = RenderMapBlock(mapGrid[i, j], (i-xBoundaries[0]) * blockSize, (j-yBoundaries[0]) * blockSize, blockSize, map.WinningBlock.X, map.WinningBlock.Y);
                     renderedMap.AddRange(renderedMapBlock);
                 }
             }
@@ -172,8 +161,10 @@ namespace DungeonGame.Render
         /// <param name="x">Top left corner x-coordinate.</param>
         /// <param name="y">Top left corner y-coordinate.</param>
         /// <param name="blockSize">Size of the block (=width=height).</param>
+        /// <param name="winningBlockX">X coordinate (from map grid) of winning map block.</param>
+        /// <param name="winningBlockY">Y coordinate (from map grid) of winning map block.</param>
         /// <returns>Block rendered as a set of shapes.</returns>
-        private List<Shape> RenderMapBlock(MapBlock mapBlock, double x, double y, double blockSize)
+        private List<Shape> RenderMapBlock(MapBlock mapBlock, double x, double y, double blockSize, int winningBlockX, int winningBlockY)
         {
             List<Shape> renderedBlock = new List<Shape>();
             double innerMargin = 2;
@@ -187,7 +178,7 @@ namespace DungeonGame.Render
             Color roomBorderColor;
             try
             {
-                if (mapBlock.X == finalBlockX && mapBlock.Y == finalBlockY)
+                if (mapBlock.X == winningBlockX && mapBlock.Y == winningBlockY)
                 {
                     roomBorderColor = (Color)ColorConverter.ConvertFromString(configuration.FinalRoomColor);
                 } else

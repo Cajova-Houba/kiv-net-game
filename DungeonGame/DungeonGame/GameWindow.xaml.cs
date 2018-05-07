@@ -19,6 +19,9 @@ using GameCore.Objects.Creatures;
 using GameCore.Map.Generator;
 using DungeonGame.Render;
 using DungeonGame.Render.Configuration;
+using System.Threading;
+using System.ComponentModel;
+using System.Windows.Threading;
 
 namespace DungeonGame
 {
@@ -27,14 +30,65 @@ namespace DungeonGame
     /// </summary>
     public partial class GameWindow : Window
     {
-        private VectorMapRenderer mapRenderer;
+        private IMapRenderer mapRenderer;
+
+        /// <summary>
+        /// Buffer for map canvas. One thread will render map after game loop,
+        /// another one will then pull items from this buffer and puts them to canvas. 
+        /// </summary>
+        protected List<UIElement> canvasBuffer;
+
+        protected DispatcherTimer renderToCanvasTimer;
+
+        protected Thread renderToCanvasThread;
+
+        protected Thread gameThread;
+
+        protected GameViewModel viewModel;
+
+        protected int lastTimeCanvasRendered;
 
         public GameWindow(GameViewModel viewModel)
         {
             DataContext = viewModel;
+            this.viewModel = viewModel;
             InitializeComponent();
-            mapRenderer = new VectorMapRenderer(new RenderConfiguration(), viewModel.GameInstance.GameMap.WinningBlock);
-            RenderMap();
+            mapRenderer = new VectorMapRenderer(new RenderConfiguration());
+            canvasBuffer = new List<UIElement>();
+            //RenderMap();
+            //renderToCanvasThread = new Thread(RenderMapFromBufferToCanvas);
+            //renderToCanvasThread.SetApartmentState(ApartmentState.STA);
+
+            renderToCanvasTimer = new DispatcherTimer();
+            renderToCanvasTimer.Tick += RenderMapFromBufferToCanvas;
+            renderToCanvasTimer.Interval = new TimeSpan(100);
+            lastTimeCanvasRendered = 0;
+
+            gameThread = new Thread(PerformGameLoopStep);
+            gameThread.SetApartmentState(ApartmentState.STA);
+
+            //renderToCanvasThread.Start();
+            renderToCanvasTimer.Start();
+            gameThread.Start();
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            if (renderToCanvasThread != null && renderToCanvasThread.IsAlive)
+            {
+                renderToCanvasThread.Abort();
+            }
+
+            if(renderToCanvasTimer != null && renderToCanvasTimer.IsEnabled)
+            {
+                renderToCanvasTimer.Stop();
+            }
+
+            if (gameThread.IsAlive)
+            {
+                gameThread.Abort();
+            }
         }
 
         public GameWindow()
@@ -50,6 +104,95 @@ namespace DungeonGame
             Uri mapResourceUri = new Uri("pack://application:,,,/img/map-placeholder.jpg");
             BitmapImage placeholderMap = new BitmapImage(mapResourceUri);
             gameMapCanvas.Background = new ImageBrush(placeholderMap);
+        }
+        
+        /// <summary>
+        /// Timer body which renders map from buffer to canvas. Uses monitor to lock canvasBufferCollection.
+        /// </summary>
+        private void RenderMapFromBufferToCanvas(object sender, EventArgs e)
+        {
+            // render 10 frames per second
+            int fps = 10;
+
+            // milliseconds per frame
+            double mspf = 1000.0 / fps;
+
+            // last time map was rendered
+            int lastTime = lastTimeCanvasRendered;
+            
+            //current time
+            double currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+            // lock buffer and render stuff from buffer
+            if ((currentTime - lastTime) >= mspf)
+            {
+                GameViewModel gameView = viewModel;
+                while(!Monitor.TryEnter(gameView))
+                {
+                    Thread.Sleep(100);
+                }
+                List<UIElement> renderedMap = mapRenderer.RenderMap(gameView.GameMap, gameView.Player.Position, gameMapCanvas.ActualWidth, gameMapCanvas.ActualHeight);
+                Monitor.Exit(gameView);
+
+                Application.Current.Dispatcher.Invoke(() => {
+                    gameMapCanvas.Children.Clear();
+                    foreach(UIElement element in renderedMap) {
+                        gameMapCanvas.Children.Add(element);
+                    }
+                });
+
+                // update last rendered time
+                lastTimeCanvasRendered += (int)currentTime;
+            }
+        }
+
+        /// <summary>
+        /// Thread body which performs one game loop step and renders map to buffer.
+        /// </summary>
+        private void PerformGameLoopStep()
+        {
+            // perform 1 game loop step every 5 per seconds => 0.2 game loop steps per second
+            double gsps = 1.0/5;
+
+            // milliseconds per game loop step
+            double mspgs = 1000.0 / gsps;
+
+            // last time game loop step was performed
+            int lastTime = 0;
+
+            // game step loop
+            bool stopLoop = false;
+            while (!stopLoop)
+            {
+                GameViewModel gameView = viewModel;
+
+                //current time
+                // todo: fix time measurement
+                double currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+                if ((currentTime - lastTime) >= mspgs)
+                {
+                    // lock game view and perform game loop step and update properties
+                    while (!Monitor.TryEnter(gameView))
+                    {
+                        Thread.Sleep(100);
+                    }
+                    try
+                    {
+                        gameView.GameLoopStep();
+                    } catch(Exception ex)
+                    {
+                        // todo: something
+                    }
+                    gameView.NotifyPropertyChanges();
+                    stopLoop = gameView.GameInstance.IsWinner;
+                    Monitor.Exit(gameView);
+                }
+                else
+                {
+                    Thread.Sleep(100);
+                }
+            }
         }
 
         /// <summary>
@@ -81,7 +224,7 @@ namespace DungeonGame
             double canvasH = gameMapCanvas.ActualHeight > 0 ? gameMapCanvas.ActualHeight : gameMapCanvas.MinHeight;
 
             Map gameMap = viewModel.GameMap;
-            List<Shape> renderedMap = mapRenderer.RenderMap(gameMap.Grid, currPlayerPos, canvasW, canvasH);
+            List<UIElement> renderedMap = mapRenderer.RenderMap(gameMap, currPlayerPos, canvasW, canvasH);
             gameMapCanvas.Children.Clear();
             foreach (Shape shape in renderedMap)
             {
@@ -97,16 +240,16 @@ namespace DungeonGame
         {
             GameViewModel viewModel = (GameViewModel)DataContext;
             viewModel.Move(direction);
-            try
-            {
-                viewModel.GameLoopStep();
-            } catch (Exception ex)
-            {
-                viewModel.AddGameMessage(ex.Message);
-            } finally
-            {
-                RenderMap();
-            }
+            //try
+            //{
+            //    viewModel.GameLoopStep();
+            //} catch (Exception ex)
+            //{
+            //    viewModel.AddGameMessage(ex.Message);
+            //} finally
+            //{
+            //    RenderMap();
+            //}
         }
 
         private void UpButtonClick(object sender, RoutedEventArgs e)
@@ -129,5 +272,4 @@ namespace DungeonGame
             Move(Direction.WEST);
         }
     }
-
 }

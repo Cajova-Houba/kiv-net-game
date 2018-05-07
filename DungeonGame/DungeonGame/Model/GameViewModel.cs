@@ -184,16 +184,28 @@ namespace DungeonGame.Model
         }
 
         /// <summary>
-        /// Perform game loop step and call property updated.
+        /// Perform game loop step.
         /// </summary>
         public void GameLoopStep()
         {
-            GameInstance?.GameLoopStep();
+            GameInstance.GameLoopStep();
+            if (GameInstance.IsWinner)
+            {
+                //AddGameMessage($"{GameInstance.Winner} has won the game!");
+            }
+        }
+
+        /// <summary>
+        /// Calls OnPropertyChanged() on multiple properties to update view.
+        /// </summary>
+        public void NotifyPropertyChanges()
+        {
             OnPropertyChanged("CurrentPlayerHP");
             OnPropertyChanged("CurrentPlayerPosition");
             OnPropertyChanged("CurrentPlayerTotalAttack");
             OnPropertyChanged("CurrentPlayerTotalDeffense");
             OnPropertyChanged("Inventory");
+            OnPropertyChanged("GameMessages");
         }
 
         /// <summary>
@@ -203,7 +215,6 @@ namespace DungeonGame.Model
         public void AddGameMessage(string message)
         {
             GameMessages.Add(message);
-            OnPropertyChanged("GameMessages");
         }
 
         protected void OnPropertyChanged(string name)
