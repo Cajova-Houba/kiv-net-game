@@ -143,5 +143,14 @@ namespace GameCore.Game
                 return GameMap.WinningBlock.Equals(player.Position);
             }
         }
+
+        /// <summary>
+        /// Method called when player dies. Override it if you want but be sure to call the super method first.
+        /// </summary>
+        /// <param name="player">Player who just died.</param>
+        public void OnPlayerDeath(AbstractPlayer player)
+        {
+
+        }
     }
 }

@@ -319,6 +319,12 @@ namespace DungeonGame.Render
         /// <returns></returns>
         private Path RenderCreature(AbstractCreature creature, double x, double y, double blockSize)
         {
+            // don't render dead creatures
+            if (!creature.Alive)
+            {
+                return new Path();
+            }
+
             if (creature is HumanPlayer)
             {
                 return RenderHumanPlayer((AbstractPlayer)creature, x, y, blockSize);

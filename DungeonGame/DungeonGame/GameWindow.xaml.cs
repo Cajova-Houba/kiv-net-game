@@ -30,16 +30,34 @@ namespace DungeonGame
     /// </summary>
     public partial class GameWindow : Window
     {
+        /// <summary>
+        /// For rendering the game map.
+        /// </summary>
         private IMapRenderer mapRenderer;
 
+        /// <summary>
+        /// Timer for 'thread' which will render map to canvas.
+        /// </summary>
         protected DispatcherTimer renderToCanvasTimer;
 
+        /// <summary>
+        /// Timer for game loop steps.
+        /// </summary>
         protected DispatcherTimer gameLoopStepTimer;
 
+        /// <summary>
+        /// This window's view model.
+        /// </summary>
         protected GameViewModel viewModel;
 
+        /// <summary>
+        /// Last time canvas was rendered. Used to set render speed.
+        /// </summary>
         protected double lastTimeCanvasRendered;
 
+        /// <summary>
+        /// Last time game loop step was performed. Used to set game speed (not necessarily AI speed though).
+        /// </summary>
         protected double lastTimeGameLoopStep;
 
         public GameWindow(GameViewModel viewModel)
@@ -47,20 +65,7 @@ namespace DungeonGame
             DataContext = viewModel;
             this.viewModel = viewModel;
             InitializeComponent();
-            mapRenderer = new VectorMapRenderer(new RenderConfiguration());
-
-            renderToCanvasTimer = new DispatcherTimer();
-            renderToCanvasTimer.Tick += RenderMapFromBufferToCanvas;
-            renderToCanvasTimer.Interval = new TimeSpan(100);
-            lastTimeCanvasRendered = 0;
-
-            gameLoopStepTimer = new DispatcherTimer();
-            gameLoopStepTimer.Tick += PerformGameLoopStep;
-            gameLoopStepTimer.Interval = new TimeSpan(100);
-            lastTimeGameLoopStep = 0;
-
-            renderToCanvasTimer.Start();
-            gameLoopStepTimer.Start();
+            Init();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -81,7 +86,25 @@ namespace DungeonGame
         public GameWindow()
         {
             InitializeComponent();
-            RenderMap();
+            Init();
+        }
+
+        private void Init()
+        {
+            mapRenderer = new VectorMapRenderer(new RenderConfiguration());
+
+            renderToCanvasTimer = new DispatcherTimer();
+            renderToCanvasTimer.Tick += RenderMapFromBufferToCanvas;
+            renderToCanvasTimer.Interval = new TimeSpan(100);
+            lastTimeCanvasRendered = 0;
+
+            gameLoopStepTimer = new DispatcherTimer();
+            gameLoopStepTimer.Tick += PerformGameLoopStep;
+            gameLoopStepTimer.Interval = new TimeSpan(100);
+            lastTimeGameLoopStep = 0;
+
+            renderToCanvasTimer.Start();
+            gameLoopStepTimer.Start();
         }
         
         /// <summary>
@@ -101,7 +124,7 @@ namespace DungeonGame
             //current time
             double currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
-            // lock buffer and render stuff from buffer
+            // lock game view, render map and pass rendering task to dispatcher
             if ((currentTime - lastTime) >= mspf)
             {
                 GameViewModel gameView = viewModel;
@@ -141,9 +164,9 @@ namespace DungeonGame
             GameViewModel gameView = viewModel;
 
             //current time
-            // todo: fix time measurement
             double currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
+            // lock game view, perform game loop step and pass task with data context update
             if ((currentTime - lastTime) >= mspgs)
             {
                 while (!Monitor.TryEnter(gameView))
@@ -173,60 +196,33 @@ namespace DungeonGame
         }
 
         /// <summary>
-        /// Render map to the canvas component
-        /// </summary>
-        private void RenderMap()
-        {
-            GameViewModel viewModel = (GameViewModel)DataContext;
-            // get current player position
-            MapBlock currPlayerPos = viewModel.Player.Position;
-
-            // get blocks around player to be rendered
-            // select area around player so that player is in the center of that area
-            // if that's not possible (corners, borders) display arrea of same size with player somewhere in that area
-            int mapW = viewModel.GameMap.Width;
-            int mapH = viewModel.GameMap.Height;
-            if (mapW <= 0 || mapH <= 0)
-            {
-                // nothing to render
-                return;
-            }
-            
-            // add black background
-            gameMapCanvas.Background = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-
-            // render map blocks
-            // each block will be rendered as square
-            double canvasW = gameMapCanvas.ActualWidth > 0 ? gameMapCanvas.ActualWidth : gameMapCanvas.MinWidth;
-            double canvasH = gameMapCanvas.ActualHeight > 0 ? gameMapCanvas.ActualHeight : gameMapCanvas.MinHeight;
-
-            Map gameMap = viewModel.GameMap;
-            List<UIElement> renderedMap = mapRenderer.RenderMap(gameMap, currPlayerPos, canvasW, canvasH);
-            gameMapCanvas.Children.Clear();
-            foreach (Shape shape in renderedMap)
-            {
-                gameMapCanvas.Children.Add(shape);
-            }
-        }
-
-        /// <summary>
         /// Send move action to the game core.
         /// </summary>
         /// <param name="direction">Direciton of the move.</param>
         private void Move(Direction direction)
         {
             GameViewModel viewModel = (GameViewModel)DataContext;
-            viewModel.Move(direction);
-            //try
-            //{
-            //    viewModel.GameLoopStep();
-            //} catch (Exception ex)
-            //{
-            //    viewModel.AddGameMessage(ex.Message);
-            //} finally
-            //{
-            //    RenderMap();
-            //}
+
+            // if the given direction is occupied, attack instead
+            MapBlock mb = viewModel.Player.Position.NextBlock(direction);
+            if (mb != null && mb.Occupied)
+            {
+                viewModel.Attack(direction);
+            } else
+            {
+                viewModel.Move(direction);
+            }
+
+        }
+
+        /// <summary>
+        /// Attack in given direction.
+        /// </summary>
+        /// <param name="direction">Direction of attack.</param>
+        private void Attack(Direction direction)
+        {
+            GameViewModel viewModel = (GameViewModel)DataContext;
+            viewModel.Attack(direction);
         }
 
         private void UpButtonClick(object sender, RoutedEventArgs e)
@@ -247,6 +243,33 @@ namespace DungeonGame
         private void LeftButtonClick(object sender, RoutedEventArgs e)
         {
             Move(Direction.WEST);
+        }
+
+        /// <summary>
+        /// Key press on main window, used to move around map.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WindowKeyDown(object sender, KeyEventArgs e)
+        {
+            switch(e.Key)
+            {
+                case System.Windows.Input.Key.Up:
+                    Move(Direction.NORTH);
+                    break;
+
+                case System.Windows.Input.Key.Right:
+                    Move(Direction.EAST);
+                    break;
+
+                case System.Windows.Input.Key.Down:
+                    Move(Direction.SOUTH);
+                    break;
+
+                case System.Windows.Input.Key.Left:
+                    Move(Direction.WEST);
+                    break;
+            }
         }
     }
 }

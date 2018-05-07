@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Game"
         Height="651" Width="741"
-        MinHeight="651" MinWidth="721">
+        MinHeight="651" MinWidth="721" KeyDown="WindowKeyDown">
     <Window.Resources>
         <DataTemplate x:Key="inventoryItemTemplate">
             <Border BorderBrush="Black" BorderThickness="1" DataContext="{Binding}">

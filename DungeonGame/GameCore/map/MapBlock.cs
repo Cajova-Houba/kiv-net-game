@@ -80,9 +80,9 @@ namespace GameCore.Map
         public int Y { get { return y; } set { y = value; } }
 
         /// <summary>
-        /// Returns true if this map block is occupied by any creature (or player).
+        /// Returns true if this map block is occupied by any non-dead creature (or player).
         /// </summary>
-        public bool Occupied { get { return creature != null;} }
+        public bool Occupied { get { return creature != null && creature.Alive;} }
 
         /// <summary>
         /// Gets or sets creature which occupies this block.

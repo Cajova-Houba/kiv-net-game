@@ -184,6 +184,15 @@ namespace DungeonGame.Model
         }
 
         /// <summary>
+        /// Send attack action for player to the game core.
+        /// </summary>
+        /// <param name="direction">Direction of attack.</param>
+        public void Attack(Direction direction)
+        {
+            Player.NextAction = new Attack() { Actor = Player, Direction = direction };
+        }
+
+        /// <summary>
         /// Perform game loop step.
         /// </summary>
         public void GameLoopStep()
