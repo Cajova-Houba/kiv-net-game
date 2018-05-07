@@ -353,6 +353,7 @@ namespace DungeonGame.Render
 
             GeometryGroup group = new GeometryGroup();
             group.Children.Add(Geometry.Parse(configuration.AIPLayerPath));
+            group.Children.Add(CreateHpBar(player));
 
             TransformGroup transformGroup = new TransformGroup();
             transformGroup.Children.Add(new ScaleTransform(blockSize, blockSize));
@@ -382,6 +383,7 @@ namespace DungeonGame.Render
 
             GeometryGroup group = new GeometryGroup();
             group.Children.Add(Geometry.Parse(configuration.HumanPlayerPath));
+            group.Children.Add(CreateHpBar(player));
 
             TransformGroup transformGroup = new TransformGroup();
             transformGroup.Children.Add(new ScaleTransform(blockSize, blockSize));
@@ -395,6 +397,23 @@ namespace DungeonGame.Render
 
 
             return renderedPlayer;
+        }
+
+        /// <summary>
+        /// Creates HP bar for creature rendered as GeometryGroup.
+        /// HP bar is represented as a line spanning from 1/3 to 2/3 of bounding rectangle and shortens with player's health. 
+        /// 
+        /// </summary>
+        /// <param name="creature"></param>
+        /// <returns></returns>
+        private GeometryGroup CreateHpBar(AbstractCreature creature)
+        {
+            // player HP points scaled to 0..1
+            double relativeCreatureHealth = Math.Max(0, creature.CurrentHitPoints / creature.MaxHitPoints);
+            GeometryGroup hpBar = new GeometryGroup();
+            hpBar.Children.Add(new LineGeometry(new Point(1.0 / 3, 0.05), new Point(1.0 / 3 + relativeCreatureHealth * 1.0 / 3, 0.05)));
+
+            return hpBar;
         }
     }
 }

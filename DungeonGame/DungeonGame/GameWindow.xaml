@@ -34,8 +34,8 @@
             <ColumnDefinition Width="230" MinWidth="230"/>
         </Grid.ColumnDefinitions>
         <Border BorderThickness="1" BorderBrush="Black" Grid.Row="0" Grid.Column="0">
-            <Canvas x:Name="gameMapCanvas" MinWidth="500" MinHeight="501" DockPanel.Dock="Left" Background="Black">
-                <Path Data="M 25,20 L 75,20 L 75,60 L 50,80 L 25,60 L 25,20 M 25,40 L 75,40 M 50,20 L 50,80"/>
+            <Canvas x:Name="gameMapCanvas" MinWidth="500" MinHeight="501" DockPanel.Dock="Left" Background="White">
+                <Path Data="M 33.3,100 L 50,66.7 L 50,30 M 33.3,50 L 50,33.3 L 66.7,50 M 66.7,100 L 50,66.7 M 40,21 A 10,10 1 1 0 60,21  A 10,10 1 1 0 40,21 M 33.3,5 L 66.7,5"/>
             </Canvas>
         </Border>
 
@@ -122,9 +122,9 @@
             </GroupBox>
         </Grid>
 
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2">
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2" >
             <Label Content="Messages"/>
-            <ListView x:Name="messageBox" ItemsSource="{Binding GameMessages, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch" Height="110"/>
+            <ListBox x:Name="messageBox" ItemsSource="{Binding GameMessages, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch"/>
         </StackPanel>
     </Grid>
 </Window>

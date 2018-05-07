@@ -48,8 +48,9 @@ namespace DungeonGame.Render.Configuration
     class DefaultRenderConfigurationConstatnts
     {
         // nice, isn't it?
-        public const string HUMAN_PLAYER_PATH = "M 0.333,1 L 0.5,0.667 L 0.5,0.267 M 0.333,0.5 L 0.5,0.333 L 0.667,0.5 M 0.667,1 L 0.5,0.667 M 0.4,0.167 A 0.1,0.1 1 1 0 0.6,0.167  A 0.1,0.1 1 1 0 0.4,0.167";
-        public const string AI_PLAYER_PATH = "M 0.333,1 L 0.5,0.667 L 0.5,0.267 M 0.333,0.5 L 0.5,0.333 L 0.667,0.5 M 0.667,1 L 0.5,0.667 M 0.4,0.167 A 0.1,0.1 1 1 0 0.6,0.167  A 0.1,0.1 1 1 0 0.4,0.167";
+        //public const string HUMAN_PLAYER_PATH = "M 0.333,1 L 0.5,0.667 L 0.5,0.267 M 0.333,0.5 L 0.5,0.333 L 0.667,0.5 M 0.667,1 L 0.5,0.667 M 0.4,0.167 A 0.1,0.1 1 1 0 0.6,0.167  A 0.1,0.1 1 1 0 0.4,0.167";
+        public const string HUMAN_PLAYER_PATH = "M 0.333,1 L 0.5,0.667 L 0.5,0.3 M 0.333,0.5 L 0.5,0.333 L 0.667,0.5 M 0.667,1 L 0.5,0.667 M 0.4,0.21 A 0.1,0.1 1 1 0 0.6,0.21  A 0.1,0.1 1 1 0 0.4,0.21";
+        public const string AI_PLAYER_PATH = "M 0.333,1 L 0.5,0.667 L 0.5,0.3 M 0.333,0.5 L 0.5,0.333 L 0.667,0.5 M 0.667,1 L 0.5,0.667 M 0.4,0.21 A 0.1,0.1 1 1 0 0.6,0.21  A 0.1,0.1 1 1 0 0.4,0.21";
         public const string ARMOR_PATH = "M 0.25,0.20 L 0.75,0.20 L 0.75,0.60 L 0.50,0.80 L 0.25,0.60 L 0.25,0.20 M 0.25,0.40 L 0.75,0.40 M 0.50,0.20 L 0.50,0.80";
         public const string FINAL_ROOM_COLOR = "#c10707";
         public const string ROOM_COLOR = "#000000";
