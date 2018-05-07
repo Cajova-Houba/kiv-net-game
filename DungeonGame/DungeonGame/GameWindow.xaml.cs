@@ -207,7 +207,7 @@ namespace DungeonGame
             MapBlock mb = viewModel.Player.Position.NextBlock(direction);
             if (mb != null && mb.Occupied)
             {
-                viewModel.Attack(direction);
+                Attack(direction);
             } else
             {
                 viewModel.Move(direction);
@@ -223,6 +223,15 @@ namespace DungeonGame
         {
             GameViewModel viewModel = (GameViewModel)DataContext;
             viewModel.Attack(direction);
+        }
+
+        /// <summary>
+        /// Pick ups item on the current block.
+        /// </summary>
+        private void PickUp()
+        {
+            GameViewModel viewModel = (GameViewModel)DataContext;
+            viewModel.PickUp();
         }
 
         private void UpButtonClick(object sender, RoutedEventArgs e)
@@ -270,6 +279,11 @@ namespace DungeonGame
                     Move(Direction.WEST);
                     break;
             }
+        }
+
+        private void PickupButtonClick(object sender, RoutedEventArgs e)
+        {
+            PickUp();
         }
     }
 }

@@ -129,6 +129,24 @@ namespace DungeonGame.Model
             }
         }
 
+        /// <summary>
+        /// Returns true if there's something on the current map block player can pick up.
+        /// </summary>
+        /// <returns></returns>
+        public bool CanPickUp
+        {
+            get
+            {
+                if (Player == null || Player.Position == null)
+                {
+                    return false;
+                } else
+                {
+                    return Player.Position.Item != null;
+                }
+            }
+        }
+
 
         public Game GameInstance { get; protected set; }
 
@@ -193,15 +211,19 @@ namespace DungeonGame.Model
         }
 
         /// <summary>
+        /// Sends pickup action for current player to the game core.
+        /// </summary>
+        public void PickUp()
+        {
+            Player.NextAction = new PickUp() { Actor = Player };
+        }
+
+        /// <summary>
         /// Perform game loop step.
         /// </summary>
         public void GameLoopStep()
         {
             GameInstance.GameLoopStep();
-            if (GameInstance.IsWinner)
-            {
-                //AddGameMessage($"{GameInstance.Winner} has won the game!");
-            }
         }
 
         /// <summary>
@@ -215,6 +237,7 @@ namespace DungeonGame.Model
             OnPropertyChanged("CurrentPlayerTotalDeffense");
             OnPropertyChanged("Inventory");
             OnPropertyChanged("GameMessages");
+            OnPropertyChanged("CanPickUp");
         }
 
         /// <summary>
