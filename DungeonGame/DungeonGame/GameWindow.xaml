@@ -62,15 +62,6 @@
             <WrapPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="1">
                 <Label Content="Actions"/>
                 <Button Content="Pickup" IsEnabled="{Binding CanPickUp, UpdateSourceTrigger=PropertyChanged}" Click="PickupButtonClick"/>
-                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <ComboBox x:Name="directionSelect">
-                        <ComboBoxItem IsSelected="True" Content="North"/>
-                        <ComboBoxItem Content="East"/>
-                        <ComboBoxItem Content="South"/>
-                        <ComboBoxItem Content="West"/>
-                    </ComboBox>
-                    <Button Content="Attack"/>
-                </WrapPanel>
             </WrapPanel>
 
             <GroupBox Header="{Binding Player.Name}" Grid.Column="0" Grid.Row="2">
