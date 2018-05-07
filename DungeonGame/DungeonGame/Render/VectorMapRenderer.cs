@@ -16,12 +16,8 @@ namespace DungeonGame.Render
     /// <summary>
     /// Class for rendering map. There should be one renderer per game instance.
     /// </summary>
-    public class MapRenderer
+    public class VectorMapRenderer : IMapRenderer
     {
-        /// <summary>
-        /// Default height and width of one map block.
-        /// </summary>
-        public const double DEF_BLOCK_SIZE = 100;
 
         /// <summary>
         /// Actual height and width of one block.
@@ -47,10 +43,10 @@ namespace DungeonGame.Render
         /// Initializes this map renderer with configuration.
         /// </summary>
         /// <param name="renderConfiguration"></param>
-        public MapRenderer(RenderConfiguration renderConfiguration, MapBlock winningBlock)
+        public VectorMapRenderer(RenderConfiguration renderConfiguration, MapBlock winningBlock)
         {
             configuration = renderConfiguration;
-            blockSize = DEF_BLOCK_SIZE;
+            blockSize = MapRendererConstants.DEF_BLOCK_SIZE;
             this.finalBlockX = winningBlock.X;
             this.finalBlockY = winningBlock.Y;
         }
@@ -63,19 +59,19 @@ namespace DungeonGame.Render
         /// <param name="canvasW">Width of target canvas.</param>
         /// <param name="canvasH">Height of target canvas.</param>
         /// <returns>Map rendered as a list of shapes.</returns>
-        public List<Shape> RenderMapBlocks(MapBlock[,] mapGrid, MapBlock centerBlock, double canvasW, double canvasH)
+        public List<UIElement> RenderMap(MapBlock[,] mapGrid, MapBlock centerBlock, double canvasW, double canvasH)
         {
-            List<Shape> shapes = new List<Shape>();
+            List<UIElement> renderedMap = new List<UIElement>();
             
             // target area is too small to render anything
             if (canvasW < this.blockSize || canvasH < this.blockSize)
             {
-                return shapes;
+                return renderedMap;
             }
 
             int verticalBlockCount = (int)Math.Min((double)mapGrid.GetLength(1), canvasH / blockSize);
             int horizontalBlockCount = (int)Math.Min((double)mapGrid.GetLength(0), canvasW / blockSize);
-            shapes.Add(new Rectangle() { Height = verticalBlockCount * blockSize, Width = horizontalBlockCount * blockSize, Fill = new SolidColorBrush(Color.FromRgb(255, 204, 102)) });
+            renderedMap.Add(new Rectangle() { Height = verticalBlockCount * blockSize, Width = horizontalBlockCount * blockSize, Fill = new SolidColorBrush(Color.FromRgb(255, 204, 102)) });
 
             int[] xBoundaries = GetXBoundaries(mapGrid, centerBlock, horizontalBlockCount);
             int[] yBoundaries = GetYBoundaries(mapGrid, centerBlock, verticalBlockCount);
@@ -84,11 +80,11 @@ namespace DungeonGame.Render
                 for (int j = yBoundaries[0]; j <= yBoundaries[1]; j++)
                 {
                     List<Shape> renderedMapBlock = RenderMapBlock(mapGrid[i, j], (i-xBoundaries[0]) * blockSize, (j-yBoundaries[0]) * blockSize, blockSize);
-                    shapes.AddRange(renderedMapBlock);
+                    renderedMap.AddRange(renderedMapBlock);
                 }
             }
 
-            return shapes;
+            return renderedMap;
         }
 
         /// <summary>

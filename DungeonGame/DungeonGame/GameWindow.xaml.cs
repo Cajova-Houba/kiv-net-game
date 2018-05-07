@@ -27,13 +27,13 @@ namespace DungeonGame
     /// </summary>
     public partial class GameWindow : Window
     {
-        private MapRenderer mapRenderer;
+        private VectorMapRenderer mapRenderer;
 
         public GameWindow(GameViewModel viewModel)
         {
             DataContext = viewModel;
             InitializeComponent();
-            mapRenderer = new MapRenderer(new RenderConfiguration(), viewModel.GameInstance.GameMap.WinningBlock);
+            mapRenderer = new VectorMapRenderer(new RenderConfiguration(), viewModel.GameInstance.GameMap.WinningBlock);
             RenderMap();
         }
 
@@ -81,7 +81,7 @@ namespace DungeonGame
             double canvasH = gameMapCanvas.ActualHeight > 0 ? gameMapCanvas.ActualHeight : gameMapCanvas.MinHeight;
 
             Map gameMap = viewModel.GameMap;
-            List<Shape> renderedMap = mapRenderer.RenderMapBlocks(gameMap.Grid, currPlayerPos, canvasW, canvasH);
+            List<Shape> renderedMap = mapRenderer.RenderMap(gameMap.Grid, currPlayerPos, canvasW, canvasH);
             gameMapCanvas.Children.Clear();
             foreach (Shape shape in renderedMap)
             {

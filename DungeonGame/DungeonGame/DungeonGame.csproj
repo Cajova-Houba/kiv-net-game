@@ -58,7 +58,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Render\Configuration\ConfigurationLoader.cs" />
-    <Compile Include="Render\MapRenderer.cs" />
+    <Compile Include="Render\IMapRenderer.cs" />
+    <Compile Include="Render\VectorMapRenderer.cs" />
     <Page Include="GameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
