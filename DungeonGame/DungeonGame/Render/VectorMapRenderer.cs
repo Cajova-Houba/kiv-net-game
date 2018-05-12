@@ -277,6 +277,11 @@ namespace DungeonGame.Render
             if (item is AbstractArmor)
             {
                 return RenderArmor((AbstractArmor)item, x, y, blockSize);
+            } else if (item is AbstractWeapon)
+            {
+                return RenderWeapon((AbstractWeapon)item, x, y, blockSize);
+            } else if (item is AbstractInventoryItem) {
+                return RenderItem((AbstractInventoryItem)item, x, y, blockSize);
             } else
             {
                 return new Path();
@@ -285,28 +290,40 @@ namespace DungeonGame.Render
 
         /// <summary>
         /// Renders armor as a path.
-        /// <param name="item">Armor to be rendered.</param>
+        /// <param name="armor">Armor to be rendered.</param>
         /// <param name="x">Top left corner x-coordinate of map block.</param>
         /// <param name="y">Top left corner y-coordinate of map block.</param>
         /// <param name="blockSize">Height and width of the block.</param>
         /// <returns>Armor rendered as path.</returns>
         private Path RenderArmor(AbstractArmor armor, double x, double y, double blockSize)
         {
-            Path renderedArmor = new Path();
+            return RenderPath(configuration.ArmorPath, x, y, blockSize / 3, Color.FromRgb(0, 0, 0), null);
+        }
 
-            GeometryGroup group = new GeometryGroup();
-            group.Children.Add(Geometry.Parse(configuration.ArmorPath));
+        /// <summary>
+        /// Renders weapon as a path.
+        /// </summary>
+        /// <param name="weapon">Weapon to be rendered.</param>
+        /// <param name="x">Top left corner x-coordinate of map block.</param>
+        /// <param name="y">Top left corner y-coordinate of map block.</param>
+        /// <param name="blockSize">Height and width of the block.</param>
+        /// <returns>Weapon rendered as path.</returns>
+        private Path RenderWeapon(AbstractWeapon weapon, double x, double y, double blockSize)
+        {
+            return RenderPath(configuration.WeaponPath, x, y, blockSize/3, Color.FromRgb(0,0,0), null);
+        }
 
-            TransformGroup transformGroup = new TransformGroup();
-            transformGroup.Children.Add(new ScaleTransform(blockSize/3, blockSize/3));
-            transformGroup.Children.Add(new TranslateTransform(x, y));
-            group.Transform = transformGroup;
-
-            renderedArmor.Data = group;
-            renderedArmor.Stroke = new SolidColorBrush(Color.FromRgb(0,0,0));
-
-
-            return renderedArmor;
+        /// <summary>
+        /// Renders item as a path.
+        /// </summary>
+        /// <param name="item">Item to be rendered.</param>
+        /// <param name="x">Top left corner x-coordinate of map block.</param>
+        /// <param name="y">Top left corner y-coordinate of map block.</param>
+        /// <param name="blockSize">Height and width of the block.</param>
+        /// <returns>Item rendered as a path.</returns>
+        private Path RenderItem(AbstractInventoryItem item, double x, double y, double blockSize)
+        {
+            return RenderPath(configuration.ItemPath, x, y, blockSize / 3, Color.FromRgb(0, 0, 0), null);
         }
 
         /// <summary>
@@ -353,18 +370,7 @@ namespace DungeonGame.Render
         /// <returns></returns>
         private Path RenderMonster(Monster monster, double x, double y, double blockSize)
         {
-            Path renderedMonster = new Path();
-
-            GeometryGroup group = new GeometryGroup();
-            group.Children.Add(Geometry.Parse(configuration.MonsterPath));
-            group.Children.Add(CreateHpBar(monster));
-
-            group.Transform = CreateBlockTransform(x, y, blockSize);
-
-            renderedMonster.Data = group;
-            renderedMonster.Stroke = new SolidColorBrush(Color.FromRgb(200, 0, 20));
-
-            return renderedMonster;
+            return RenderPath(configuration.MonsterPath, x, y, blockSize, Color.FromRgb(200, 0, 20), CreateHpBar(monster));
         }
 
         /// <summary>
@@ -377,19 +383,7 @@ namespace DungeonGame.Render
         /// <returns></returns>
         private Path RenderAIPlayer(AbstractPlayer player, double x, double y, double blockSize)
         {
-            Path renderedPlayer = new Path();
-
-            GeometryGroup group = new GeometryGroup();
-            group.Children.Add(Geometry.Parse(configuration.AIPLayerPath));
-            group.Children.Add(CreateHpBar(player));
-
-            group.Transform = CreateBlockTransform(x, y, blockSize);
-
-            renderedPlayer.Data = group;
-            renderedPlayer.Stroke = new SolidColorBrush(Color.FromRgb(200, 0, 20));
-
-
-            return renderedPlayer;
+            return RenderPath(configuration.AIPLayerPath, x, y, blockSize, Color.FromRgb(200, 0, 20), CreateHpBar(player));
         }
 
         /// <summary>
@@ -402,19 +396,37 @@ namespace DungeonGame.Render
         /// <returns></returns>
         private Path RenderHumanPlayer(AbstractPlayer player, double x, double y, double blockSize)
         {
-            Path renderedPlayer = new Path();
+            return RenderPath(configuration.HumanPlayerPath, x, y, blockSize, Color.FromRgb(0, 153, 51), CreateHpBar(player));
+        }
+
+        /// <summary>
+        /// Renders path as a path object.
+        /// </summary>
+        /// <param name="path">Path to be rendered</param>
+        /// <param name="x">Top left corner x-coordinate of map block.</param>
+        /// <param name="y">Top left cornet y-coordinate of map block.</param>
+        /// <param name="blockSize">Size of the block.</param>
+        /// <param name="strokeColor">Stroke color of the path.</param>
+        /// <param name="hpBar">Optional HP bar, leave null if not to be rendered.</param>
+        /// <returns>Rendered path</returns>
+        private Path RenderPath(String path, double x, double y, double blockSize, Color strokeColor, GeometryGroup hpBar)
+        {
+            Path renderedPath = new Path();
 
             GeometryGroup group = new GeometryGroup();
-            group.Children.Add(Geometry.Parse(configuration.HumanPlayerPath));
-            group.Children.Add(CreateHpBar(player));
+            group.Children.Add(Geometry.Parse(path));
+            if (hpBar != null)
+            {
+                group.Children.Add(hpBar);
+            }
 
             group.Transform = CreateBlockTransform(x, y, blockSize);
 
-            renderedPlayer.Data = group;
-            renderedPlayer.Stroke = new SolidColorBrush(Color.FromRgb(0, 153, 51));
+            renderedPath.Data = group;
+            renderedPath.Stroke = new SolidColorBrush(strokeColor);
 
 
-            return renderedPlayer;
+            return renderedPath;
         }
 
         /// <summary>

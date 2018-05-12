@@ -6,6 +6,7 @@ using GameCore.Objects.Creatures;
 using GameCore.Objects.Creatures.AIPlayers;
 using GameCore.Objects.Items;
 using GameCore.Objects.Items.Armors;
+using GameCore.Objects.Items.Weapons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +60,8 @@ namespace DungeonGame
             game.AddAIPlayer(AIPlayerFactory.CreateSimpleAIPLayer("Test AI Player 2", gameMap.Grid[6, 6]));
             game.AddMonster(MonsterFactory.CreateGoblin("Goblin", gameMap.Grid[4, 7]));
             new LeatherArmor("Leather armor", game.GameMap.Grid[1, 1]);
+            new Axe("Rusty axe", game.GameMap.Grid[3, 4]);
+            new BasicItem("Golden ring", game.GameMap.Grid[6, 7], 15);
 
             return game;
         }

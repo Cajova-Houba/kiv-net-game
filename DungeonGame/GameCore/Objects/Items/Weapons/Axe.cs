@@ -6,13 +6,13 @@ using GameCore.Map;
 namespace GameCore.Objects.Items.Weapons
 {
     /// <summary>
-    /// Basic sword.
+    /// Basic axe.
     /// </summary>
-    public class Sword : AbstractWeapon
+    public class Axe : AbstractWeapon
     {
         public const int DAMAGE = 3;
 
-        public Sword(string name, MapBlock position) : base(name, position, DAMAGE)
+        public Axe(string name, MapBlock position) : base(name, position, DAMAGE)
         {
         }
 
@@ -23,7 +23,7 @@ namespace GameCore.Objects.Items.Weapons
 
         public override bool Equals(object obj)
         {
-            var sword = obj as Sword;
+            var sword = obj as Axe;
             return sword != null &&
                    Damage == sword.Damage &&
                    Name == sword.Name;

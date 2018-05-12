@@ -112,7 +112,7 @@ namespace GameCoreUnitTest
         {
             // prepare map block with one item, player and pick up action
             MapBlock mapBlock = new MapBlock(0, 0);
-            AbstractItem sword = new Sword("Test item", mapBlock);
+            AbstractItem sword = new Axe("Test item", mapBlock);
             AbstractPlayer testPlayer = new EmptyAIPlayer("Test player", mapBlock);
             PickUp pickUpAction = new PickUp() { Actor = testPlayer };
 
@@ -128,7 +128,7 @@ namespace GameCoreUnitTest
             Assert.IsNull(mapBlock.Item, "Item was not picked up from map block");
 
             // add new sword to the map block and check that swapping works
-            AbstractItem sword2 = new Sword("Test sword 2", mapBlock);
+            AbstractItem sword2 = new Axe("Test sword 2", mapBlock);
             pickUpAction.Execute();
 
             // check swap
