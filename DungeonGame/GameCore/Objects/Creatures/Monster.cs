@@ -13,6 +13,11 @@ namespace GameCore.Objects.Creatures
     public class Monster : AbstractCreature
     {
         /// <summary>
+        /// Default monster speed measured in actions per seconds.
+        /// </summary>
+        public const double DEF_MONSTER_SPEED = 1.0 / 2;
+
+        /// <summary>
         /// Default maximum of stack capacity.
         /// </summary>
         public const int DEF_MAX_STACK_CAPACITY = 20;
@@ -44,30 +49,21 @@ namespace GameCore.Objects.Creatures
         /// </summary>
         private Boolean goBackwardFlag;
 
-        public override double TotalAttack
-        {
-            get
-            {
-                return BaseAttack;
-            }
-        }
-        
+        /// <summary>
+        /// Speed of this monster, measured in actions per second.
+        /// </summary>
+        private double monsterSpeed;
 
-        public override double TotalDeffense
-        {
-            get
-            {
-                return BaseDeffense;
-            }
-        }
+        /// <summary>
+        /// Time of the last action. Used to set speed of "action per seconds".
+        /// </summary>
+        private double lastActionTime;
 
-        public override double MaxHitPoints
-        {
-            get
-            {
-                return BaseHitPoints;
-            }
-        }
+        public override double TotalAttack { get {return BaseAttack; } }
+
+        public override double TotalDeffense { get { return BaseDeffense; } }
+
+        public override double MaxHitPoints { get { return BaseHitPoints; } }
 
 
 
@@ -81,10 +77,8 @@ namespace GameCore.Objects.Creatures
         /// <param name="baseDeffense"></param>
         public Monster(string name, MapBlock position, int baseHitPoints, int baseAttack, int baseDeffense) : base(name, position, baseHitPoints, baseAttack, baseDeffense)
         {
-            goBackwardFlag = true;
-            randomizer = new Random();
+            Init();
             stackCapacity = randomizer.Next(DEF_MAX_STACK_CAPACITY) + 1;
-            pathStack = new Stack<Direction>();
         }
 
         /// <summary>
@@ -98,10 +92,16 @@ namespace GameCore.Objects.Creatures
         /// <param name="stackCapacity">Max capacity of stack. Should be greater than 0.</param>
         public Monster(string name, MapBlock position, int baseHitPoints, int baseAttack, int baseDeffense, int stackCapacity) : base(name, position, baseHitPoints, baseAttack, baseDeffense)
         {
+            Init();
+            this.stackCapacity = stackCapacity;
+        }
+
+        private void Init()
+        {
             goBackwardFlag = false;
             randomizer = new Random();
-            this.stackCapacity = stackCapacity;
             pathStack = new Stack<Direction>();
+            monsterSpeed = DEF_MONSTER_SPEED;
         }
 
         /// <summary>
@@ -109,13 +109,23 @@ namespace GameCore.Objects.Creatures
         /// </summary>
         public override void Think()
         {
+            // timing
+            double currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            double mspa = 1000 / monsterSpeed;
+            if ((currentTime - lastActionTime) < mspa)
+            {
+                return;
+            }
+
             Direction nextDirection;
             if(goBackwardFlag)
             {
                 nextDirection = GoBackward();
+                lastActionTime = currentTime;
             } else
             {
                 nextDirection = GoForward();
+                lastActionTime = currentTime;
             } 
 
             if(!nextDirection.IsNoDirection())

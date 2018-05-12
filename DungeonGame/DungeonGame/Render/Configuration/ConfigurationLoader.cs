@@ -54,6 +54,7 @@ namespace DungeonGame.Render.Configuration
         public const string ARMOR_PATH = "M 0.25,0.20 L 0.75,0.20 L 0.75,0.60 L 0.50,0.80 L 0.25,0.60 L 0.25,0.20 M 0.25,0.40 L 0.75,0.40 M 0.50,0.20 L 0.50,0.80";
         public const string FINAL_ROOM_COLOR = "#c10707";
         public const string ROOM_COLOR = "#000000";
+        public const string DEFAULT_MONSTER_PATH = "M 0.33,0.83 A 0.167,0.167 1 1 0 0.667,0.83 A 0.167,0.167 1 1 0 0.333,0.83 M 0.33,0.80 L 0.416,0.50 L 0.50,0.67 L 0.583,0.50 L 0.66,0.80 M 0.43,0.83 L 0.567,0.83";
     }
 
     /// <summary>
@@ -62,6 +63,8 @@ namespace DungeonGame.Render.Configuration
     /// </summary>
     public class RenderConfiguration
     {
+        public const string MONSTER_PATH = "monster_path";
+
         /// <summary>
         /// Unique id to identify human player path property in configuration dictionary.
         /// </summary>
@@ -142,6 +145,14 @@ namespace DungeonGame.Render.Configuration
             get
             {
                 return (String)TryGetConfiguration(AI_PLAYER_PATH_ID, DefaultRenderConfigurationConstatnts.AI_PLAYER_PATH);
+            }
+        }
+
+        public String MonsterPath
+        {
+            get
+            {
+                return (String)TryGetConfiguration(MONSTER_PATH, DefaultRenderConfigurationConstatnts.DEFAULT_MONSTER_PATH);
             }
         }
         

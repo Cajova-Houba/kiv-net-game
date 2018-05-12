@@ -333,10 +333,38 @@ namespace DungeonGame.Render
             {
                 return RenderAIPlayer((AbstractPlayer)creature, x, y, blockSize);
             }
+            else if (creature is Monster)
+            {
+                return RenderMonster((Monster)creature, x, y, blockSize);
+            }
             else
             {
                 return new Path();
             }
+        }
+
+        /// <summary>
+        /// Renders monster as a path.
+        /// </summary>
+        /// <param name="monster">Monster to be rendered.</param>
+        /// <param name="x">Top left corner x-coordinate of map block.</param>
+        /// <param name="y">Top left cornet y-coordinate of map block.</param>
+        /// <param name="blockSize">Size of the block.</param>
+        /// <returns></returns>
+        private Path RenderMonster(Monster monster, double x, double y, double blockSize)
+        {
+            Path renderedMonster = new Path();
+
+            GeometryGroup group = new GeometryGroup();
+            group.Children.Add(Geometry.Parse(configuration.MonsterPath));
+            group.Children.Add(CreateHpBar(monster));
+
+            group.Transform = CreateBlockTransform(x, y, blockSize);
+
+            renderedMonster.Data = group;
+            renderedMonster.Stroke = new SolidColorBrush(Color.FromRgb(200, 0, 20));
+
+            return renderedMonster;
         }
 
         /// <summary>
@@ -355,15 +383,10 @@ namespace DungeonGame.Render
             group.Children.Add(Geometry.Parse(configuration.AIPLayerPath));
             group.Children.Add(CreateHpBar(player));
 
-            TransformGroup transformGroup = new TransformGroup();
-            transformGroup.Children.Add(new ScaleTransform(blockSize, blockSize));
-            transformGroup.Children.Add(new TranslateTransform(x, y));
-            group.Transform = transformGroup;
+            group.Transform = CreateBlockTransform(x, y, blockSize);
 
             renderedPlayer.Data = group;
             renderedPlayer.Stroke = new SolidColorBrush(Color.FromRgb(200, 0, 20));
-            //renderedPlayer.StrokeThickness = 1;
-            //renderedPlayer.Fill = new SolidColorBrush(Color.FromRgb(0, 153, 51));
 
 
             return renderedPlayer;
@@ -385,18 +408,28 @@ namespace DungeonGame.Render
             group.Children.Add(Geometry.Parse(configuration.HumanPlayerPath));
             group.Children.Add(CreateHpBar(player));
 
-            TransformGroup transformGroup = new TransformGroup();
-            transformGroup.Children.Add(new ScaleTransform(blockSize, blockSize));
-            transformGroup.Children.Add(new TranslateTransform(x, y));
-            group.Transform = transformGroup;
+            group.Transform = CreateBlockTransform(x, y, blockSize);
 
             renderedPlayer.Data = group;
             renderedPlayer.Stroke = new SolidColorBrush(Color.FromRgb(0, 153, 51));
-            //renderedPlayer.StrokeThickness = 1;
-            //renderedPlayer.Fill = new SolidColorBrush(Color.FromRgb(0, 153, 51));
 
 
             return renderedPlayer;
+        }
+
+        /// <summary>
+        /// Creates transformation for particular position and block size.
+        /// </summary>
+        /// <param name="x">Top left corner x-coordinate of map block.</param>
+        /// <param name="y">Top left cornet y-coordinate of map block.</param>
+        /// <param name="blockSize">Size of the block.</param>
+        /// <returns>Transform group.</returns>
+        private TransformGroup CreateBlockTransform(double x, double y, double blockSize)
+        {
+            TransformGroup transformGroup = new TransformGroup();
+            transformGroup.Children.Add(new ScaleTransform(blockSize, blockSize));
+            transformGroup.Children.Add(new TranslateTransform(x, y));
+            return transformGroup;
         }
 
         /// <summary>
