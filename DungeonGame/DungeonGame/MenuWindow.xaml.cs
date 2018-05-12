@@ -43,7 +43,8 @@ namespace DungeonGame
 
         private Game GenerateNewGame()
         {
-            Map gameMap = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(10, 10, 123456);
+            Random r = new Random();
+            Map gameMap = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(40, 40, r.Next(99999));
             AbstractPlayer player = new HumanPlayer("Test player", gameMap.Grid[2, 2]);
             player.Inventory.AddRange(new BasicItem[]
             {

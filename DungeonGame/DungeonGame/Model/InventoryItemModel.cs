@@ -13,7 +13,7 @@ namespace DungeonGame.Model
     /// </summary>
     public class InventoryItemModel
     {
-        public AbstractInventoryItem ModelObject { get; set; }
+        public AbstractItem ModelObject { get; set; }
 
         public String ItemName {
             get

@@ -254,6 +254,11 @@ namespace DungeonGame
             Move(Direction.WEST);
         }
 
+        private void PickUpButtonClick(object sender, RoutedEventArgs e)
+        {
+            PickUp();
+        }
+
         /// <summary>
         /// Key press on main window, used to move around map.
         /// </summary>
@@ -278,12 +283,12 @@ namespace DungeonGame
                 case System.Windows.Input.Key.Left:
                     Move(Direction.WEST);
                     break;
+
+                case System.Windows.Input.Key.Space:
+                    PickUp();
+                    break;
             }
         }
-
-        private void PickupButtonClick(object sender, RoutedEventArgs e)
-        {
-            PickUp();
-        }
+       
     }
 }

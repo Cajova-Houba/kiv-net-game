@@ -10,10 +10,6 @@ namespace GameCore.Objects.Items
     /// </summary>
     public class BasicItem : AbstractInventoryItem
     {
-        /// <summary>
-        /// Value of this utem, used for score calculations.
-        /// </summary>
-        public int ItemValue { get; set; }
 
         /// <summary>
         /// Initializes this basic item with name, position and value.

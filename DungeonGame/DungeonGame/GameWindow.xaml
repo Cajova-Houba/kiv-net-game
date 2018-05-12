@@ -47,21 +47,21 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="120"/>
                 <RowDefinition Height="80"/>
-                <RowDefinition Height="125"/>
+                <RowDefinition Height="150"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <WrapPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0">
-                <Label Content="Game controls"/>
+            <WrapPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0" MinWidth="80">
+                <Label Content="Ovládání hry"/>
                 <Button Content="Up" Click="UpButtonClick"/>
                 <Button Content="Right" Click="RightButtonClick"/>
                 <Button Content="Down" Click="DownButtonClick"/>
                 <Button Content="Left" Click="LeftButtonClick"/>
             </WrapPanel>
 
-            <WrapPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="1">
-                <Label Content="Actions"/>
-                <Button Content="Pickup" IsEnabled="{Binding CanPickUp, UpdateSourceTrigger=PropertyChanged}" Click="PickupButtonClick"/>
+            <WrapPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="1" MinWidth="80">
+                <Label Content="Akce" HorizontalAlignment="Center"/>
+                <Button Content="Seber" IsEnabled="{Binding CanPickUp, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
             </WrapPanel>
 
             <GroupBox Header="{Binding Player.Name}" Grid.Column="0" Grid.Row="2">
@@ -72,6 +72,7 @@
                             <ColumnDefinition Width="0.5*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
@@ -88,11 +89,14 @@
 
                         <Label Content="Pozice" Grid.Column="0" Grid.Row="3"/>
                         <Label Content="{Binding CurrentPlayerPosition, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="3"/>
+
+                        <Label Content="Skóre" Grid.Column="0" Grid.Row="4"/>
+                        <Label Content="{Binding InventoryValue, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4"/>
                     </Grid>
                 </StackPanel>
             </GroupBox>
 
-            <GroupBox Header="Inventory" Grid.Row="3" Grid.Column="1">
+            <GroupBox Header="Inventář" Grid.Row="3" Grid.Column="1">
                 <ListBox x:Name="inventoryLb"
                                  MinHeight="95"
                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" 

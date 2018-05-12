@@ -10,8 +10,15 @@ namespace GameCore.Objects.Items
     /// </summary>
     public abstract class AbstractInventoryItem : AbstractItem
     {
+        /// <summary>
+        /// Value of this utem, used for score calculations.
+        /// 0 by default.
+        /// </summary>
+        public int ItemValue { get; set; }
+
         public AbstractInventoryItem(string name, MapBlock position) : base(name, position)
         {
+            ItemValue = 0;
         }
     }
 }

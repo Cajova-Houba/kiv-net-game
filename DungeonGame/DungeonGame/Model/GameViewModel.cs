@@ -47,9 +47,56 @@ namespace DungeonGame.Model
         }
         
         /// <summary>
-        /// Returns player's inventory.
+        /// Returns player's inventory with armor and weapon onf the first place (if any).
         /// </summary>
-        public ObservableCollection<InventoryItemModel> Inventory { get; protected set; }
+        public ObservableCollection<InventoryItemModel> Inventory {
+            get
+            {
+                ObservableCollection<InventoryItemModel> inv = new ObservableCollection<InventoryItemModel>();
+                AbstractPlayer player = Player;
+                if(player == null)
+                {
+                    return inv;
+                }
+
+                if (player.Armor != null)
+                {
+                    inv.Add(new InventoryItemModel() { ModelObject = player.Armor });
+                }
+                if (player.Weapon != null)
+                {
+                    inv.Add(new InventoryItemModel() { ModelObject = player.Weapon });
+                }
+                foreach (AbstractInventoryItem invItem in player.Inventory)
+                {
+                    inv.Add(new InventoryItemModel() { ModelObject = invItem });
+                }
+
+                return inv;
+            }
+        }
+
+        /// <summary>
+        /// Returns the total value of items in inventory.
+        /// </summary>
+        public int InventoryValue
+        {
+            get
+            {
+                int val = 0;
+                AbstractPlayer player = Player;
+                if (player != null)
+                {
+                    foreach (AbstractInventoryItem invItem in player.Inventory)
+                    {
+                        val += invItem.ItemValue;
+                    }
+                }
+
+
+                return val;
+            }
+        }
         
         /// <summary>
         /// Returns map of the current game.
@@ -157,15 +204,6 @@ namespace DungeonGame.Model
         public GameViewModel(Game game)
         {
             GameMap = game.GameMap;
-            if (game.HumanPlayers.Count > 0)
-            {
-                AbstractPlayer player = game.HumanPlayers[0];
-                Inventory = new ObservableCollection<InventoryItemModel>();
-                foreach (AbstractInventoryItem invItem in player.Inventory)
-                {
-                    Inventory.Add(new InventoryItemModel() { ModelObject = invItem });
-                }
-            }
             GameInstance = game;
 
         }
@@ -181,11 +219,6 @@ namespace DungeonGame.Model
                 new BasicItem("Test item 2", new MapBlock(), 10),
                 new BasicItem("Some cool item", new MapBlock(), 10)
             });
-            Inventory = new ObservableCollection<InventoryItemModel>();
-            foreach(AbstractInventoryItem invItem in player.Inventory)
-            {
-                Inventory.Add(new InventoryItemModel() { ModelObject = invItem });
-            }
 
             GameInstance = new Game();
             GameInstance.GameMap = GameMap;
@@ -236,6 +269,7 @@ namespace DungeonGame.Model
             OnPropertyChanged("CurrentPlayerTotalAttack");
             OnPropertyChanged("CurrentPlayerTotalDeffense");
             OnPropertyChanged("Inventory");
+            OnPropertyChanged("InventoryValue");
             OnPropertyChanged("GameMessages");
             OnPropertyChanged("CanPickUp");
         }

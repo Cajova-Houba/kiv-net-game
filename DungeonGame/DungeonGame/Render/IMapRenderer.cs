@@ -32,6 +32,6 @@ namespace DungeonGame.Render
         /// <summary>
         /// Default height and width of one map block.
         /// </summary>
-        public const double DEF_BLOCK_SIZE = 100;
+        public const double DEF_BLOCK_SIZE = 50;
     }
 }
