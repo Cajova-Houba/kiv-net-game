@@ -1,4 +1,6 @@
-﻿using GameCore.Objects.Creatures;
+﻿using GameCore.Map;
+using GameCore.Objects.Creatures;
+using GameCore.Objects.Items;
 using System.Collections.Generic;
 
 namespace GameCore.Game
@@ -74,6 +76,19 @@ namespace GameCore.Game
         public void AddMonster(AbstractCreature monster)
         {
             Monsters.Add(monster);
+        }
+
+        /// <summary>
+        /// Adds item to the game. Item should have its position set.
+        /// </summary>
+        /// <param name="item">Item to be added.</param>
+        public void AddItem(AbstractItem item)
+        {
+            MapBlock pos = item.Position;
+            if (pos != null && pos.X >=0 && pos.X < GameMap.Width && pos.Y >=0 && pos.Y < GameMap.Height)
+            {
+                GameMap.Grid[pos.X, pos.Y].Item = item;
+            }
         }
 
         /// <summary>

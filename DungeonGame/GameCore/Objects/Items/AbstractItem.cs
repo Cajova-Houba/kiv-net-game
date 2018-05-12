@@ -12,7 +12,6 @@ namespace GameCore.Objects.Items
     {
         public AbstractItem(string name, MapBlock position) : base(name, position)
         {
-            position.Item = this;
         }
     }
 }
