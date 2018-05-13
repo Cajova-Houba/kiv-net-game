@@ -66,7 +66,7 @@ namespace DungeonGame
             // place human player
             int x = r.Next(w);
             int y = r.Next(h);
-            AbstractPlayer player = new HumanPlayer(model.PlayerName, gameMap.Grid[w, h]);
+            AbstractPlayer player = new HumanPlayer(model.PlayerName, gameMap.Grid[x, y]);
             game.AddHumanPlayer(player);
             creatureOccupiedPositions.Add($"{x}:{y}");
             
