@@ -1,0 +1,83 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DungeonGame"
+        xmlns:ViewModel="clr-namespace:DungeonGame.ViewModel" x:Class="DungeonGame.ScoreWindow"
+        mc:Ignorable="d"
+        Title="Výsledky hry" Height="300" Width="300">
+
+    <Window.DataContext>
+        <ViewModel:ScoreViewModel/>
+    </Window.DataContext>
+
+    <StackPanel Orientation="Vertical">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="150"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <WrapPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0">
+                <Label Content="Velikost mapy"/>
+                <Label Content="{Binding MapSize}"/>
+            </WrapPanel>
+
+            <WrapPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
+                <Label Content="Počet protihráčů"/>
+                <Label Content="{Binding AiCount}"/>
+            </WrapPanel>
+
+            <WrapPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="2">
+                <Label Content="Počet monster"/>
+                <Label Content="{Binding MonsterCount}"/>
+            </WrapPanel>
+
+            <WrapPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
+                <Label Content="Počet tahů"/>
+                <Label Content="{Binding MoveCount}"/>
+            </WrapPanel>
+
+            <WrapPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                <Label Content="Délka hry"/>
+                <Label Content="{Binding GameLength}"/>
+            </WrapPanel>
+        </Grid>
+
+        <StackPanel Orientation="Vertical" Margin="0,20,0,0">
+            <Label Content="Pořadí hráčů"/>
+            <ListView ItemsSource="{Binding LeaderBoardItems}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0" Content="{Binding PlayerName}"/>
+                            <Label Grid.Column="1" Content="{Binding TotalScore}" HorizontalAlignment="Right" Margin="0,0,20,0"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+
+        <WrapPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center">
+            <Button Content="Zpět do menu"/>
+        </WrapPanel>
+    </StackPanel>
+</Window>
+
+    

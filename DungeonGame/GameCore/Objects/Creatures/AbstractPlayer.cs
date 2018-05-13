@@ -45,6 +45,26 @@ namespace GameCore.Objects.Creatures
         public AbstractWeapon Weapon { get; protected set; }
 
         /// <summary>
+        /// Returns the value of all items in player's inventory.
+        /// </summary>
+        public int TotalInventoryValue
+        {
+            get
+            {
+                int totalValue = 0;
+                if (Inventory != null && Inventory.Count > 0)
+                {
+                    foreach(AbstractInventoryItem inventoryItem in Inventory)
+                    {
+                        totalValue += inventoryItem.ItemValue;
+                    }
+                }
+
+                return totalValue;
+            }
+        }
+
+        /// <summary>
         /// Property for getting max inventory size. Override it to use custom value.
         /// </summary>
         public virtual int InventorySize

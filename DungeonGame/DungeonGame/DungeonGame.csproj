@@ -63,7 +63,11 @@
     <Compile Include="Render\Configuration\ConfigurationLoader.cs" />
     <Compile Include="Render\IMapRenderer.cs" />
     <Compile Include="Render\VectorMapRenderer.cs" />
+    <Compile Include="ScoreWindow.xaml.cs">
+      <DependentUpon>ScoreWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\NewGameSettingsModel.cs" />
+    <Compile Include="ViewModel\ScoreViewModel.cs" />
     <Page Include="GameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -84,6 +88,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="NewGameSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ScoreWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
