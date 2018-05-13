@@ -149,5 +149,18 @@ namespace DungeonGame
             }
             return game;
         }
+
+        /// <summary>
+        /// Closes this window and displays menu again.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BackBtnClick(object sender, RoutedEventArgs e)
+        {
+            MenuWindow menuWindow = new MenuWindow();
+            App.Current.MainWindow = menuWindow;
+            this.Close();
+            menuWindow.Show();
+        }
     }
 }

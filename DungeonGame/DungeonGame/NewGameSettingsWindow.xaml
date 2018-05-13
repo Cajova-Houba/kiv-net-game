@@ -61,6 +61,7 @@
         <Label Content="Jméno hráče" Grid.Column="0" Grid.Row="7"/>
         <TextBox x:Name="tbPlayerName" Grid.Column="1" Grid.Row="7" Text="{Binding PlayerName}" Margin="5"/>
 
+        <Button Content="Zpět" Grid.Column="0" Grid.Row="8" Margin="10" Click="BackBtnClick"/>
         <Button Content="Start" Grid.Column="1" Grid.Row="8" Click="StartGameBtnClick" Margin="10,10,10,10"/>
     </Grid>
 </Window>
