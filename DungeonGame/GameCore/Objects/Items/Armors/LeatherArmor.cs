@@ -12,7 +12,7 @@ namespace GameCore.Objects.Items.Armors
     {
         public const int DEFENSE = 2;
 
-        public LeatherArmor(string name, MapBlock position) : base(name, position, DEFENSE)
+        public LeatherArmor(MapBlock position) : base("Kožená zbroj", position, DEFENSE)
         {
         }
 

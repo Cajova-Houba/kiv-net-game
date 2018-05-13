@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DungeonGame"
-        xmlns:Model="clr-namespace:DungeonGame.Model" x:Class="DungeonGame.GameWindow"
+        xmlns:Model="clr-namespace:DungeonGame.ViewModel" x:Class="DungeonGame.GameWindow"
         mc:Ignorable="d"
         Title="Game"
         Height="651" Width="741"

@@ -57,9 +57,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="NewGameSettingsWindow.xaml.cs">
+      <DependentUpon>NewGameSettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Render\Configuration\ConfigurationLoader.cs" />
     <Compile Include="Render\IMapRenderer.cs" />
     <Compile Include="Render\VectorMapRenderer.cs" />
+    <Compile Include="ViewModel\NewGameSettingsModel.cs" />
     <Page Include="GameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -79,10 +83,14 @@
       <DependentUpon>MenuWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NewGameSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\GameViewModel.cs" />
-    <Compile Include="Model\InventoryItemModel.cs" />
+    <Compile Include="ViewModel\GameViewModel.cs" />
+    <Compile Include="ViewModel\InventoryItemModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace DungeonGame.Model
+namespace DungeonGame.ViewModel
 {
     /// <summary>
     /// Simple model which wraps inventory item.

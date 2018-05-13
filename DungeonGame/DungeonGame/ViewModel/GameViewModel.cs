@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DungeonGame.Model 
+namespace DungeonGame.ViewModel 
 {
     /// <summary>
     /// View model for game related things.

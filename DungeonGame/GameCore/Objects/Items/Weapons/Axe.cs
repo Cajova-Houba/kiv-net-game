@@ -12,7 +12,7 @@ namespace GameCore.Objects.Items.Weapons
     {
         public const int DAMAGE = 3;
 
-        public Axe(string name, MapBlock position) : base(name, position, DAMAGE)
+        public Axe(MapBlock position) : base("Rezavá sekera", position, DAMAGE)
         {
         }
 

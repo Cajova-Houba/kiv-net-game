@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using GameCore.Objects.Items;
-using DungeonGame.Model;
+using DungeonGame.ViewModel;
 using GameCore.Map;
 using GameCore.Objects.Creatures;
 using GameCore.Map.Generator;

@@ -1,4 +1,4 @@
-﻿using DungeonGame.Model;
+﻿using DungeonGame.ViewModel;
 using GameCore.Game;
 using GameCore.Map;
 using GameCore.Map.Generator;
@@ -36,27 +36,10 @@ namespace DungeonGame
 
         private void newGameBtn_Click(object sender, RoutedEventArgs e)
         {
-            GameWindow gameWindow = new GameWindow(new GameViewModel(GenerateNewGame()));
-            App.Current.MainWindow = gameWindow;
+            NewGameSettingsWindow newGameSettingsWindow = new NewGameSettingsWindow();
+            App.Current.MainWindow = newGameSettingsWindow;
             this.Close();
-            gameWindow.Show();
-        }
-
-        private Game GenerateNewGame()
-        {
-            Random r = new Random();
-            Map gameMap = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(40, 40, r.Next(99999));
-            AbstractPlayer player = new HumanPlayer("Test player", gameMap.Grid[2, 2]);
-            Game game = new Game() { GameMap = gameMap };
-            game.AddHumanPlayer(player);
-            game.AddAIPlayer(AIPlayerFactory.CreateSimpleAIPLayer("Test AI Player", gameMap.Grid[1, 1]));
-            game.AddAIPlayer(AIPlayerFactory.CreateSimpleAIPLayer("Test AI Player 2", gameMap.Grid[6, 6]));
-            game.AddMonster(MonsterFactory.CreateGoblin("Goblin", gameMap.Grid[4, 7]));
-            game.AddItem(new LeatherArmor("Leather armor", game.GameMap.Grid[1, 1]));
-            game.AddItem(new Axe("Rusty axe", game.GameMap.Grid[3, 4]));
-            game.AddItem(new BasicItem("Golden ring", game.GameMap.Grid[6, 7], 15));
-
-            return game;
+            newGameSettingsWindow.Show();
         }
     }
 }
