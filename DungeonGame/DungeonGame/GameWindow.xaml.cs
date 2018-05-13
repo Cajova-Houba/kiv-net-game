@@ -78,7 +78,42 @@ namespace DungeonGame
         {
             base.OnClosing(e);
 
-            if(renderToCanvasTimer != null && renderToCanvasTimer.IsEnabled)
+            PauseGame();
+
+            // ask user if he really wants to exit
+            bool close = MessageBox.Show("Opravdu chcete odejít?", "Ukončit hru", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes;
+            if (!close) {
+                ResumeGame();
+                e.Cancel = true;
+            } else
+            {
+                // display menu again
+                DisplayMenu();
+            }
+        }
+
+        /// <summary>
+        /// Start timers.
+        /// </summary>
+        private void ResumeGame()
+        {
+            if (renderToCanvasTimer != null && !renderToCanvasTimer.IsEnabled)
+            {
+                renderToCanvasTimer.Start();
+            }
+
+            if (gameLoopStepTimer != null && !gameLoopStepTimer.IsEnabled)
+            {
+                gameLoopStepTimer.Start();
+            }
+        }
+
+        /// <summary>
+        /// Stop game timers.
+        /// </summary>
+        private void PauseGame()
+        {
+            if (renderToCanvasTimer != null && renderToCanvasTimer.IsEnabled)
             {
                 renderToCanvasTimer.Stop();
             }
@@ -87,9 +122,6 @@ namespace DungeonGame
             {
                 gameLoopStepTimer.Stop();
             }
-
-            // display menu again
-            DisplayMenu();
         }
 
         /// <summary>
@@ -305,4 +337,5 @@ namespace DungeonGame
         }
        
     }
+   
 }
