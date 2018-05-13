@@ -35,7 +35,7 @@ namespace DungeonGame
 
         private void StartGameBtnClick(object sender, RoutedEventArgs e)
         {
-            GameWindow gameWindow = new GameWindow(new GameViewModel(GenerateNewGame((NewGameSettingsModel)DataContext));
+            GameWindow gameWindow = new GameWindow(new GameViewModel(GenerateNewGame((NewGameSettingsModel)DataContext)));
             App.Current.MainWindow = gameWindow;
             this.Close();
             gameWindow.Show();
@@ -74,11 +74,12 @@ namespace DungeonGame
                 bool placed = false;
                 while(!placed && (tries < maxTries))
                 {
+                    tries++;
                     int x = r.Next(w);
                     int y = r.Next(h);
-                    if (!creatureOccupiedPositions.Contains("${x}:{y}")) {
+                    if (!creatureOccupiedPositions.Contains($"{x}:{y}")) {
                         game.AddAIPlayer(AIPlayerFactory.CreateSimpleAIPLayer($"Simple AI Player {i + 1}", gameMap.Grid[x, y]));
-                        creatureOccupiedPositions.Add(("${x}:{y}"));
+                        creatureOccupiedPositions.Add(($"{x}:{y}"));
                         placed = true;
                     }
                 }
@@ -98,12 +99,13 @@ namespace DungeonGame
                 bool placed = false;
                 while (!placed && (tries < maxTries))
                 {
+                    tries++;
                     int x = r.Next(w);
                     int y = r.Next(h);
-                    if (!creatureOccupiedPositions.Contains("${x}:{y}"))
+                    if (!creatureOccupiedPositions.Contains($"{x}:{y}"))
                     {
                         game.AddMonster(MonsterFactory.CreateRandomMonster(gameMap.Grid[x, y]));
-                        creatureOccupiedPositions.Add(("${x}:{y}"));
+                        creatureOccupiedPositions.Add(($"{x}:{y}"));
                         placed = true;
                     }
                 }
@@ -124,12 +126,13 @@ namespace DungeonGame
                 bool placed = false;
                 while (!placed && (tries < maxTries))
                 {
+                    tries++;
                     int x = r.Next(w);
                     int y = r.Next(h);
-                    if (!itemsOccupiedPositions.Contains("${x}:{y}"))
+                    if (!itemsOccupiedPositions.Contains($"{x}:{y}"))
                     {
                         game.AddItem(ItemFactory.CreateRandomItem(gameMap.Grid[x,y]));
-                        itemsOccupiedPositions.Add(("${x}:{y}"));
+                        itemsOccupiedPositions.Add(($"{x}:{y}"));
                         placed = true;
                     }
                 }
