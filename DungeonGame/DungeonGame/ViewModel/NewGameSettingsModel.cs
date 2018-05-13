@@ -17,6 +17,7 @@ namespace DungeonGame.ViewModel
         public const int DEF_MAP_SEED = IMapGeneratorConstants.NO_SEED;
         public const int DEF_AI_COUNT = 3;
         public const int DEF_MONSTER_COUNT = 10;
+        public const string DEF_PLAYER_NAME = "Dobrodruh #5";
 
         private int mapWidth;
         public int MapWidth
@@ -65,6 +66,13 @@ namespace DungeonGame.ViewModel
             set { selectedDensity = value; }
         }
 
+        private string playerName;
+        public string PlayerName
+        {
+            get { return playerName; }
+            set { playerName = value; }
+        }
+
         /// <summary>
         /// Initializes this view model with default values.
         /// </summary>
@@ -75,6 +83,7 @@ namespace DungeonGame.ViewModel
             mapSeed = DEF_MAP_SEED;
             aiCount = DEF_AI_COUNT;
             monsterCount = DEF_MONSTER_COUNT;
+            playerName = DEF_PLAYER_NAME;
 
             itemsDensities = new List<ItemsDensity>();
             itemsDensities.Add(new ItemsDensity() { Value = 1, Name = "Málo" });

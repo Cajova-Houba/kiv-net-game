@@ -61,9 +61,14 @@ namespace DungeonGame
 
             Random r = new Random();
             Map gameMap = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(w, h, seed);
-            AbstractPlayer player = new HumanPlayer("Test player", gameMap.Grid[2, 2]);
             Game game = new Game() { GameMap = gameMap };
+
+            // place human player
+            int x = r.Next(w);
+            int y = r.Next(h);
+            AbstractPlayer player = new HumanPlayer(model.PlayerName, gameMap.Grid[w, h]);
             game.AddHumanPlayer(player);
+            creatureOccupiedPositions.Add($"{x}:{y}");
             
             // place AI players
             for(int i = 0; i < aiCount; i++)
@@ -75,8 +80,8 @@ namespace DungeonGame
                 while(!placed && (tries < maxTries))
                 {
                     tries++;
-                    int x = r.Next(w);
-                    int y = r.Next(h);
+                    x = r.Next(w);
+                    y = r.Next(h);
                     if (!creatureOccupiedPositions.Contains($"{x}:{y}")) {
                         game.AddAIPlayer(AIPlayerFactory.CreateSimpleAIPLayer($"Simple AI Player {i + 1}", gameMap.Grid[x, y]));
                         creatureOccupiedPositions.Add(($"{x}:{y}"));
@@ -100,8 +105,8 @@ namespace DungeonGame
                 while (!placed && (tries < maxTries))
                 {
                     tries++;
-                    int x = r.Next(w);
-                    int y = r.Next(h);
+                    x = r.Next(w);
+                    y = r.Next(h);
                     if (!creatureOccupiedPositions.Contains($"{x}:{y}"))
                     {
                         game.AddMonster(MonsterFactory.CreateRandomMonster(gameMap.Grid[x, y]));
@@ -127,8 +132,8 @@ namespace DungeonGame
                 while (!placed && (tries < maxTries))
                 {
                     tries++;
-                    int x = r.Next(w);
-                    int y = r.Next(h);
+                    x = r.Next(w);
+                    y = r.Next(h);
                     if (!itemsOccupiedPositions.Contains($"{x}:{y}"))
                     {
                         game.AddItem(ItemFactory.CreateRandomItem(gameMap.Grid[x,y]));

@@ -68,6 +68,12 @@ namespace DungeonGame
             Init();
         }
 
+        public GameWindow()
+        {
+            InitializeComponent();
+            Init();
+        }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
@@ -81,12 +87,20 @@ namespace DungeonGame
             {
                 gameLoopStepTimer.Stop();
             }
+
+            // display menu again
+            DisplayMenu();
         }
 
-        public GameWindow()
+        /// <summary>
+        /// Creates new menu window and sets it as current app window.
+        /// Does NOT close this window.
+        /// </summary>
+        private void DisplayMenu()
         {
-            InitializeComponent();
-            Init();
+            MenuWindow menuWindow = new MenuWindow();
+            App.Current.MainWindow = menuWindow;
+            menuWindow.Show();
         }
 
         private void Init()
