@@ -60,6 +60,17 @@ namespace DungeonGame
         /// </summary>
         protected double lastTimeGameLoopStep;
 
+        /// <summary>
+        /// Flag used to determine whether 'Are you sure' dialog should be displayed when closing this window.
+        /// After the score is displayed and closed, there's no need to ask user if he wants to close this window.
+        /// </summary>
+        private bool skipExitConfirm;
+
+        /// <summary>
+        /// Timestamp of time when this window was created. Used to calculated total game length.
+        /// </summary>
+        private DateTime startTime;
+
         public GameWindow(GameViewModel viewModel)
         {
             DataContext = viewModel;
@@ -78,14 +89,29 @@ namespace DungeonGame
         {
             base.OnClosing(e);
 
-            PauseGame();
+            if (!skipExitConfirm)
+            {
+                HandleClosingWithDialog(e);
+            }
+            
+        }
+
+        /// <summary>
+        /// Shows 'Are you sure' dialog and interrupts closing if needed.
+        /// </summary>
+        /// <param name="e"></param>
+        private void HandleClosingWithDialog(CancelEventArgs e)
+        {
+            PauseGame(true);
 
             // ask user if he really wants to exit
             bool close = MessageBox.Show("Opravdu chcete odejít?", "Ukončit hru", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes;
-            if (!close) {
+            if (!close)
+            {
                 ResumeGame();
                 e.Cancel = true;
-            } else
+            }
+            else
             {
                 // display menu again
                 DisplayMenu();
@@ -110,10 +136,11 @@ namespace DungeonGame
 
         /// <summary>
         /// Stop game timers.
+        /// <paramref name="stopRendering">Rendring timer is also stopped if this parameter is true.</paramref>
         /// </summary>
-        private void PauseGame()
+        private void PauseGame(bool stopRendering)
         {
-            if (renderToCanvasTimer != null && renderToCanvasTimer.IsEnabled)
+            if (renderToCanvasTimer != null && renderToCanvasTimer.IsEnabled && stopRendering)
             {
                 renderToCanvasTimer.Stop();
             }
@@ -135,6 +162,37 @@ namespace DungeonGame
             menuWindow.Show();
         }
 
+        /// <summary>
+        /// Creates score modal window and sets it as current app window.
+        /// Does NOT close this window.
+        /// </summary>
+        private void DisplayScore()
+        {
+            int gameTime = (int)(DateTime.Now - startTime).TotalSeconds;
+
+            ScoreWindow scoreWindow = new ScoreWindow(new ScoreViewModel(viewModel.GameInstance, gameTime));
+            scoreWindow.ShowDialog();
+        }
+
+        /// <summary>
+        /// Should be called after someone wins the game or player dies.
+        /// </summary>
+        private void OnGameEnded()
+        {
+            PauseGame(true);
+
+            // show score
+            DisplayScore();
+
+            // display menu again when score window is closed
+            DisplayMenu();
+            this.skipExitConfirm = true;
+            this.Close();
+        }
+
+        /// <summary>
+        /// Does some initialization, called from constructor.
+        /// </summary>
         private void Init()
         {
             mapRenderer = new VectorMapRenderer(new RenderConfiguration());
@@ -149,8 +207,9 @@ namespace DungeonGame
             gameLoopStepTimer.Interval = new TimeSpan(100);
             lastTimeGameLoopStep = 0;
 
-            renderToCanvasTimer.Start();
-            gameLoopStepTimer.Start();
+            startTime = DateTime.Now;
+
+            ResumeGame();
         }
         
         /// <summary>
@@ -226,6 +285,8 @@ namespace DungeonGame
                 {
                     // todo: something
                 }
+
+                bool winner = gameView.GameInstance.IsWinner;
                 if (gameView.GameInstance.IsWinner)
                 {
                     ((DispatcherTimer)sender).Stop();
@@ -236,6 +297,10 @@ namespace DungeonGame
                     viewModel = gameView;
                     DataContext = viewModel;
                     gameView.NotifyPropertyChanges();
+                    if (winner)
+                    {
+                        OnGameEnded();
+                    }
                 });
                 Monitor.Exit(gameView);
             }

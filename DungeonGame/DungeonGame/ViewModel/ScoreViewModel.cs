@@ -105,12 +105,20 @@ namespace DungeonGame.ViewModel
             mapHeight = gameInstance.GameMap.Height;
             aiCount = gameInstance.AiPlayers.Count;
             monsterCount = gameInstance.Monsters.Count;
-            moveCount = 0;
+            moveCount = gameInstance.HumanPlayers[0].MoveCounter;
 
             leaderBoardItems = new List<LeaderboardItem>();
-            leaderBoardItems.Add(new LeaderboardItem() { PlayerName = gameInstance.HumanPlayers[0].Name, TotalScore = gameInstance.HumanPlayers[0].TotalInventoryValue });
+            gameInstance.HumanPlayers.ForEach(humanPlayer => leaderBoardItems.Add(new LeaderboardItem() {
+                PlayerName = humanPlayer.Name,
+                TotalScore = humanPlayer.TotalInventoryValue,
+                Winner = humanPlayer.Equals(gameInstance.Winner)
+            }));
 
-            gameInstance.AiPlayers.ForEach(aiPlayer => leaderBoardItems.Add(new LeaderboardItem() { PlayerName = aiPlayer.Name, TotalScore = aiPlayer.TotalInventoryValue }));
+            gameInstance.AiPlayers.ForEach(aiPlayer => leaderBoardItems.Add(new LeaderboardItem() {
+                PlayerName = aiPlayer.Name,
+                TotalScore = aiPlayer.TotalInventoryValue,
+                Winner = aiPlayer.Equals(gameInstance.Winner)
+            }));
         }
     }
 
@@ -122,5 +130,6 @@ namespace DungeonGame.ViewModel
     {
         public String PlayerName { get; set; }
         public int TotalScore { get; set; }
+        public bool Winner { get; set; }
     }
 }

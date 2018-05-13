@@ -6,16 +6,12 @@
         xmlns:local="clr-namespace:DungeonGame"
         xmlns:ViewModel="clr-namespace:DungeonGame.ViewModel" x:Class="DungeonGame.ScoreWindow"
         mc:Ignorable="d"
-        Title="Výsledky hry" Height="300" Width="300">
+        Title="Výsledky hry" Height="400" Width="300">
 
-    <Window.DataContext>
-        <ViewModel:ScoreViewModel/>
-    </Window.DataContext>
-
-    <StackPanel Orientation="Vertical">
-        <Grid>
+    <StackPanel Orientation="Vertical" Height="Auto">
+        <Grid HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="150"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -51,11 +47,17 @@
         </Grid>
 
         <StackPanel Orientation="Vertical" Margin="0,20,0,0">
-            <Label Content="Pořadí hráčů"/>
-            <ListView ItemsSource="{Binding LeaderBoardItems}">
+            <Label Content="Pořadí hráčů podle skóre"/>
+            <ListView ItemsSource="{Binding LeaderBoardItems}" MaxHeight="200" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Winner}" Value="true">
+                                <Setter Property="Background" Value="LightGreen"/>
+                            </DataTrigger>
+                        </Style.Triggers>
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
@@ -75,7 +77,7 @@
         </StackPanel>
 
         <WrapPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center">
-            <Button Content="Zpět do menu"/>
+            <Button Content="Zavřít" Click="CloseBtnClick"/>
         </WrapPanel>
     </StackPanel>
 </Window>

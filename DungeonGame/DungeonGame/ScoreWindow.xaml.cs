@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DungeonGame.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,23 @@ namespace DungeonGame
     {
         public ScoreWindow()
         {
+            DataContext = new ScoreViewModel();
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Initializes this window with given model.
+        /// </summary>
+        /// <param name="viewModel">View model to be used as this window's data context.</param>
+        public ScoreWindow(ScoreViewModel viewModel)
+        {
+            DataContext = viewModel;
+            InitializeComponent();
+        }
+
+        private void CloseBtnClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

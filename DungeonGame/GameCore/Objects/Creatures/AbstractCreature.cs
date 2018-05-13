@@ -41,6 +41,16 @@ namespace GameCore.Objects.Creatures
         /// </summary>
         public bool Alive { get { return CurrentHitPoints > 0; } }
 
+        private int moveCounter;
+
+        /// <summary>
+        /// Returns the number of move actions which were executed over this creature.
+        /// </summary>
+        public int MoveCounter
+        {
+            get { return moveCounter; }
+        }
+
         /// <summary>
         /// Returns the action to be performed (if any) and adds new action to the action queue.
         /// </summary>
@@ -90,6 +100,7 @@ namespace GameCore.Objects.Creatures
             {
                 position.Creature = this;
             }
+            moveCounter = 0;
         }
 
         /// <summary>
@@ -104,6 +115,7 @@ namespace GameCore.Objects.Creatures
             // to the new position
             Position = mapBlock;
             mapBlock.Creature = this;
+            moveCounter++;
         }
 
         /// <summary>
