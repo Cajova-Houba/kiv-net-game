@@ -87,7 +87,6 @@ namespace DungeonGame.ViewModel
             toolboxItems = CreateToolboxItems();
 
             PlacedItems = new ObservableCollection<EditorToolboxItem>();
-            PlacedItems.Add(new EditorToolboxItem() { Name = "Protihráč", Tooltip = "Umístí protihráče na hrací plochu." });
         }
 
         /// <summary>
@@ -136,16 +135,22 @@ namespace DungeonGame.ViewModel
         }
 
         /// <summary>
-        /// Places item from toolbox to the map.
+        /// Places SelectedToolboxItem to the map. If no item is selected, nothing happnes.
         /// 
         /// If the map block is occupied, coordinates are out of range, map is null or item type is unknown, exception is raised.
         /// 
         /// </summary>
-        /// <param name="item">Item to be placed.</param>
         /// <param name="mapX">X coordinate of map block to place this item.</param>
         /// <param name="mapY">Y coordinate of map block to place this item.</param>
-        public void PlaceItemFromToolbox(EditorToolboxItem item, int mapX, int mapY)
+        public void PlaceSelectedToolboxItem(int mapX, int mapY)
         {
+            EditorToolboxItem item = SelectedToolboxItem;
+            // no item selected => do nothing
+            if (item == null)
+            {
+                return;
+            }
+
             if (GameMap == null)
             {
                 throw new Exception("Není herní mapa!");

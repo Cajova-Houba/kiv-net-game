@@ -116,7 +116,7 @@ namespace DungeonGame
             {
                 try
                 {
-                    viewModel.PlaceItemFromToolbox(viewModel.SelectedToolboxItem, mapBlockPos[0], mapBlockPos[1]);
+                    viewModel.PlaceSelectedToolboxItem(mapBlockPos[0], mapBlockPos[1]);
                     viewModel.DeselectToolboxItem();
                     RenderMap();
                 } catch (Exception ex)
