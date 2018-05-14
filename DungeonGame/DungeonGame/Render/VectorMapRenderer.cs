@@ -58,8 +58,8 @@ namespace DungeonGame.Render
             }
 
             MapBlock[,] mapGrid = map.Grid;
-            int verticalBlockCount = (int)Math.Min((double)mapGrid.GetLength(1), canvasH / blockSize);
-            int horizontalBlockCount = (int)Math.Min((double)mapGrid.GetLength(0), canvasW / blockSize);
+            int verticalBlockCount = (int)Math.Min((double)map.Height, canvasH / blockSize);
+            int horizontalBlockCount = (int)Math.Min((double)map.Width, canvasW / blockSize);
             renderedMap.Add(new Rectangle() { Height = verticalBlockCount * blockSize, Width = horizontalBlockCount * blockSize, Fill = new SolidColorBrush(Color.FromRgb(255, 204, 102)) });
 
             int[] xBoundaries = GetXBoundaries(mapGrid, centerBlock, horizontalBlockCount);
@@ -70,6 +70,26 @@ namespace DungeonGame.Render
                 {
                     List<Shape> renderedMapBlock = RenderMapBlock(mapGrid[i, j], (i-xBoundaries[0]) * blockSize, (j-yBoundaries[0]) * blockSize, blockSize, map.WinningBlock.X, map.WinningBlock.Y);
                     renderedMap.AddRange(renderedMapBlock);
+                }
+            }
+
+            return renderedMap;
+        }
+
+
+        public List<UIElement> RenderWholeMap(Map map)
+        {
+            List<UIElement> renderedMap = new List<UIElement>();
+
+            int verticalBlockCount = map.Height;
+            int horizontalBlockCount = map.Width;
+            renderedMap.Add(new Rectangle() { Height = verticalBlockCount * blockSize, Width = horizontalBlockCount * blockSize, Fill = new SolidColorBrush(Color.FromRgb(255, 204, 102)) });
+
+            for (int i = 0; i < horizontalBlockCount; i++)
+            {
+                for (int j = 0; j < verticalBlockCount; j++)
+                {
+                    renderedMap.AddRange(RenderMapBlock(map.Grid[i, j], i*blockSize, j*blockSize, blockSize, map.WinningBlock.X, map.WinningBlock.Y));
                 }
             }
 

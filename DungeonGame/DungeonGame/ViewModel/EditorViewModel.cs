@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GameCore.Map;
+using GameCore.Map.Generator;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -65,7 +67,10 @@ namespace DungeonGame.ViewModel
         /// </summary>
         public ObservableCollection<EditorToolboxItem> PlacedItems{ get; protected set;}
 
-
+        /// <summary>
+        /// Generated map.
+        /// </summary>
+        public Map GameMap { get; set; }
 
         /// <summary>
         /// Initializes this model with default values.
@@ -100,6 +105,15 @@ namespace DungeonGame.ViewModel
             return items;
         }
 
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
         /// <summary>
         /// Deselects toolbox item.
         /// </summary>
@@ -109,13 +123,12 @@ namespace DungeonGame.ViewModel
 
         }
 
-        protected void OnPropertyChanged(string name)
+        /// <summary>
+        /// Generate new map from values stored in this view model.
+        /// </summary>
+        public void GenerateMap()
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
+            GameMap = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(MapWidth, MapHeight, MapSeed);
         }
     }
 

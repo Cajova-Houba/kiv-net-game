@@ -22,6 +22,14 @@ namespace DungeonGame.Render
         /// <param name="canvasH">Height of target canvas.</param>
         /// <returns>Map rendered as a set of UI elements.</returns>
         List<System.Windows.UIElement> RenderMap(Map map, MapBlock centerBlock, double canvasW, double canvasH);
+
+        /// <summary>
+        /// Renders whole map as a collection of UI elements which can be added to canvas.
+        /// Map blocks will have constant size.
+        /// </summary>
+        /// <param name="map">Map to be rendered.</param>
+        /// <returns></returns>
+        List<System.Windows.UIElement> RenderWholeMap(Map map);
     }
 
     /// <summary>
