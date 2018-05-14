@@ -128,10 +128,13 @@ namespace DungeonGame.ViewModel
 
         /// <summary>
         /// Generate new map from values stored in this view model.
+        /// Note that this will also remove all placed items.
         /// </summary>
         public void GenerateMap()
         {
             GameMap = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(MapWidth, MapHeight, MapSeed);
+            PlacedItems.Clear();
+            OnPropertyChanged("PlacedItems");
         }
 
         /// <summary>

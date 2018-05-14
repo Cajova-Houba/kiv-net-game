@@ -93,14 +93,21 @@ namespace DungeonGame
 
         private void GenerateBtnClick(object sender, RoutedEventArgs e)
         {
+            EditorViewModel viewModel = (EditorViewModel)DataContext;
+
+            // if the map in view model is not null, ask user if he really wants to generate new map
+            if ( viewModel.GameMap != null &&
+                MessageBox.Show("Opravdu chcete smazat současnou mapu a vygenerovat novou?", "Nová mapa", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) {
+                return;
+            }
+
+            // check values used to generate new map and don't proceed if they're not correct
             if(!CheckValuesForGenerating())
             {
                 return;
             }
-
-            EditorViewModel viewModel = (EditorViewModel)DataContext;
+            
             viewModel.GenerateMap();
-            DataContext = viewModel;
             RenderMap();
         }
 
@@ -135,6 +142,11 @@ namespace DungeonGame
     /// </summary>
     class EditorMapCanvas : Canvas
     {
+        /// <summary>
+        /// Returns size needed to fit all of its' children.
+        /// </summary>
+        /// <param name="constraint">Constraint.</param>
+        /// <returns>Actual size needed for this canvas.</returns>
         protected override Size MeasureOverride(Size constraint)
         {
             base.MeasureOverride(constraint);
