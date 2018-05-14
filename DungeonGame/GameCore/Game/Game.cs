@@ -58,6 +58,7 @@ namespace GameCore.Game
         public void AddHumanPlayer(AbstractPlayer humanPlayer)
         {
             HumanPlayers.Add(humanPlayer);
+            GameMap.AddCreature(humanPlayer);
         }
 
         /// <summary>
@@ -67,6 +68,7 @@ namespace GameCore.Game
         public void AddAIPlayer(AbstractPlayer aiPlayer)
         {
             AiPlayers.Add(aiPlayer);
+            GameMap.AddCreature(aiPlayer);
         }
         
         /// <summary>
@@ -76,6 +78,7 @@ namespace GameCore.Game
         public void AddMonster(AbstractCreature monster)
         {
             Monsters.Add(monster);
+            GameMap.AddCreature(monster);
         }
 
         /// <summary>

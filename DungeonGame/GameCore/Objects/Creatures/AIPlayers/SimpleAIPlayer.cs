@@ -48,9 +48,12 @@ namespace GameCore.Objects.Creatures.AIPlayers
             // timing
             double currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             double mspa = 1000 / aiSpeed;
-            if ((currentTime - lastActionTime) < mspa)
+            if (!IgnoreSpeed)
             {
-                return;
+                if ((currentTime - lastActionTime) < mspa)
+                {
+                    return;
+                }
             }
 
             Map.Map map = Position.ParentMap;

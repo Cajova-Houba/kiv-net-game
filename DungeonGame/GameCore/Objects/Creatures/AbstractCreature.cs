@@ -12,6 +12,11 @@ namespace GameCore.Objects.Creatures
     public abstract class AbstractCreature : GameObject
     {
         /// <summary>
+        /// Whether shoudl AI ignore its' speed. Should be used while implementing Think() method.
+        /// </summary>
+        public bool IgnoreSpeed { get; set; }
+
+        /// <summary>
         /// Base HP. Total HP might be changed accordingly to equipped items.
         /// </summary>
         public int BaseHitPoints { get; protected set; }
@@ -96,10 +101,6 @@ namespace GameCore.Objects.Creatures
             BaseAttack = baseAttack;
             BaseDeffense = baseDeffense;
             ActionQueue = new Queue<AbstractAction>();
-            if (position != null)
-            {
-                position.Creature = this;
-            }
             moveCounter = 0;
         }
 

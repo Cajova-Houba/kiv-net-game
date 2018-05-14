@@ -32,7 +32,9 @@ namespace GameCoreUnitTest
             int baseHp = 10;
             int expectedHp = 9;
             Monster m1 = new Monster("Test monster 1", map.Grid[0, 0], baseHp, 2, 1);
+            map.AddCreature(m1);
             Monster m2 = new Monster("Test monster 2", map.Grid[1, 0], baseHp, 2, 1);
+            map.AddCreature(m2);
 
             // m1 attacks m2
             Attack attackAction = new Attack() { Actor = m1, Direction = Direction.EAST };
@@ -60,6 +62,9 @@ namespace GameCoreUnitTest
             Monster m1 = new Monster("Test monster 1", map.Grid[1, 0], baseHp, 2, 1);
             Monster m2 = new Monster("Test monster 2", map.Grid[0, 0], baseHp, 2, 2);
             Monster m3 = new Monster("Test monster 2", map.Grid[2, 0], baseHp, 2, 10);
+            map.AddCreature(m1);
+            map.AddCreature(m2);
+            map.AddCreature(m3);
 
             // m1 attacks m2
             Attack attackM2 = new Attack() { Actor = m1, Direction = Direction.WEST };
@@ -86,7 +91,8 @@ namespace GameCoreUnitTest
 
             // create monster and let it plan its next action 4 times
             // monster should generate 4 'move to EAST' actions 
-            Monster monster = new Monster("Test monster", map.Grid[0, 0], 100, 0, 0,w-1);
+            Monster monster = new Monster("Test monster", map.Grid[0, 0], 100, 0, 0,w-1) { IgnoreSpeed = true };
+            map.AddCreature(monster);
             Stack<Direction> dirStack = new Stack<Direction>();
             for(int i = 0; i < w-1; i++)
             {

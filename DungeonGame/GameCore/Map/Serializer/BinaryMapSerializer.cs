@@ -59,7 +59,7 @@ namespace GameCore.Map.Serializer
             {
                 if (byteStream.ReadByte() != expectedHeader[i])
                 {
-                    throw new Exception($"Wrong {i} byte of header!");
+                    throw new Exception($"Chybný {i} byte v hlavičce!");
                 }
             }
         }
@@ -71,16 +71,16 @@ namespace GameCore.Map.Serializer
         /// <param name="map">Map object to write into.</param>
         private void ReadMap(Stream byteStream, Map map)
         {
-            int w = ByteToInt(byteStream);
-            int h = ByteToInt(byteStream);
-            int wx = ByteToInt(byteStream);
-            int wy = ByteToInt(byteStream);
+            int w = ReadInt(byteStream);
+            int h = ReadInt(byteStream);
+            int wx = ReadInt(byteStream);
+            int wy = ReadInt(byteStream);
 
             map.InitializeMap(ReadMapBlocks(byteStream, w, h));
             map.WinningBlock = map.Grid[wx, wy];
 
-            List<AbstractCreature> creatures = ReadCreatures(byteStream);
-            List<AbstractItem> items = ReadItems(byteStream);
+            List<AbstractCreature> creatures = ReadCreatures(byteStream, map);
+            List<AbstractItem> items = ReadItems(byteStream, map);
         }
 
         /// <summary>
@@ -139,26 +139,92 @@ namespace GameCore.Map.Serializer
         /// Read creatures from byte stream.
         /// </summary>
         /// <param name="byteStream">Byte stream to read creatures from.</param>
+        /// <param name="map">Map to write data to.</param>
         /// <returns>Creatures.</returns>
-        private List<AbstractCreature> ReadCreatures(Stream byteStream)
+        private List<AbstractCreature> ReadCreatures(Stream byteStream, Map map)
         {
-            int creatureCount = ByteToInt(byteStream);
+            int creatureCount = ReadInt(byteStream);
             List<AbstractCreature> creatures = new List<AbstractCreature>();
 
             return creatures;
         }
 
         /// <summary>
+        /// Read creature from byte stream.
+        /// </summary>
+        /// <param name="byteStream">Byte stream to read creature from.</param>
+        /// <param name="map">Map to write data to.</param>
+        /// <returns>Creature.</returns>
+        private AbstractCreature ReadCreature(Stream byteStream, Map map)
+        {
+            AbstractCreature creature;
+            int uid = ReadInt(byteStream);
+            int nameLen = ReadInt(byteStream);
+            String name = ReadString(byteStream, nameLen);
+            int x = ReadInt(byteStream);
+            int y = ReadInt(byteStream);
+            int hp = ReadInt(byteStream);
+            int dmg = ReadInt(byteStream);
+            int def = ReadInt(byteStream);
+            byte type = (byte)byteStream.ReadByte();
+
+            switch(type)
+            {
+                case 0:
+                    creature = new Monster(name, map.Grid[x, y], hp, dmg, def);
+                    break;
+
+                case 1:
+                    creature = new HumanPlayer(name, map.Grid[x, y]);
+                    break;
+
+                case 2:
+                    creature = new EmptyAIPlayer(name, map.Grid[x, y]);
+                    break;
+
+                case 3:
+                    creature = new SimpleAIPlayer(name, map.Grid[x, y]);
+                    break;
+
+                default:
+                    throw new Exception($"Neznámý typ bytosti: {type}!");
+            }
+
+            if (map.Grid[x,y].Occupied)
+            {
+                throw new Exception($"Na bloku [{x},{y}] je již umístěna postava {map.Grid[x, y].Creature.Name} a nelze na ni umístit {name}!");
+            }
+            map.Grid[x, y].Creature = creature;
+
+
+            return creature;
+        }
+
+        /// <summary>
         /// Read items from byte stream.
         /// </summary>
         /// <param name="byteStream">Byte stream to read items from.</param>
+        /// <param name="map">Map to write data to.</param>
         /// <returns>Items.</returns>
-        private List<AbstractItem> ReadItems(Stream byteStream)
+        private List<AbstractItem> ReadItems(Stream byteStream, Map map)
         {
-            int itemCount = ByteToInt(byteStream);
+            int itemCount = ReadInt(byteStream);
             List<AbstractItem> items = new List<AbstractItem>();
 
             return items;
+        }
+
+        /// <summary>
+        /// Read UTF8 encoded string with nameLen chars from byte stream.
+        /// </summary>
+        /// <param name="byteStrem">Byte stream to read name from.</param>
+        /// <param name="stringLen">Number of characters in string.</param>
+        /// <returns>String.</returns>
+        private String ReadString(Stream byteStrem, int stringLen)
+        {
+            String str = "";
+
+            return str;
         }
 
         /// <summary>
@@ -295,16 +361,16 @@ namespace GameCore.Map.Serializer
             crBytes.AddRange(IntToBytes(creature.Position.X));
             crBytes.AddRange(IntToBytes(creature.Position.Y));
 
-            // creature type and attributes
+            // creature attributes
             byte type = 255;
             if (creature is Monster) { type = 0; }
             else if (creature is HumanPlayer) { type = 1; }
             else if (creature is EmptyAIPlayer) { type = 2; }
             else if (creature is SimpleAIPlayer) { type = 3; }
-            crBytes.Add(type);
             crBytes.AddRange(IntToBytes(creature.BaseHitPoints));
             crBytes.AddRange(IntToBytes(creature.BaseAttack));
             crBytes.AddRange(IntToBytes(creature.BaseDeffense));
+            crBytes.Add(type);
 
             return crBytes;
         }
@@ -341,14 +407,14 @@ namespace GameCore.Map.Serializer
             itBytes.AddRange(IntToBytes(item.Position.X));
             itBytes.AddRange(IntToBytes(item.Position.Y));
 
-            // type and attributes
+            // attributes parameters
             byte type = 255;
             int param = 0;
             if (item is AbstractWeapon) { type = 0; param = ((AbstractWeapon)item).Damage; }
             else if (item is AbstractArmor) { type = 1; param = ((AbstractArmor)item).Defense; }
             else if (item is AbstractInventoryItem) { type = 2; param = ((AbstractInventoryItem)item).ItemValue; }
-            itBytes.Add(type);
             itBytes.AddRange(IntToBytes(param));
+            itBytes.Add(type);
 
             return itBytes;
         }
@@ -380,7 +446,7 @@ namespace GameCore.Map.Serializer
         /// </summary>
         /// <param name="byteStrem">Stream to read from.</param>
         /// <returns>Result.</returns>
-        private int ByteToInt(Stream byteStrem)
+        private int ReadInt(Stream byteStrem)
         {
             byte b0 = (byte)byteStrem.ReadByte();
             byte b1 = (byte)byteStrem.ReadByte();

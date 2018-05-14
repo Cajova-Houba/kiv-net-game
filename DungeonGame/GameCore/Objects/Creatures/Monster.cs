@@ -112,10 +112,14 @@ namespace GameCore.Objects.Creatures
             // timing
             double currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             double mspa = 1000 / monsterSpeed;
-            if ((currentTime - lastActionTime) < mspa)
+            if (!IgnoreSpeed)
             {
-                return;
+                if ((currentTime - lastActionTime) < mspa)
+                {
+                    return;
+                }
             }
+
 
             Direction nextDirection;
             if(goBackwardFlag)

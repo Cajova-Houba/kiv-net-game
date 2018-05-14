@@ -38,7 +38,8 @@ namespace GameCoreUnitTest
             int h = 1;
             Map map = simpleMapGenerator.GenerateMap(w, h, IMapGeneratorConstants.NO_SEED);
 
-            AbstractPlayer simpleAIPlayer = new SimpleAIPlayer("Test simple AI player", map.Grid[0, 0]);
+            AbstractPlayer simpleAIPlayer = new SimpleAIPlayer("Test simple AI player", map.Grid[0, 0]) { IgnoreSpeed = true };
+            map.AddCreature(simpleAIPlayer);
 
             // player should get to the block [4,0] in 4 turns
             for(int i = 0; i < w-1; i ++)
@@ -69,8 +70,10 @@ namespace GameCoreUnitTest
             int h = 1;
             Map map = openMapGenerator.GenerateMap(w, h, IMapGeneratorConstants.NO_SEED);
 
-            AbstractPlayer simpleAIPlayer = new SimpleAIPlayer("Test simple AI player", map.Grid[0, 0]);
+            AbstractPlayer simpleAIPlayer = new SimpleAIPlayer("Test simple AI player", map.Grid[0, 0]) { IgnoreSpeed = true };
+            map.AddCreature(simpleAIPlayer);
             Monster monster = new Monster("Test monster", map.Grid[1, 0], 10, 10, 10);
+            map.AddCreature(monster);
 
             simpleAIPlayer.Think();
 
@@ -91,7 +94,8 @@ namespace GameCoreUnitTest
             int maxIter = 2*(50*50)+1;
             IMapGenerator simpleMapGenerator = new SimpleMapGenerator();
             Map map = simpleMapGenerator.GenerateMap(w, h, IMapGeneratorConstants.NO_SEED);
-            AbstractPlayer simpleAIPlayer = new SimpleAIPlayer("Simple maze solver", map.Grid[0, 0]);
+            AbstractPlayer simpleAIPlayer = new SimpleAIPlayer("Simple maze solver", map.Grid[0, 0]) { IgnoreSpeed = true };
+            map.AddCreature(simpleAIPlayer);
             MapBlock finish = map.Grid[w - 1, h - 1];
             bool finishReached = false;
             int iter = 0;

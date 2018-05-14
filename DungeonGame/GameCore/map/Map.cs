@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GameCore.Objects.Creatures;
+using Newtonsoft.Json;
 using System;
 
 namespace GameCore.Map
@@ -58,6 +59,23 @@ namespace GameCore.Map
                     grid[i, j].AssignToMap(this);
                 }
             }
+        }
+
+        /// <summary>
+        /// Adds crature to this map. Assumes that creature's position is not null.
+        /// If the block is already occupied, exception is thrown.
+        /// </summary>
+        /// <param name="creature">Creature to be placed.</param>
+        public void AddCreature(AbstractCreature creature)
+        {
+            int x = creature.Position.X;
+            int y = creature.Position.Y;
+            if (Grid[x, y].Occupied)
+            {
+                throw new Exception($"Na bloku [{x},{y}] je již umístěna postava {Grid[x, y].Creature.Name} a nelze na ni umístit {creature.Name}!");
+            }
+
+            Grid[x, y].Creature = creature;
         }
 
         /// <summary>
