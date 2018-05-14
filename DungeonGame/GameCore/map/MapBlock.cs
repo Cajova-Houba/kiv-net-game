@@ -97,7 +97,7 @@ namespace GameCore.Map
         }
 
         /// <summary>
-        /// Initializes map block with 4 NONEXISTENT entrances, parent map and position in that map..
+        /// Initializes map block with 4 NONEXISTENT entrances and coordinates.
         /// </summary>
         /// <param name="x">X coordinate of this block.</param>
         /// <param name="y">Y coordinate of this block.</param>

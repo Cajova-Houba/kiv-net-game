@@ -85,6 +85,66 @@ namespace GameCoreUnitTest
             // check creature and item counts
             Assert.AreEqual(0, serializedMap[33], "Wrong creature count!");
             Assert.AreEqual(0, serializedMap[34], "Wrong item count!");
+
+            // try to deserialize
+            Map deserializedMap = byteSerializer.Deserialize(serializedMap);
+
+            // check map 
+            Assert.AreEqual(w, deserializedMap.Width, "Wrong width after deserialization!");
+            Assert.AreEqual(h, deserializedMap.Width, "Wrong height after deserialization!");
+            Assert.AreEqual(map.WinningBlock.X, deserializedMap.WinningBlock.X, "Wrong x coordinate of winning block!");
+            Assert.AreEqual(map.WinningBlock.Y, deserializedMap.WinningBlock.Y, "Wrong Y coordinate of winning block!");
+
+            // check map blocks
+            for(int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    MapBlock origBlock = map.Grid[i, j];
+                    MapBlock testedBlock = deserializedMap.Grid[i, j];
+
+                    Assert.IsTrue(testedBlock.North.IsOpen(), $"North entrance of block [{i},{j}] is not open!");
+                    Assert.IsTrue(testedBlock.East.IsOpen(), $"East entrance of block [{i},{j}] is not open!");
+                    Assert.IsTrue(testedBlock.South.IsOpen(), $"South entrance of block [{i},{j}] is not open!");
+                    Assert.IsTrue(testedBlock.West.IsOpen(), $"West entrance of block [{i},{j}] is not open!");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create simple maze and try serialization / deserialization.
+        /// </summary>
+        [TestMethod]
+        public void TestSerializeMaze()
+        {
+            int w = 4;
+            int h = 4;
+            Map map = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(w, h, IMapGeneratorConstants.NO_SEED);
+            IMapSerializer<byte[], byte[]> byteSerializer = new BinaryMapSerializer();
+
+            byte[] serializedMap = byteSerializer.Serialize(map);
+            Map deserializedMap = byteSerializer.Deserialize(serializedMap);
+
+            // check map 
+            Assert.AreEqual(w, deserializedMap.Width, "Wrong width after deserialization!");
+            Assert.AreEqual(h, deserializedMap.Width, "Wrong height after deserialization!");
+            Assert.AreEqual(map.WinningBlock.X, deserializedMap.WinningBlock.X, "Wrong x coordinate of winning block!");
+            Assert.AreEqual(map.WinningBlock.Y, deserializedMap.WinningBlock.Y, "Wrong Y coordinate of winning block!");
+
+            // check map blocks
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    MapBlock origBlock = map.Grid[i, j];
+                    MapBlock testedBlock = deserializedMap.Grid[i, j];
+
+                    foreach(Direction dir in  DirectionMethods.GetAllDirections())
+                    {
+                        Assert.AreEqual(origBlock.EntranceInDirection(dir).IsOpen(), testedBlock.EntranceInDirection(dir).IsOpen(), $"Wrong entrance in direction {dir} in block [{i},{j}].");
+                    }
+                }
+            }
         }
     }
 }

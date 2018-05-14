@@ -31,8 +31,9 @@ namespace GameCore.Map.Serializer
             ReadHeader(byteStream);
 
             Map map = new Map();
+            ReadMap(byteStream, map);
 
-            throw new NotImplementedException();
+            return map;
         }
 
         public byte[] Serialize(Map map)
@@ -70,7 +71,94 @@ namespace GameCore.Map.Serializer
         /// <param name="map">Map object to write into.</param>
         private void ReadMap(Stream byteStream, Map map)
         {
+            int w = ByteToInt(byteStream);
+            int h = ByteToInt(byteStream);
+            int wx = ByteToInt(byteStream);
+            int wy = ByteToInt(byteStream);
 
+            map.InitializeMap(ReadMapBlocks(byteStream, w, h));
+            map.WinningBlock = map.Grid[wx, wy];
+
+            List<AbstractCreature> creatures = ReadCreatures(byteStream);
+            List<AbstractItem> items = ReadItems(byteStream);
+        }
+
+        /// <summary>
+        /// Reads grid of map blocks from stream.
+        /// </summary>
+        /// <param name="byteStream">Stream to read from.</param>
+        /// <param name="w">Width of the grid.</param>
+        /// <param name="h">Height of the grid.</param>
+        /// <returns>Grid with map blocks.</returns>
+        private MapBlock[,] ReadMapBlocks(Stream byteStream, int w, int h)
+        {
+            MapBlock[,] blocks = new MapBlock[w, h];
+            int i = 0;
+            int j = 0;
+
+            byte blockByte = 0;
+            bool upper = false;
+            while((i*j) <= (w-1)*(h-1))
+            {
+                blocks[i, j] = new MapBlock(i, j);
+                byte mask = (byte)(1 << 4);
+
+                // read byte only every second iteration
+                if (!upper)
+                {
+                    blockByte = (byte)byteStream.ReadByte();
+                    mask = 1;
+                }
+
+                byte res = (byte)(blockByte & mask);
+                res = (byte)(blockByte & (mask << 1));
+                res = (byte)(blockByte & (mask << 2));
+                res = (byte)(blockByte & (mask << 3));
+                if ((blockByte & mask) == mask) { blocks[i, j].CreateEntrance(Direction.NORTH); }
+                if ((blockByte & (mask << 1)) == (mask << 1)) { blocks[i, j].CreateEntrance(Direction.EAST); }
+                if ((blockByte & (mask << 2)) == (mask << 2)) { blocks[i, j].CreateEntrance(Direction.SOUTH); }
+                if ((blockByte & (mask << 3)) == (mask << 3)) { blocks[i, j].CreateEntrance(Direction.WEST); }
+
+                upper = !upper;
+                j++;
+                if (j == h )
+                {
+                    j = 0;
+                    i++;
+                    if (i == w)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return blocks;
+        }
+
+        /// <summary>
+        /// Read creatures from byte stream.
+        /// </summary>
+        /// <param name="byteStream">Byte stream to read creatures from.</param>
+        /// <returns>Creatures.</returns>
+        private List<AbstractCreature> ReadCreatures(Stream byteStream)
+        {
+            int creatureCount = ByteToInt(byteStream);
+            List<AbstractCreature> creatures = new List<AbstractCreature>();
+
+            return creatures;
+        }
+
+        /// <summary>
+        /// Read items from byte stream.
+        /// </summary>
+        /// <param name="byteStream">Byte stream to read items from.</param>
+        /// <returns>Items.</returns>
+        private List<AbstractItem> ReadItems(Stream byteStream)
+        {
+            int itemCount = ByteToInt(byteStream);
+            List<AbstractItem> items = new List<AbstractItem>();
+
+            return items;
         }
 
         /// <summary>
@@ -284,6 +372,22 @@ namespace GameCore.Map.Serializer
                 (byte)((intVal >> 16) & 255),
                 (byte)((intVal >> 24) & 255)
             };
+        }
+
+        /// <summary>
+        /// Reads four bytes from stream and converts them to int.
+        /// Little endian.
+        /// </summary>
+        /// <param name="byteStrem">Stream to read from.</param>
+        /// <returns>Result.</returns>
+        private int ByteToInt(Stream byteStrem)
+        {
+            byte b0 = (byte)byteStrem.ReadByte();
+            byte b1 = (byte)byteStrem.ReadByte();
+            byte b2 = (byte)byteStrem.ReadByte();
+            byte b3 = (byte)byteStrem.ReadByte();
+
+            return (((((((((0 | b3 << 8) | b2) << 8) | b1) << 8) | b0))));
         }
 
         /// <summary>
