@@ -108,10 +108,24 @@ namespace DungeonGame
         {
             double x = e.GetPosition(cMap).X;
             double y = e.GetPosition(cMap).Y;
+            EditorViewModel viewModel = (EditorViewModel)DataContext;
 
-            int[] mapBlockPos = mapRenderer.CalculateMapBlockPosition(((EditorViewModel)DataContext).GameMap, x, y);
+            int[] mapBlockPos = mapRenderer.CalculateMapBlockPosition(viewModel.GameMap, x, y);
 
-            MessageBox.Show($"kliknuto na blok {mapBlockPos[0]},{mapBlockPos[1]}");
+            if(mapBlockPos[0] != -1 && mapBlockPos[1] != -1 && viewModel.SelectedToolboxItem != null)
+            {
+                try
+                {
+                    viewModel.PlaceItemFromToolbox(viewModel.SelectedToolboxItem, mapBlockPos[0], mapBlockPos[1]);
+                    viewModel.DeselectToolboxItem();
+                    RenderMap();
+                } catch (Exception ex)
+                {
+                    MessageBox.Show($"Chyba: {ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+
+            //MessageBox.Show($"kliknuto na blok {mapBlockPos[0]},{mapBlockPos[1]}");
         }
         
     }

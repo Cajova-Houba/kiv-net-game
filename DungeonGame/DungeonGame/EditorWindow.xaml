@@ -73,7 +73,7 @@
 
 
             <GroupBox Header="Toolbox" Grid.Column="0" Grid.Row="1">
-                <ListBox ItemsSource="{Binding ToolboxItems}" SelectedItem="{Binding SelectedToolboxItem}">
+                <ListBox Name="lbToolbox" ItemsSource="{Binding ToolboxItems}" SelectedItem="{Binding SelectedToolboxItem, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Border BorderBrush="Black" BorderThickness="1" DataContext="{Binding}">
