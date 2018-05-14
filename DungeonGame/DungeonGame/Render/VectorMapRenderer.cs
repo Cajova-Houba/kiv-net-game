@@ -76,7 +76,12 @@ namespace DungeonGame.Render
             return renderedMap;
         }
 
-
+        /// <summary>
+        /// Renders whole map as a collection of UI elements which can be added to canvas.
+        /// Map blocks will have constant size.
+        /// </summary>
+        /// <param name="map">Map to be rendered.</param>
+        /// <returns>Map rendered as a collection of UI elements.</returns>
         public List<UIElement> RenderWholeMap(Map map)
         {
             List<UIElement> renderedMap = new List<UIElement>();
@@ -94,6 +99,34 @@ namespace DungeonGame.Render
             }
 
             return renderedMap;
+        }
+
+        /// <summary>
+        /// Transforms [x,y] position (usually from canvas) to map block position.
+        /// X and y should be in range  [0..canvasWidth], [0..canvasHeight].
+        /// </summary>
+        /// <param name="map">Map used to get map dimensions. If null [-1,-1] is returned.</param>
+        /// <param name="x">X coordinate of a point.</param>
+        /// <param name="y">Y coordinate of a point.</param>
+        /// <returns>Coordinates of map block which would be rendered on the point given by [X,Y] coordinates.</returns>
+        public int[] CalculateMapBlockPosition(Map map, double x, double y)
+        {
+            int[] mapBlockPos = new int[2];
+            
+            if (map == null)
+            {
+                return new int[] { -1, -1 };
+            }
+
+            if (x < 0 ) { mapBlockPos[0] = 0; }
+            else if (x > blockSize * map.Width) { mapBlockPos[0] = map.Width - 1; }
+            else { mapBlockPos[0] = (int)x / (int)blockSize; }
+
+            if (y < 0) { mapBlockPos[1] = 0; }
+            else if (y > blockSize * map.Height) { mapBlockPos[1] = map.Height - 1; }
+            else { mapBlockPos[1] = (int)y / (int)blockSize; }
+
+            return mapBlockPos;
         }
 
         /// <summary>

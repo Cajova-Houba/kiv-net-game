@@ -31,7 +31,7 @@
         </Menu>
 
         <ScrollViewer Grid.Column="0" Grid.Row="1" Width="Auto" Height="Auto" HorizontalScrollBarVisibility="Visible">
-            <local:EditorMapCanvas x:Name="cMap" Width="Auto" Height="Auto"/>
+            <local:EditorMapCanvas x:Name="cMap" Width="Auto" Height="Auto" Background="Transparent" MouseLeftButtonDown="EditorMapCanvasClick"/>
         </ScrollViewer>
 
         <Grid Grid.Row="1" Grid.Column="1">

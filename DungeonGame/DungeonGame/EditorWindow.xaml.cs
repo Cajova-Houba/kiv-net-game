@@ -103,6 +103,17 @@ namespace DungeonGame
             DataContext = viewModel;
             RenderMap();
         }
+
+        private void EditorMapCanvasClick(object sender, MouseButtonEventArgs e)
+        {
+            double x = e.GetPosition(cMap).X;
+            double y = e.GetPosition(cMap).Y;
+
+            int[] mapBlockPos = mapRenderer.CalculateMapBlockPosition(((EditorViewModel)DataContext).GameMap, x, y);
+
+            MessageBox.Show($"kliknuto na blok {mapBlockPos[0]},{mapBlockPos[1]}");
+        }
+        
     }
 
     /// <summary>
