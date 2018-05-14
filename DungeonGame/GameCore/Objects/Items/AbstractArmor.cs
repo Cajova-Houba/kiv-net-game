@@ -10,7 +10,7 @@ namespace GameCore.Objects.Items
         /// <summary>
         /// Defense which is added to player's base defense.
         /// </summary>
-        public int Defense { get; protected set; }
+        public int Defense { get; set; }
 
         public AbstractArmor(string name, MapBlock position, int defense) : base(name, position)
         {

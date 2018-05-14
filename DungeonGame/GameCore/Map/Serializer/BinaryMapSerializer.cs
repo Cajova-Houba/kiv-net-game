@@ -1,6 +1,8 @@
 ﻿using GameCore.Objects.Creatures;
 using GameCore.Objects.Creatures.AIPlayers;
 using GameCore.Objects.Items;
+using GameCore.Objects.Items.Armors;
+using GameCore.Objects.Items.Weapons;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -145,7 +147,10 @@ namespace GameCore.Map.Serializer
         {
             int creatureCount = ReadInt(byteStream);
             List<AbstractCreature> creatures = new List<AbstractCreature>();
-
+            for(int i = 0; i < creatureCount; i++)
+            {
+                creatures.Add(ReadCreature(byteStream, map));
+            }
             return creatures;
         }
 
@@ -171,30 +176,26 @@ namespace GameCore.Map.Serializer
             switch(type)
             {
                 case 0:
-                    creature = new Monster(name, map.Grid[x, y], hp, dmg, def);
+                    creature = new Monster(name, map.Grid[x, y], hp, dmg, def) { UniqueId = uid, BaseHitPoints = hp, BaseAttack = dmg, BaseDeffense = def };
                     break;
 
                 case 1:
-                    creature = new HumanPlayer(name, map.Grid[x, y]);
+                    creature = new HumanPlayer(name, map.Grid[x, y]) { UniqueId = uid, BaseHitPoints = hp, BaseAttack = dmg, BaseDeffense = def };
                     break;
 
                 case 2:
-                    creature = new EmptyAIPlayer(name, map.Grid[x, y]);
+                    creature = new EmptyAIPlayer(name, map.Grid[x, y]) { UniqueId = uid, BaseHitPoints = hp, BaseAttack = dmg, BaseDeffense = def };
                     break;
 
                 case 3:
-                    creature = new SimpleAIPlayer(name, map.Grid[x, y]);
+                    creature = new SimpleAIPlayer(name, map.Grid[x, y]) { UniqueId = uid, BaseHitPoints = hp, BaseAttack = dmg, BaseDeffense = def };
                     break;
 
                 default:
                     throw new Exception($"Neznámý typ bytosti: {type}!");
             }
-
-            if (map.Grid[x,y].Occupied)
-            {
-                throw new Exception($"Na bloku [{x},{y}] je již umístěna postava {map.Grid[x, y].Creature.Name} a nelze na ni umístit {name}!");
-            }
-            map.Grid[x, y].Creature = creature;
+            
+            map.AddCreature(creature);
 
 
             return creature;
@@ -210,19 +211,69 @@ namespace GameCore.Map.Serializer
         {
             int itemCount = ReadInt(byteStream);
             List<AbstractItem> items = new List<AbstractItem>();
-
+            for(int i = 0; i <itemCount; i++)
+            {
+                items.Add(ReadItem(byteStream, map));
+            }
             return items;
         }
 
         /// <summary>
+        /// Read item from byte stream.
+        /// </summary>
+        /// <param name="byteStream">Byte stream to read items from.</param>
+        /// <param name="map">Map to write data to.</param>
+        /// <returns>Items</returns>
+        private AbstractItem ReadItem(Stream byteStream, Map map)
+        {
+            AbstractItem item;
+            int uid = ReadInt(byteStream);
+            int nameLen = ReadInt(byteStream);
+            String name = ReadString(byteStream, nameLen);
+            int x = ReadInt(byteStream);
+            int y = ReadInt(byteStream);
+            int param = ReadInt(byteStream);
+            byte type = (byte)byteStream.ReadByte();
+
+            switch(type)
+            {
+                case 0:
+                    item = new Axe(map.Grid[x, y]) { UniqueId = uid, Name = name, Damage = param };
+                    break;
+
+                case 1:
+                    item = new LeatherArmor(map.Grid[x, y]) { UniqueId = uid, Name = name, Defense = param };
+                    break;
+
+                case 2:
+                    item = new BasicItem(name, map.Grid[x, y], param) { UniqueId = uid };
+                    break;
+
+                default:
+                    throw new Exception($"Neznámý typ předmětu: {type}!");
+            }
+
+            map.AddItem(item);
+
+            return item;
+        }
+
+
+        /// <summary>
         /// Read UTF8 encoded string with nameLen chars from byte stream.
         /// </summary>
-        /// <param name="byteStrem">Byte stream to read name from.</param>
-        /// <param name="stringLen">Number of characters in string.</param>
+        /// <param name="byteStream">Byte stream to read name from.</param>
+        /// <param name="stringLen">Number of bytes which represents UTF8 string.</param>
         /// <returns>String.</returns>
-        private String ReadString(Stream byteStrem, int stringLen)
+        private String ReadString(Stream byteStream, int stringLen)
         {
             String str = "";
+            byte[] buffer = new byte[stringLen];
+            for(int i = 0; i < stringLen; i++)
+            {
+                buffer[i] = ((byte)byteStream.ReadByte());
+            }
+            str = Encoding.UTF8.GetString(buffer);   
 
             return str;
         }
@@ -444,14 +495,14 @@ namespace GameCore.Map.Serializer
         /// Reads four bytes from stream and converts them to int.
         /// Little endian.
         /// </summary>
-        /// <param name="byteStrem">Stream to read from.</param>
+        /// <param name="byteStream">Stream to read from.</param>
         /// <returns>Result.</returns>
-        private int ReadInt(Stream byteStrem)
+        private int ReadInt(Stream byteStream)
         {
-            byte b0 = (byte)byteStrem.ReadByte();
-            byte b1 = (byte)byteStrem.ReadByte();
-            byte b2 = (byte)byteStrem.ReadByte();
-            byte b3 = (byte)byteStrem.ReadByte();
+            byte b0 = (byte)byteStream.ReadByte();
+            byte b1 = (byte)byteStream.ReadByte();
+            byte b2 = (byte)byteStream.ReadByte();
+            byte b3 = (byte)byteStream.ReadByte();
 
             return (((((((((0 | b3 << 8) | b2) << 8) | b1) << 8) | b0))));
         }

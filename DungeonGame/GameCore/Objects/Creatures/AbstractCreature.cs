@@ -19,7 +19,7 @@ namespace GameCore.Objects.Creatures
         /// <summary>
         /// Base HP. Total HP might be changed accordingly to equipped items.
         /// </summary>
-        public int BaseHitPoints { get; protected set; }
+        public int BaseHitPoints { get;  set; }
 
         /// <summary>
         /// Current HP of this creature.
@@ -29,12 +29,12 @@ namespace GameCore.Objects.Creatures
         /// <summary>
         /// Base attack. Total attack might be changed accordingly to equipped items.
         /// </summary>
-        public int BaseAttack { get; protected set; }
+        public int BaseAttack { get;  set; }
 
         /// <summary>
         /// Base deffense. Total deffense might be changes accordingly to equipped items.
         /// </summary>
-        public int BaseDeffense { get; protected set; }
+        public int BaseDeffense { get;  set; }
 
         /// <summary>
         /// Actions to be performed in game loop. Rather than direct access (public get is for testing purposes), NextAction property should be used.

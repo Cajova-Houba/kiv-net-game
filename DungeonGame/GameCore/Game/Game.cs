@@ -90,7 +90,7 @@ namespace GameCore.Game
             MapBlock pos = item.Position;
             if (pos != null && pos.X >=0 && pos.X < GameMap.Width && pos.Y >=0 && pos.Y < GameMap.Height)
             {
-                GameMap.Grid[pos.X, pos.Y].Item = item;
+                GameMap.AddItem(item);
             }
         }
 

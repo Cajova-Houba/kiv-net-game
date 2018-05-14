@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GameCore.Map;
 using GameCore.Map.Generator;
 using GameCore.Map.Serializer;
+using GameCore.Objects.Creatures;
+using GameCore.Objects.Creatures.AIPlayers;
 
 namespace GameCoreUnitTest
 {
@@ -120,6 +122,10 @@ namespace GameCoreUnitTest
             int w = 4;
             int h = 4;
             Map map = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(w, h, IMapGeneratorConstants.NO_SEED);
+            Monster origMonster = new Monster("Test monster", map.Grid[0, 0], 4, 3654123, 87621235);
+            map.AddCreature(origMonster);
+            SimpleAIPlayer aiPlayer = new SimpleAIPlayer("Test player", map.Grid[3, 2]);
+            map.AddCreature(aiPlayer);
             IMapSerializer<byte[], byte[]> byteSerializer = new BinaryMapSerializer();
 
             byte[] serializedMap = byteSerializer.Serialize(map);
@@ -145,6 +151,19 @@ namespace GameCoreUnitTest
                     }
                 }
             }
+
+            // check creatures
+            Monster m = (Monster)deserializedMap.Grid[0, 0].Creature;
+            Assert.IsNotNull(m, "Monster is missing!");
+            Assert.AreEqual(origMonster.Name, m.Name, "Wrong monster name!");
+            Assert.AreEqual(origMonster.UniqueId, m.UniqueId, "Wrong monster uid!");
+            Assert.AreEqual(origMonster.BaseHitPoints, m.BaseHitPoints, "Wrong monster hp!");
+
+            SimpleAIPlayer p = (SimpleAIPlayer)deserializedMap.Grid[3, 2].Creature;
+            Assert.IsNotNull(p, "Player is missing!");
+            Assert.AreEqual(aiPlayer.Name, p.Name, "Wrong player name!");
+            Assert.AreEqual(aiPlayer.UniqueId, p.UniqueId, "Wrong player uid!");
+            Assert.AreEqual(aiPlayer.BaseHitPoints, p.BaseHitPoints, "Wrong player hp!");
         }
     }
 }

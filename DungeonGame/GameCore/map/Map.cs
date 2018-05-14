@@ -1,4 +1,5 @@
 ﻿using GameCore.Objects.Creatures;
+using GameCore.Objects.Items;
 using Newtonsoft.Json;
 using System;
 
@@ -72,10 +73,27 @@ namespace GameCore.Map
             int y = creature.Position.Y;
             if (Grid[x, y].Occupied)
             {
-                throw new Exception($"Na bloku [{x},{y}] je již umístěna postava {Grid[x, y].Creature.Name} a nelze na ni umístit {creature.Name}!");
+                throw new Exception($"Na bloku [{x},{y}] je již umístěna postava {Grid[x, y].Creature.Name} a nelze na něj umístit {creature.Name}!");
             }
 
             Grid[x, y].Creature = creature;
+        }
+
+        /// <summary>
+        /// Adds item to this map. Assumes that item's position is not null.
+        /// If the block is already occupied, exception is thrown.
+        /// </summary>
+        /// <param name="item">Item to be placed.</param>
+        public void AddItem(AbstractItem item)
+        {
+            int x = item.Position.X;
+            int y = item.Position.Y;
+            if (Grid[x, y].Item != null)
+            {
+                throw new Exception($"Na bloku [{x},{y}] je již umístěn předmět {Grid[x, y].Item.Name} a nelze na něj umístit {item.Name}!");
+            }
+
+            Grid[x, y].Item = item;
         }
 
         /// <summary>
