@@ -1,4 +1,5 @@
-﻿using DungeonGame.ViewModel;
+﻿using DungeonGame.Common;
+using DungeonGame.ViewModel;
 using GameCore.Game;
 using GameCore.Map;
 using GameCore.Map.Generator;
@@ -29,10 +30,6 @@ namespace DungeonGame
     /// </summary>
     public partial class NewGameSettingsWindow : Window
     {
-        public const int MIN_MAP_WIDTH = 3;
-        public const int MAX_MAP_WIDTH = 100;
-        public const int MIN_MAP_HEIGHT = 3;
-        public const int MAX_MAP_HEIGHT = 100;
         public const int MIN_AI_PLAYER_COUNT = 0;
         public const int MAX_AI_PLAYER_COUNT = 100;
         public const int MIN_MONSTER_COUNT = 0;
@@ -63,12 +60,12 @@ namespace DungeonGame
         private bool CheckValues()
         {
             int res = 0;
-            if (!CheckRangedInt(tbMapWidth.Text, MIN_MAP_WIDTH, MAX_MAP_WIDTH, "Šířka mapy není platná hodnota.", $"Šířka mapy musí být v rozsahu {MIN_MAP_WIDTH}-{MAX_MAP_WIDTH}."))
+            if (!Utils.CheckRangedInt(tbMapWidth.Text, ViewModelConstants.MIN_MAP_WIDTH, ViewModelConstants.MAX_MAP_WIDTH, "Šířka mapy není platná hodnota.", $"Šířka mapy musí být v rozsahu {ViewModelConstants.MIN_MAP_WIDTH}-{ViewModelConstants.MAX_MAP_WIDTH}."))
             {
                 return false;
             }
 
-            if (!CheckRangedInt(tbMapHeight.Text, MIN_MAP_WIDTH, MAX_MAP_WIDTH, "Výška mapy není platná hodnota.", $"Výška mapy musí být v rozsahu {MIN_MAP_HEIGHT}-{MAX_MAP_HEIGHT}."))
+            if (!Utils.CheckRangedInt(tbMapHeight.Text, ViewModelConstants.MIN_MAP_WIDTH, ViewModelConstants.MAX_MAP_WIDTH, "Výška mapy není platná hodnota.", $"Výška mapy musí být v rozsahu {ViewModelConstants.MIN_MAP_HEIGHT}-{ViewModelConstants.MAX_MAP_HEIGHT}."))
             {
                 return false;
             }
@@ -79,42 +76,14 @@ namespace DungeonGame
                 return false;
             }
 
-            if (!CheckRangedInt(tbAiCount.Text, MIN_AI_PLAYER_COUNT, MAX_AI_PLAYER_COUNT, "Počet protihráčů není platná hodnota.", $"Počet protihráčů musí být v rozsahu {MIN_AI_PLAYER_COUNT}-{MAX_AI_PLAYER_COUNT}."))
+            if (!Utils.CheckRangedInt(tbAiCount.Text, MIN_AI_PLAYER_COUNT, MAX_AI_PLAYER_COUNT, "Počet protihráčů není platná hodnota.", $"Počet protihráčů musí být v rozsahu {MIN_AI_PLAYER_COUNT}-{MAX_AI_PLAYER_COUNT}."))
             {
                 return false;
             }
 
-            if (!CheckRangedInt(tbMonsterCount.Text, MIN_MONSTER_COUNT, MAX_MONSTER_COUNT, "Počet monster není platná hodnota.", $"Počet monster musí být v rozsahu {MIN_MONSTER_COUNT}-{MAX_MONSTER_COUNT}."))
+            if (!Utils.CheckRangedInt(tbMonsterCount.Text, MIN_MONSTER_COUNT, MAX_MONSTER_COUNT, "Počet monster není platná hodnota.", $"Počet monster musí být v rozsahu {MIN_MONSTER_COUNT}-{MAX_MONSTER_COUNT}."))
             {
                 return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Tries to parse integer from source and checks it's range.
-        /// </summary>
-        /// <param name="source">String with integer to be checked.</param>
-        /// <param name="min">Min allowed value.</param>
-        /// <param name="max">Max allowed value.</param>
-        /// <param name="parseErrorMessage">Error message to be displayed if error occurs during parsing.</param>
-        /// <param name="rangeErrorMessage">Error message to be displayed if error occurs during rarnge check.</param>
-        /// <returns>True if source is ok integer.</returns>
-        private bool CheckRangedInt(string source, int min, int max, string parseErrorMessage, string rangeErrorMessage)
-        {
-            int res = 0;
-            if (!Int32.TryParse(source, out res))
-            {
-                MessageBox.Show(parseErrorMessage, "Chybe", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            } else
-            {
-                if (res < min || res > max)
-                {
-                    MessageBox.Show(rangeErrorMessage, "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return false;
-                }
             }
 
             return true;
