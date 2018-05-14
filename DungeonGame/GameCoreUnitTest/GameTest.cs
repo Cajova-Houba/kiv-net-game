@@ -114,7 +114,7 @@ namespace GameCoreUnitTest
         {
             // prepare map block with one item, player and pick up action
             MapBlock mapBlock = new MapBlock(0, 0);
-            AbstractItem sword = new Axe("Test item", mapBlock);
+            AbstractItem sword = new Axe(mapBlock);
             mapBlock.Item = sword;
             AbstractPlayer testPlayer = new EmptyAIPlayer("Test player", mapBlock);
             PickUp pickUpAction = new PickUp() { Actor = testPlayer };
@@ -131,7 +131,7 @@ namespace GameCoreUnitTest
             Assert.IsNull(mapBlock.Item, "Item was not picked up from map block");
 
             // add new sword to the map block and check that swapping works
-            AbstractItem sword2 = new Axe("Test sword 2", mapBlock);
+            AbstractItem sword2 = new Axe(mapBlock);
             mapBlock.Item = sword2;
             pickUpAction.Execute();
 
@@ -150,7 +150,7 @@ namespace GameCoreUnitTest
         {
             // prepare map block with one item, player and pick up action
             MapBlock mapBlock = new MapBlock(0, 0);
-            AbstractItem armor = new LeatherArmor("Test amor", mapBlock);
+            AbstractItem armor = new LeatherArmor(mapBlock);
             mapBlock.Item = armor;
             AbstractPlayer testPlayer = new EmptyAIPlayer("Test player", mapBlock);
             PickUp pickUpAction = new PickUp() { Actor = testPlayer };
@@ -167,7 +167,7 @@ namespace GameCoreUnitTest
             Assert.IsNull(mapBlock.Item, "Item was not picked up from map block");
 
             // add new sword to the map block and check that swapping works
-            AbstractItem armor2 = new LeatherArmor("Test armor 2", mapBlock);
+            AbstractItem armor2 = new LeatherArmor(mapBlock);
             mapBlock.Item = armor2;
             pickUpAction.Execute();
 

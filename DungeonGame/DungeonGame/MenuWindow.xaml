@@ -11,7 +11,7 @@
         <Label Content="Dungeon" HorizontalAlignment="Center"/>
         <Button Name="newGameBtn" Content="Nová hra" Click="newGameBtn_Click" Margin="0,5"/>
         <Button Name="importMapsBtn" Content="Import map" IsEnabled="False" Margin="0,5"/>
-        <Button Name="mapeditorBtn" Content="Editor" IsEnabled="False" Margin="0,5"/>
+        <Button Name="mapeditorBtn" Content="Editor" Margin="0,5" Click="EditorBtnClick"/>
         <Button Name="exitBtn" Content="Ukončit" Margin="0,5" Click="OnExitBtnClick"/>
     </StackPanel>
 </Window>

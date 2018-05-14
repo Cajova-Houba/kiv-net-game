@@ -23,5 +23,25 @@ namespace DungeonGame
         {
             InitializeComponent();
         }
+
+        /// <summary>
+        /// Displays menu window. Does not cancel this window.
+        /// </summary>
+        private void DisplayMenu()
+        {
+            MenuWindow menuWindow = new MenuWindow();
+            App.Current.MainWindow = menuWindow;
+            menuWindow.Show();
+        }
+
+        private void OnEditorClose(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            DisplayMenu();
+        }
+
+        private void CloseMenuItemClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

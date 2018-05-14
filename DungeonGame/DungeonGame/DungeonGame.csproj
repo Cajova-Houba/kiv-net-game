@@ -69,8 +69,10 @@
     <Compile Include="ScoreWindow.xaml.cs">
       <DependentUpon>ScoreWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\EditorViewModel.cs" />
     <Compile Include="ViewModel\NewGameSettingsModel.cs" />
     <Compile Include="ViewModel\ScoreViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelConstants.cs" />
     <Page Include="EditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -12,11 +12,8 @@ namespace DungeonGame.ViewModel
     /// </summary>
     public class NewGameSettingsModel
     {
-        public const int DEF_MAP_WIDTH = 10;
-        public const int DEF_MAP_HEIGHT = 10;
-        public const int DEF_MAP_SEED = IMapGeneratorConstants.NO_SEED;
-        public const int DEF_AI_COUNT = 3;
         public const int DEF_MONSTER_COUNT = 10;
+        public const int DEF_AI_COUNT = 3;
         public const string DEF_PLAYER_NAME = "Dobrodruh #5";
 
         private int mapWidth;
@@ -78,9 +75,9 @@ namespace DungeonGame.ViewModel
         /// </summary>
         public NewGameSettingsModel()
         {
-            mapWidth = DEF_MAP_WIDTH;
-            mapHeight = DEF_MAP_HEIGHT;
-            mapSeed = DEF_MAP_SEED;
+            mapWidth = ViewModelConstants.DEF_MAP_WIDTH;
+            mapHeight = ViewModelConstants.DEF_MAP_HEIGHT;
+            mapSeed = ViewModelConstants.DEF_MAP_SEED;
             aiCount = DEF_AI_COUNT;
             monsterCount = DEF_MONSTER_COUNT;
             playerName = DEF_PLAYER_NAME;

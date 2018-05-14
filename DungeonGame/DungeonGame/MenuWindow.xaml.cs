@@ -46,5 +46,13 @@ namespace DungeonGame
         {
             this.Close();
         }
+
+        private void EditorBtnClick(object sender, RoutedEventArgs e)
+        {
+            EditorWindow editorWindow = new EditorWindow();
+            App.Current.MainWindow = editorWindow;
+            this.Close();
+            editorWindow.Show();
+        }
     }
 }
