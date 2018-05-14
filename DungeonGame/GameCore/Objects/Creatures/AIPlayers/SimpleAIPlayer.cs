@@ -17,7 +17,7 @@ namespace GameCore.Objects.Creatures.AIPlayers
         /// <summary>
         /// Default AI speed measured in actions per seconds.
         /// </summary>
-        public const double DEF_AI_SPEED = 1.0/2;
+        public const double DEF_AI_SPEED = 1.0/3;
 
         /// <summary>
         /// Time of the last action. Used to set speed of "action per seconds".

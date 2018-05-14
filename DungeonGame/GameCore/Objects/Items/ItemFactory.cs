@@ -64,7 +64,7 @@ namespace GameCore.Objects.Items
         /// <returns></returns>
 		public static AbstractItem CreateRandomItem(MapBlock position)
         {
-            Random r = new Random();
+            Random r = new Random((int)(DateTime.Now.Ticks));
             int randVal = r.Next(4);
 
 			switch(randVal)

@@ -79,12 +79,12 @@ namespace DungeonGame
                 return false;
             }
 
-            if (!CheckRangedInt(tbAiCount.Text, MIN_MAP_WIDTH, MAX_MAP_WIDTH, "Počet protihráčů není platná hodnota.", $"Počet protihráčů musí být v rozsahu {MIN_AI_PLAYER_COUNT}-{MAX_AI_PLAYER_COUNT}."))
+            if (!CheckRangedInt(tbAiCount.Text, MIN_AI_PLAYER_COUNT, MAX_AI_PLAYER_COUNT, "Počet protihráčů není platná hodnota.", $"Počet protihráčů musí být v rozsahu {MIN_AI_PLAYER_COUNT}-{MAX_AI_PLAYER_COUNT}."))
             {
                 return false;
             }
 
-            if (!CheckRangedInt(tbMonsterCount.Text, MIN_MAP_WIDTH, MAX_MAP_WIDTH, "Počet monster není platná hodnota.", $"Počet monster musí být v rozsahu {MIN_MONSTER_COUNT}-{MAX_MONSTER_COUNT}."))
+            if (!CheckRangedInt(tbMonsterCount.Text, MIN_MONSTER_COUNT, MAX_MONSTER_COUNT, "Počet monster není platná hodnota.", $"Počet monster musí být v rozsahu {MIN_MONSTER_COUNT}-{MAX_MONSTER_COUNT}."))
             {
                 return false;
             }
@@ -202,6 +202,7 @@ namespace DungeonGame
 
             // place items
             int itemCount = r.Next((w * h) / (10 * Math.Max(itemsDensity.Value,1)));
+            itemCount = r.Next((w * h) / 10) + ((w*h)/10 * Math.Max(itemsDensity.Value, 1));
             for(int i = 0; i < itemCount; i++)
             {
                 // keep generating positions until item is placed or limit of tries is reached

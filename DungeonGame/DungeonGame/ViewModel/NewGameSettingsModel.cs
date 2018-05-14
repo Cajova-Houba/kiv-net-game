@@ -86,9 +86,9 @@ namespace DungeonGame.ViewModel
             playerName = DEF_PLAYER_NAME;
 
             itemsDensities = new List<ItemsDensity>();
-            itemsDensities.Add(new ItemsDensity() { Value = 1, Name = "Málo" });
+            itemsDensities.Add(new ItemsDensity() { Value = 3, Name = "Málo" });
             itemsDensities.Add(new ItemsDensity() { Value = 2, Name = "Středně" });
-            itemsDensities.Add(new ItemsDensity() { Value = 3, Name = "Hodně" });
+            itemsDensities.Add(new ItemsDensity() { Value = 1, Name = "Hodně" });
             selectedDensity = itemsDensities[1];
         }
     }

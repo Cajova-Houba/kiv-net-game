@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DungeonGame"
         mc:Ignorable="d"
-        Title="Welcome to the Dungeon!" Height="400" Width="300
-        ">
+        Title="Vítejte v dungeonu!" Height="400" Width="300" 
+        ResizeMode="NoResize">
     <StackPanel Orientation="Vertical" Margin="75,50,75,50">
         <Label Content="Dungeon" HorizontalAlignment="Center"/>
-        <Button Name="newGameBtn" Content="New game" Click="newGameBtn_Click"/>
-        <Button Name="importMapsBtn" Content="Import maps"/>
-        <Button Name="mapeditorBtn" Content="Editor"/>
-        <Button Name="exitBtn" Content="Exit"/>
+        <Button Name="newGameBtn" Content="Nová hra" Click="newGameBtn_Click" Margin="0,5"/>
+        <Button Name="importMapsBtn" Content="Import map" IsEnabled="False" Margin="0,5"/>
+        <Button Name="mapeditorBtn" Content="Editor" IsEnabled="False" Margin="0,5"/>
+        <Button Name="exitBtn" Content="Ukončit" Margin="0,5" Click="OnExitBtnClick"/>
     </StackPanel>
 </Window>

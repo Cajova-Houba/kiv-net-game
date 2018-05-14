@@ -57,6 +57,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EditorWindow.xaml.cs">
+      <DependentUpon>EditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NewGameSettingsWindow.xaml.cs">
       <DependentUpon>NewGameSettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -68,6 +71,10 @@
     </Compile>
     <Compile Include="ViewModel\NewGameSettingsModel.cs" />
     <Compile Include="ViewModel\ScoreViewModel.cs" />
+    <Page Include="EditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

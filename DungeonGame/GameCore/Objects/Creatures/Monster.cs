@@ -15,7 +15,7 @@ namespace GameCore.Objects.Creatures
         /// <summary>
         /// Default monster speed measured in actions per seconds.
         /// </summary>
-        public const double DEF_MONSTER_SPEED = 1.0 / 2;
+        public const double DEF_MONSTER_SPEED = 1.0 / 1.2;
 
         /// <summary>
         /// Default maximum of stack capacity.

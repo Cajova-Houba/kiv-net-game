@@ -41,5 +41,10 @@ namespace DungeonGame
             this.Close();
             newGameSettingsWindow.Show();
         }
+
+        private void OnExitBtnClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
