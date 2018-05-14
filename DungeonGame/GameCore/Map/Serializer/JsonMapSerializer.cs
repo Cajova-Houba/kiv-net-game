@@ -5,19 +5,19 @@ using System.IO;
 using System.Xml;
 using Newtonsoft.Json;
 
-namespace GameCore.Map
+namespace GameCore.Map.Serializer
 {
     /// <summary>
-    /// Library class to de/serialize Map entity from/to xml file.
+    /// Serializes map to json and back.
     /// </summary>
-    public class MapSerializer
+    public class JsonMapSerializer : IMapSerializer<string, string>
     {
         /// <summary>
         /// Serializes Map object as json string.
         /// </summary>
         /// <param name="map">Map to be serialized.</param>
         /// <returns>Json string.</returns>
-        public static String Serialize(Map map)
+        public String Serialize(Map map)
         {
             string output = JsonConvert.SerializeObject(map);
             return output;
@@ -28,7 +28,7 @@ namespace GameCore.Map
         /// </summary>
         /// <param name="jsonString">Json string to be deserialized.</param>
         /// <returns>Deserialized map.</returns>
-        public static Map Deserialize(string jsonString)
+        public Map Deserialize(string jsonString)
         {
             return JsonConvert.DeserializeObject<Map>(jsonString);
         }
