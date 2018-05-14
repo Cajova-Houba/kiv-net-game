@@ -118,5 +118,43 @@ namespace GameCore.Map
                     throw new NotSupportedException($"Direction {direction} is not supported!");
             }
         }
+
+        /// <summary>
+        /// Removes object from map and returns true if the object was found and removed.
+        /// Note that in case of players, this will also remove their inventory content.
+        /// This method should be used for editor purposes only and not in real game.
+        /// </summary>
+        /// <param name="uid">Uid of object to be removed.</param>
+        /// <returns>True if the object was removed.</returns>
+        public bool RemoveObjectFromMapByUid(int uid)
+        {
+            bool found = false;
+            for(int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    if (Grid[i,j].Occupied && Grid[i,j].Creature.UniqueId == uid)
+                    {
+                        Grid[i, j].Creature.Position = null;
+                        Grid[i, j].Creature = null;
+                        found = true;
+                        break;
+                    }
+
+                    else if (Grid[i,j].Item != null && Grid[i,j].Item.UniqueId == uid)
+                    {
+                        Grid[i, j].Item.Position = null;
+                        Grid[i, j].Item = null;
+                        found = true;
+                        break;
+                    }
+
+                }
+
+                if (found) { break; }
+            }
+
+            return found;
+        }
     }
 }

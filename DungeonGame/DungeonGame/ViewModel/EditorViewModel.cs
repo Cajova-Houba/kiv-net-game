@@ -168,31 +168,58 @@ namespace DungeonGame.ViewModel
                 throw new Exception($"Na pozici [{mapX},{mapY}] už je umístěn předmět!");
             }
 
-            PlacedItems.Add(item.Clone());
+            int uid = -1;
             switch(item.ItemType)
             {
                 case EditorToolboxItemType.AI_PLAYER:
                     GameMap.Grid[mapX, mapY].Creature = AIPlayerFactory.CreateSimpleAIPLayer("Simple AI Player", GameMap.Grid[mapX, mapY]);
+                    uid = GameMap.Grid[mapX, mapY].Creature.UniqueId;
                     break;
 
                 case EditorToolboxItemType.MONSTER:
                     GameMap.Grid[mapX, mapY].Creature = MonsterFactory.CreateRandomMonster(GameMap.Grid[mapX, mapY]);
+                    uid = GameMap.Grid[mapX, mapY].Creature.UniqueId;
                     break;
 
                 case EditorToolboxItemType.ITEM:
                     GameMap.Grid[mapX, mapY].Item = ItemFactory.CreateBasicItem(GameMap.Grid[mapX, mapY]);
+                    uid = GameMap.Grid[mapX, mapY].Item.UniqueId;
                     break;
 
                 case EditorToolboxItemType.ARMOR:
                     GameMap.Grid[mapX, mapY].Item = ItemFactory.CreateLeatherArmor(GameMap.Grid[mapX, mapY]);
+                    uid = GameMap.Grid[mapX, mapY].Item.UniqueId;
                     break;
 
                 case EditorToolboxItemType.WEAPON:
                     GameMap.Grid[mapX, mapY].Item = ItemFactory.CreateAxe(GameMap.Grid[mapX, mapY]);
+                    uid = GameMap.Grid[mapX, mapY].Item.UniqueId;
                     break;
 
                 default:
                     throw new Exception($"Neznámý typ umisťovaného předmětu: {item.ItemType}!");
+            }
+            EditorToolboxItem placedItem = item.Clone();
+            placedItem.UID = uid;
+            PlacedItems.Add(placedItem);
+
+            OnPropertyChanged("PlacedItems");
+        }
+
+        /// <summary>
+        /// Removes placed item from the map.
+        /// </summary>
+        /// <param name="uid">Uid of item to be removed.</param>
+        public void RemovePlacedItem(int uid)
+        {
+            GameMap?.RemoveObjectFromMapByUid(uid);
+            foreach(EditorToolboxItem item in PlacedItems)
+            {
+                if (item.UID == uid)
+                {
+                    PlacedItems.Remove(item);
+                    break;
+                }
             }
 
             OnPropertyChanged("PlacedItems");
@@ -205,6 +232,10 @@ namespace DungeonGame.ViewModel
     /// </summary>
     public class EditorToolboxItem
     {
+        /// <summary>
+        /// UID of placed item. Used when removing placed items from map.
+        /// </summary>
+        public int UID { get; set; }
         public String Name { get; set; }
         public String Tooltip { get; set; }
         public BitmapImage Icon { get; set; }

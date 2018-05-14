@@ -31,6 +31,11 @@ namespace DungeonGame
             RenderMap();
         }
 
+        private EditorViewModel GetViewModel()
+        {
+            return (EditorViewModel)DataContext;
+        }
+
         /// <summary>
         /// Renders map from view model to canvas.
         /// </summary>
@@ -93,7 +98,7 @@ namespace DungeonGame
 
         private void GenerateBtnClick(object sender, RoutedEventArgs e)
         {
-            EditorViewModel viewModel = (EditorViewModel)DataContext;
+            EditorViewModel viewModel = GetViewModel();
 
             // if the map in view model is not null, ask user if he really wants to generate new map
             if ( viewModel.GameMap != null &&
@@ -111,14 +116,18 @@ namespace DungeonGame
             RenderMap();
         }
 
+
         private void EditorMapCanvasClick(object sender, MouseButtonEventArgs e)
         {
+            // click position
             double x = e.GetPosition(cMap).X;
             double y = e.GetPosition(cMap).Y;
-            EditorViewModel viewModel = (EditorViewModel)DataContext;
+            EditorViewModel viewModel = GetViewModel();
 
+            // get clicked block coordinates
             int[] mapBlockPos = mapRenderer.CalculateMapBlockPosition(viewModel.GameMap, x, y);
 
+            // place item if possible
             if(mapBlockPos[0] != -1 && mapBlockPos[1] != -1 && viewModel.SelectedToolboxItem != null)
             {
                 try
@@ -131,10 +140,23 @@ namespace DungeonGame
                     MessageBox.Show($"Chyba: {ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-
-            //MessageBox.Show($"kliknuto na blok {mapBlockPos[0]},{mapBlockPos[1]}");
         }
-        
+
+
+        private void RemovePlacedItemBtnClick(object sender, RoutedEventArgs e)
+        {
+            // uid of placed item to be removed is bound to button tag
+            int uid;
+            string tag = ((Button)sender).Tag.ToString();
+            if (!Int32.TryParse(tag, out uid))
+            {
+                // error for some reason, return
+                return;
+            }
+
+            GetViewModel().RemovePlacedItem(uid);
+            RenderMap();
+        }
     }
 
     /// <summary>

@@ -13,6 +13,26 @@ namespace GameCore.Objects
     public abstract class GameObject
     {
         /// <summary>
+        /// Id counter used to give unique id to every object in the game.
+        /// </summary>
+        protected static int idCounter = 0;
+
+        /// <summary>
+        /// Returns unique id for game object.
+        /// </summary>
+        /// <returns>Unique game id.</returns>
+        protected static int GetUID()
+        {
+            idCounter++;
+            return idCounter;
+        }
+
+        /// <summary>
+        /// Unique id of this object.
+        /// </summary>
+        public int UniqueId { get; set; }
+
+        /// <summary>
         /// Object's displayed name.
         /// </summary>
         [JsonProperty]
@@ -32,6 +52,7 @@ namespace GameCore.Objects
         {
             Name = name;
             Position = position;
+            UniqueId = GameObject.GetUID();
         }
     }
 }
