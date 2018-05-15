@@ -5,6 +5,7 @@ using GameCore.Map.Generator;
 using GameCore.Map.Serializer;
 using GameCore.Objects.Creatures;
 using GameCore.Objects.Creatures.AIPlayers;
+using GameCore.Objects.Items;
 
 namespace GameCoreUnitTest
 {
@@ -122,20 +123,36 @@ namespace GameCoreUnitTest
             int w = 4;
             int h = 4;
             Map map = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(w, h, IMapGeneratorConstants.NO_SEED);
+
+            // add creatures to map
             Monster origMonster = new Monster("Test monster", map.Grid[0, 0], 4, 3654123, 87621235);
             map.AddCreature(origMonster);
             SimpleAIPlayer aiPlayer = new SimpleAIPlayer("Test player", map.Grid[3, 2]);
             map.AddCreature(aiPlayer);
-            IMapSerializer<byte[], byte[]> byteSerializer = new BinaryMapSerializer();
+            HumanPlayer hPlayer = new HumanPlayer("Příliš žluťoučký kůň úpěl ďábelské ódy", map.Grid[1, 3]) { BaseHitPoints = 98432156, BaseAttack = 112348, BaseDeffense = 41226987 };
+            map.AddCreature(hPlayer);
 
+            // add items to map
+            AbstractWeapon weapon = ItemFactory.CreateAxe(map.Grid[1, 3]);
+            map.AddItem(weapon);
+            AbstractArmor armor = ItemFactory.CreateLeatherArmor(map.Grid[1, 1]);
+            map.AddItem(armor);
+            AbstractInventoryItem item = new BasicItem("Příliš žluťoučký kůň úpěl ďábelské ódy.!?_/()':123456789<>&@{}[]", map.Grid[2, 2], 514) { UniqueId = 6284 };
+            map.AddItem(item);
+
+
+            // serialize - deserialize
+            IMapSerializer<byte[], byte[]> byteSerializer = new BinaryMapSerializer();
             byte[] serializedMap = byteSerializer.Serialize(map);
             Map deserializedMap = byteSerializer.Deserialize(serializedMap);
+
 
             // check map 
             Assert.AreEqual(w, deserializedMap.Width, "Wrong width after deserialization!");
             Assert.AreEqual(h, deserializedMap.Width, "Wrong height after deserialization!");
             Assert.AreEqual(map.WinningBlock.X, deserializedMap.WinningBlock.X, "Wrong x coordinate of winning block!");
             Assert.AreEqual(map.WinningBlock.Y, deserializedMap.WinningBlock.Y, "Wrong Y coordinate of winning block!");
+
 
             // check map blocks
             for (int i = 0; i < w; i++)
@@ -152,18 +169,61 @@ namespace GameCoreUnitTest
                 }
             }
 
+
             // check creatures
             Monster m = (Monster)deserializedMap.Grid[0, 0].Creature;
-            Assert.IsNotNull(m, "Monster is missing!");
-            Assert.AreEqual(origMonster.Name, m.Name, "Wrong monster name!");
-            Assert.AreEqual(origMonster.UniqueId, m.UniqueId, "Wrong monster uid!");
-            Assert.AreEqual(origMonster.BaseHitPoints, m.BaseHitPoints, "Wrong monster hp!");
+            CheckCreature(origMonster, m);
 
             SimpleAIPlayer p = (SimpleAIPlayer)deserializedMap.Grid[3, 2].Creature;
-            Assert.IsNotNull(p, "Player is missing!");
-            Assert.AreEqual(aiPlayer.Name, p.Name, "Wrong player name!");
-            Assert.AreEqual(aiPlayer.UniqueId, p.UniqueId, "Wrong player uid!");
-            Assert.AreEqual(aiPlayer.BaseHitPoints, p.BaseHitPoints, "Wrong player hp!");
+            CheckCreature(aiPlayer, p);
+
+            HumanPlayer hp = (HumanPlayer)deserializedMap.Grid[1, 3].Creature;
+            CheckCreature(hPlayer, hp);
+
+
+            // check items
+            AbstractWeapon weap = (AbstractWeapon)map.Grid[1, 3].Item;
+            CheckItem(weap, weapon);
+
+            AbstractArmor arm = (AbstractArmor)map.Grid[1, 1].Item;
+            CheckItem(arm, armor);
+
+            AbstractInventoryItem itm = (AbstractInventoryItem)map.Grid[2, 2].Item;
+            CheckItem(item, itm);
+        }
+
+        private void CheckItem(AbstractItem expected, AbstractItem actual)
+        {
+            Assert.IsNotNull(actual, "Actual item is null");
+            Assert.AreEqual(expected.Name, actual.Name, "Wrong creature name!");
+            Assert.AreEqual(expected.UniqueId, actual.UniqueId, "Wrong creature uid!");
+            if (actual is AbstractWeapon)
+            {
+                Assert.IsTrue(expected is AbstractWeapon, "Actual item is not a weapon!");
+                Assert.AreEqual(((AbstractWeapon)expected).Damage, ((AbstractWeapon)actual).Damage, "Actual item does not have correct damage!");
+            }
+
+            else if (actual is AbstractArmor)
+            {
+                Assert.IsTrue(expected is AbstractArmor, "Actual item is not an armor!");
+                Assert.AreEqual(((AbstractArmor)expected).Defense, ((AbstractArmor)actual).Defense, "Actual item does not have correct deffense!");
+            }
+
+            else if (actual is AbstractInventoryItem)
+            {
+                Assert.IsTrue(expected is AbstractInventoryItem, "Actual item is not an inventory item!");
+                Assert.AreEqual(((AbstractInventoryItem)expected).ItemValue, ((AbstractInventoryItem)actual).ItemValue, "Actual item does not have correct item value!");
+            }
+        }
+
+        private void CheckCreature(AbstractCreature expected, AbstractCreature actual)
+        {
+            Assert.IsNotNull(actual, "Actual creature is null!");
+            Assert.AreEqual(expected.Name, actual.Name, "Wrong creature name!");
+            Assert.AreEqual(expected.UniqueId, actual.UniqueId, "Wrong creature uid!");
+            Assert.AreEqual(expected.BaseHitPoints, actual.BaseHitPoints, "Wrong creature hp!");
+            Assert.AreEqual(expected.BaseAttack, actual.BaseAttack, "Wrong creature attack!");
+            Assert.AreEqual(expected.BaseDeffense, actual.BaseDeffense, "Wrong creature deffense!");
         }
     }
 }
