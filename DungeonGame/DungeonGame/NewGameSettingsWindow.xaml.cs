@@ -35,6 +35,10 @@ namespace DungeonGame
         public const int MIN_MONSTER_COUNT = 0;
         public const int MAX_MONSTER_COUNT = 100;
 
+        /// <summary>
+        /// Flag used to control Closing event.
+        /// </summary>
+        private bool displayGameWindow = false;
 
         public NewGameSettingsWindow()
         {
@@ -49,6 +53,7 @@ namespace DungeonGame
             }
             GameWindow gameWindow = new GameWindow(new GameViewModel(GenerateNewGame((NewGameSettingsModel)DataContext)));
             App.Current.MainWindow = gameWindow;
+            displayGameWindow = true;
             this.Close();
             gameWindow.Show();
         }
@@ -87,6 +92,16 @@ namespace DungeonGame
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Display menu. Does not close this window.
+        /// </summary>
+        private void DisplayMenu()
+        {
+            MenuWindow menuWindow = new MenuWindow();
+            App.Current.MainWindow = menuWindow;
+            menuWindow.Show();
         }
 
         /// <summary>
@@ -206,10 +221,7 @@ namespace DungeonGame
         /// <param name="e"></param>
         private void BackBtnClick(object sender, RoutedEventArgs e)
         {
-            MenuWindow menuWindow = new MenuWindow();
-            App.Current.MainWindow = menuWindow;
             this.Close();
-            menuWindow.Show();
         }
 
         /// <summary>
@@ -226,6 +238,14 @@ namespace DungeonGame
         private void NumberTextBoxPreview(object sender, TextCompositionEventArgs e)
         {
             e.Handled = ValidateNumberInput(e.Text);
+        }
+
+        private void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!displayGameWindow)
+            {
+                DisplayMenu();
+            }
         }
     }
 }

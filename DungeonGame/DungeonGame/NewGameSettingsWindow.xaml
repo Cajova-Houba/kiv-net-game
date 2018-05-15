@@ -7,7 +7,7 @@
         xmlns:ViewModel="clr-namespace:DungeonGame.ViewModel" x:Class="DungeonGame.NewGameSettingsWindow"
         mc:Ignorable="d"
         Title="New game settings" Height="360" Width="350"
-        ResizeMode="NoResize"
+        ResizeMode="NoResize" Closing="OnClosing"
     >
 
     <Window.DataContext>
