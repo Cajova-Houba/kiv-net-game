@@ -271,6 +271,10 @@ namespace DungeonGame.ViewModel
                 if (item.UID == uid)
                 {
                     PlacedItems.Remove(item);
+                    if (item.ItemType == EditorToolboxItemType.HUMAN_PLAYER)
+                    {
+                        HumanPlayerPlaced = false;
+                    }
                     break;
                 }
             }
