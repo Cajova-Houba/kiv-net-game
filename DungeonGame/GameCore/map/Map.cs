@@ -46,6 +46,7 @@ namespace GameCore.Map
         public Map()
         {
             InitializeMap(new MapBlock[0, 0]);
+            MapName = "";
         }
 
         /// <summary>

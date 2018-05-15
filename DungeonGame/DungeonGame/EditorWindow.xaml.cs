@@ -1,8 +1,11 @@
 ﻿using DungeonGame.Common;
 using DungeonGame.Render;
 using DungeonGame.ViewModel;
+using GameCore.Map.Serializer;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,6 +89,34 @@ namespace DungeonGame
             return true;
         }
 
+        /// <summary>
+        /// Exports currently edited map to binary file
+        /// </summary>
+        private void ExportMap()
+        {
+            if (GetViewModel().GameMap == null)
+            {
+                MessageBox.Show("V editoru není žádná mapa k uložení.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.ValidateNames = true;
+            saveFileDialog.Filter = "Dungeon map file(*.dmap)| *.dmap | All files (*.*)|*.*";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string fileName = saveFileDialog.FileName;
+                try
+                {
+                    IMapSerializer<byte[], byte[]> serializer = new BinaryMapSerializer();
+                    File.WriteAllBytes(fileName, serializer.Serialize(GetViewModel().GameMap));
+                } catch (Exception ex)
+                {
+                    MessageBox.Show($"Chyba při exportu mapy do souboru {fileName}: {ex.Message}.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
         private void OnEditorClose(object sender, System.ComponentModel.CancelEventArgs e)
         {
             DisplayMenu();
@@ -156,6 +187,11 @@ namespace DungeonGame
 
             GetViewModel().RemovePlacedItem(uid);
             RenderMap();
+        }
+
+        private void SavemenuItemClick(object sender, RoutedEventArgs e)
+        {
+            ExportMap();
         }
     }
 

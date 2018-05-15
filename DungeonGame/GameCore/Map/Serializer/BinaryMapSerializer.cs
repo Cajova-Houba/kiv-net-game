@@ -299,9 +299,15 @@ namespace GameCore.Map.Serializer
         /// <param name="serialized">List with serialized data.</param>
         private void AddMapHeader(Map map, List<byte> serialized)
         {
-            byte[] encodedName = Encoding.UTF8.GetBytes(map.MapName);
-            serialized.AddRange(IntToBytes(encodedName.Length));
-            serialized.AddRange(encodedName);
+            if (map.MapName == null)
+            {
+                serialized.AddRange(IntToBytes(0));
+            } else
+            {
+                byte[] encodedName = Encoding.UTF8.GetBytes(map.MapName);
+                serialized.AddRange(IntToBytes(encodedName.Length));
+                serialized.AddRange(encodedName);
+            }
             serialized.AddRange(IntToBytes(map.Width));
             serialized.AddRange(IntToBytes(map.Height));
             serialized.AddRange(IntToBytes(map.WinningBlock.X));
