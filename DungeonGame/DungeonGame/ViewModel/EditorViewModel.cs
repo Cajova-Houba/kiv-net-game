@@ -20,34 +20,16 @@ namespace DungeonGame.ViewModel
     public class EditorViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
-        private int mapWidth;
-        public int MapWidth
-        {
-            get { return mapWidth; }
-            set { mapWidth = value; }
-        }
-
-        private int mapHeight;
-        public int MapHeight
-        {
-            get { return mapHeight; }
-            set { mapHeight = value; }
-        }
-
-        private int mapSeed;
-        public int MapSeed
-        {
-            get { return mapSeed; }
-            set { mapSeed = value; }
-        }
-
-        private bool generatePanelEnabled;
-        public bool GeneratePanelEnabled
-        {
-            get { return generatePanelEnabled; }
-            set { generatePanelEnabled = value; }
-        }
+        
+        public string MapName { get; set; }
+        
+        public int MapWidth { get; set; }
+        
+        public int MapHeight { get; set; }
+        
+        public int MapSeed { get; set; }
+        
+        public bool GeneratePanelEnabled { get; set; }
 
         private List<EditorToolboxItem> toolboxItems;
         /// <summary>
@@ -77,10 +59,11 @@ namespace DungeonGame.ViewModel
         /// </summary>
         public EditorViewModel()
         {
-            mapWidth = ViewModelConstants.DEF_MAP_WIDTH;
-            mapHeight = ViewModelConstants.DEF_MAP_HEIGHT;
-            mapSeed = ViewModelConstants.DEF_MAP_SEED;
-            generatePanelEnabled = true;
+            MapWidth = ViewModelConstants.DEF_MAP_WIDTH;
+            MapHeight = ViewModelConstants.DEF_MAP_HEIGHT;
+            MapSeed = ViewModelConstants.DEF_MAP_SEED;
+            GeneratePanelEnabled = true;
+            MapName = "Nová mapa";
 
             SelectedToolboxItem = null;
             SelectedToolboxItemIndex = -1;
@@ -134,6 +117,7 @@ namespace DungeonGame.ViewModel
         {
             GameMap = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(MapWidth, MapHeight, MapSeed);
             PlacedItems.Clear();
+            GameMap.MapName = MapName;
             OnPropertyChanged("PlacedItems");
         }
 
