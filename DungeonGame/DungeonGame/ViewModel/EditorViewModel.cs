@@ -82,7 +82,7 @@ namespace DungeonGame.ViewModel
         private List<EditorToolboxItem> CreateToolboxItems()
         {
             List<EditorToolboxItem> items = new List<EditorToolboxItem>();
-            items.Add(new EditorToolboxItem() { Name = "Hráč", Tooltip = "Umístí hráče na hrací plochu.", ItemType = EditorToolboxItemType.AI_PLAYER });
+            items.Add(new EditorToolboxItem() { Name = "Hráč", Tooltip = "Umístí hráče na hrací plochu.", ItemType = EditorToolboxItemType.HUMAN_PLAYER });
             items.Add(new EditorToolboxItem() { Name = "Protihráč", Tooltip = "Umístí protihráče na hrací plochu.", ItemType = EditorToolboxItemType.AI_PLAYER});
             items.Add(new EditorToolboxItem() { Name = "Monstrum", Tooltip = "Umístí monstrum na hrací plochu.", ItemType = EditorToolboxItemType.MONSTER });
             items.Add(new EditorToolboxItem() { Name = "Zbraň", Tooltip = "Umístí zbraň na hrací plochu.", ItemType = EditorToolboxItemType.WEAPON });
@@ -217,7 +217,7 @@ namespace DungeonGame.ViewModel
                 case EditorToolboxItemType.HUMAN_PLAYER:
                     if (HumanPlayerPlaced)
                     {
-                        throw new Exception("Na hrací plochu lze umístit pouze jendoho lidského hráče!");
+                        throw new Exception("Na hrací plochu lze umístit pouze jednoho lidského hráče!");
                     }
                     GameMap.Grid[mapX, mapY].Creature = new HumanPlayer("Human player", GameMap.Grid[mapX, mapY]);
                     uid = GameMap.Grid[mapX, mapY].Creature.UniqueId;
