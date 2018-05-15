@@ -1,4 +1,5 @@
-﻿using GameCore.Map;
+﻿using DungeonGame.Common;
+using GameCore.Map;
 using GameCore.Map.Serializer;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,7 @@ namespace DungeonGame.ViewModel
     public class MapManagementViewModel : INotifyPropertyChanged
     {
         /// <summary>
-        /// This folder which contains imported maps is expected to be in the same directory as executable.
-        /// </summary>
-        public const string MAP_FOLDER_NAME = "maps";
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -45,12 +44,22 @@ namespace DungeonGame.ViewModel
             get { return FileName != null && FileName.Length > 0; }
         }
 
+        /// <summary>
+        /// Colleciton of imported maps. Note that this collection only acts a binding model for list view component,
+        /// not as global source of imported maps.
+        /// </summary>
         public ObservableCollection<ImportedMapWrapper> ImportedMaps { get; set; }
 
         public MapManagementViewModel()
         {
             FileName = "";
             ImportedMaps = new ObservableCollection<ImportedMapWrapper>();
+
+            // load maps from global configuraiton to view model
+            foreach (ImportedMapWrapper wrapper in GlobalConfiguration.GetInstance().ImportedMaps)
+            {
+                ImportedMaps.Add(wrapper);
+            }
         }
 
         protected void OnPropertyChanged(string name)
@@ -93,7 +102,7 @@ namespace DungeonGame.ViewModel
         /// <returns>Number of maps which failed to be imported.</returns>
         public int RefreshImportedMaps()
         {
-            string mapsPath = Directory.GetCurrentDirectory() + "\\" + MAP_FOLDER_NAME;
+            string mapsPath = Directory.GetCurrentDirectory() + "\\" + GlobalConfiguration.MAP_FOLDER_NAME;
             if (!Directory.Exists(mapsPath))
             {
                 throw new Exception($"Složka {mapsPath} obsahující importované mapy nenalezena!");
@@ -146,14 +155,18 @@ namespace DungeonGame.ViewModel
             }
             OnPropertyChanged("ImportedMaps");
         }
-    }
 
-    /// <summary>
-    /// Simple wrapper for imported maps.
-    /// </summary>
-    public class ImportedMapWrapper
-    {
-        public Map Map { get; set; }
-        public string FilePath { get; set; }
+        /// <summary>
+        /// Clears collection of imported maps in global configuration and adds imported maps from this view model.
+        /// </summary>
+        public void FlushImportedMapsToGlobalConfiguration()
+        {
+            GlobalConfiguration.GetInstance().ImportedMaps.Clear();
+            foreach(ImportedMapWrapper importedMap in ImportedMaps)
+            {
+                GlobalConfiguration.GetInstance().ImportedMaps.Add(importedMap);
+            }
+        }
+
     }
 }

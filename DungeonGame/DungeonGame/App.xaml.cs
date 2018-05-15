@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DungeonGame.Common;
+using DungeonGame.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +15,11 @@ namespace DungeonGame
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            // call instance of global configuration so that it is initialized
+            GlobalConfiguration.GetInstance();
+        }
+
     }
 }

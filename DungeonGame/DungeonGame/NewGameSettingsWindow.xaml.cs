@@ -123,8 +123,18 @@ namespace DungeonGame
             HashSet<string> itemsOccupiedPositions = new HashSet<string>();
 
             Random r = new Random();
-            Map gameMap = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(w, h, seed);
-            Game game = new Game() { GameMap = gameMap };
+            Map gameMap;
+            Game game;
+            if (model.RandomMapSelected)
+            {
+                gameMap = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(w, h, seed);
+                game = new Game() { GameMap = gameMap };
+            } else
+            {
+                gameMap = model.SelectedImportedMap.Map;
+                game = new Game() { GameMap = gameMap };
+                return game;
+            }
 
             // place human player
             int x = r.Next(w);

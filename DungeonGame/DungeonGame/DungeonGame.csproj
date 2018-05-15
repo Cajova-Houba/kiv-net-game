@@ -57,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\GlobalConfiguration.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="CustomMapManagementWindow.xaml.cs">
       <DependentUpon>CustomMapManagementWindow.xaml</DependentUpon>
@@ -76,6 +77,7 @@
     <Compile Include="ViewModel\EditorViewModel.cs" />
     <Compile Include="ViewModel\MapManagementViewModel.cs" />
     <Compile Include="ViewModel\NewGameSettingsModel.cs" />
+    <Compile Include="ViewModel\ObservaleCollection.cs" />
     <Compile Include="ViewModel\ScoreViewModel.cs" />
     <Compile Include="ViewModel\ViewModelConstants.cs" />
     <Page Include="CustomMapManagementWindow.xaml">

@@ -1,4 +1,5 @@
-﻿using GameCore.Map.Generator;
+﻿using DungeonGame.Common;
+using GameCore.Map.Generator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +71,15 @@ namespace DungeonGame.ViewModel
             set { playerName = value; }
         }
 
+        public bool RandomMapSelected { get; set; }
+        public bool ImportedMapSelected { get; set; }
+
+        public ImportedMapWrapper SelectedImportedMap { get; set; }
+
+        public List<ImportedMapWrapper> ImportedMaps {
+            get { return GlobalConfiguration.GetInstance().ImportedMaps; }
+        }
+
         /// <summary>
         /// Initializes this view model with default values.
         /// </summary>
@@ -81,6 +91,8 @@ namespace DungeonGame.ViewModel
             aiCount = DEF_AI_COUNT;
             monsterCount = DEF_MONSTER_COUNT;
             playerName = DEF_PLAYER_NAME;
+            RandomMapSelected = true;
+            ImportedMapSelected = false;
 
             itemsDensities = new List<ItemsDensity>();
             itemsDensities.Add(new ItemsDensity() { Value = 3, Name = "Málo" });

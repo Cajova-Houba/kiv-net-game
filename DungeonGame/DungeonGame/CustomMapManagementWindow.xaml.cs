@@ -45,6 +45,7 @@ namespace DungeonGame
 
         private void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            GetViewModel().FlushImportedMapsToGlobalConfiguration();
             DisplayMenu();
         }
 
