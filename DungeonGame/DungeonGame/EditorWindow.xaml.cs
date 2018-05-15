@@ -104,7 +104,7 @@ namespace DungeonGame
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 ValidateNames = true,
-                Filter = "Dungeon map file (*.dmap)|*.dmap | All files (*.*)|*.*"
+                Filter = "Dungeon map file (*.dmap)|*.dmap|All files (*.*)|*.*"
             };
             if (saveFileDialog.ShowDialog() == true)
             {
@@ -128,7 +128,7 @@ namespace DungeonGame
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 ValidateNames = true,
-                Filter = "Dungeon map file (*.dmap)|*.dmap | All files (*.*)|*.*"
+                Filter = "Dungeon map file (*.dmap)|*.dmap|All files (*.*)|*.*"
             };
             string fileName;
             if(openFileDialog.ShowDialog() == true)

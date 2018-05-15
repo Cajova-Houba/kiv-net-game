@@ -1,4 +1,5 @@
 ﻿using DungeonGame.ViewModel;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,6 +65,51 @@ namespace DungeonGame
             } catch (Exception ex)
             {
                 ShowErrorMessage($"Chyba při obnovování map! {ex.Message}");
+            }
+        }
+
+        private void RemoveImportedMapBtnClick(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is Button) || ((Button)sender).Tag == null)
+            {
+                return;
+            }
+
+            if (MessageBox.Show("Opravdu chcete smazat soubor s mapou?", "Smazat mapu", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    GetViewModel().RemoveImportedMap(((Button)sender).Tag.ToString());
+                } catch (Exception ex)
+                {
+                    ShowErrorMessage($"Chyba při odstraňování mapy: {ex.Message}");
+                }
+            }
+        }
+
+        private void LoadMapBtnClick(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                ValidateNames = true,
+                Filter = "Dungeon map file (*.dmap)|*.dmap|All files (*.*)|*.*"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                GetViewModel().FileName = openFileDialog.FileName;
+            }
+        }
+
+        private void ImportMapBtnClick(object sender, RoutedEventArgs e)
+        {
+            string fName = GetViewModel().FileName;
+            try
+            {
+                GetViewModel().ImportMapFromCurrentFile();
+            } catch (Exception ex)
+            {
+                ShowErrorMessage($"Chyba při importování mapy ze souboru {fName}. {ex.Message}");
             }
         }
     }

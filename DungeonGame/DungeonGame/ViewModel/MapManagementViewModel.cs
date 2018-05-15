@@ -24,6 +24,11 @@ namespace DungeonGame.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         private string fileName;
+
+        /// <summary>
+        /// File name which contains currently 'loaded' file (= prepared for import).
+        /// It is expected that this field is filled before calling  ImportMapFromCurrentFile().
+        /// </summary>
         public string FileName
         {
             get { return fileName; }
@@ -31,6 +36,7 @@ namespace DungeonGame.ViewModel
             {
                 fileName = value;
                 OnPropertyChanged("FileName");
+                OnPropertyChanged("MapImportEnabled");
             }
         }
 
@@ -39,12 +45,12 @@ namespace DungeonGame.ViewModel
             get { return FileName != null && FileName.Length > 0; }
         }
 
-        public ObservableCollection<Map> ImportedMaps { get; set; }
+        public ObservableCollection<ImportedMapWrapper> ImportedMaps { get; set; }
 
         public MapManagementViewModel()
         {
             FileName = "";
-            ImportedMaps = new ObservableCollection<Map>();
+            ImportedMaps = new ObservableCollection<ImportedMapWrapper>();
         }
 
         protected void OnPropertyChanged(string name)
@@ -75,7 +81,8 @@ namespace DungeonGame.ViewModel
             byte[] fileContent;
             fileContent = File.ReadAllBytes(FileName);
             Map deserializedMap = new BinaryMapSerializer().Deserialize(fileContent);
-            ImportedMaps.Add(deserializedMap);
+            ImportedMaps.Add(new ImportedMapWrapper() { Map = deserializedMap, FilePath = FileName });
+            FileName = "";
 
             OnPropertyChanged("ImportedMaps");
         }
@@ -113,5 +120,40 @@ namespace DungeonGame.ViewModel
 
             return failedMaps;
         }
+
+        /// <summary>
+        /// Removes imported map.
+        /// </summary>
+        /// <param name="mapFileName">File path of the map to be removed.</param>
+        public void RemoveImportedMap(string mapFileName)
+        {
+            if (!File.Exists(mapFileName))
+            {
+                return;
+            }
+
+            // remove file
+            File.Delete(mapFileName);
+
+            // remove it from imported maps collection
+            foreach(ImportedMapWrapper map in ImportedMaps)
+            {
+                if (map.FilePath.Equals(mapFileName))
+                {
+                    ImportedMaps.Remove(map);
+                    break;
+                }
+            }
+            OnPropertyChanged("ImportedMaps");
+        }
+    }
+
+    /// <summary>
+    /// Simple wrapper for imported maps.
+    /// </summary>
+    public class ImportedMapWrapper
+    {
+        public Map Map { get; set; }
+        public string FilePath { get; set; }
     }
 }
