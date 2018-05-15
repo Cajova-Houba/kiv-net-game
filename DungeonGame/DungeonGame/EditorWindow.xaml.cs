@@ -1,6 +1,7 @@
 ﻿using DungeonGame.Common;
 using DungeonGame.Render;
 using DungeonGame.ViewModel;
+using GameCore.Map;
 using GameCore.Map.Serializer;
 using Microsoft.Win32;
 using System;
@@ -100,9 +101,11 @@ namespace DungeonGame
                 return;
             }
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.ValidateNames = true;
-            saveFileDialog.Filter = "Dungeon map file(*.dmap)| *.dmap | All files (*.*)|*.*";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                ValidateNames = true,
+                Filter = "Dungeon map file (*.dmap)|*.dmap | All files (*.*)|*.*"
+            };
             if (saveFileDialog.ShowDialog() == true)
             {
                 string fileName = saveFileDialog.FileName;
@@ -112,10 +115,61 @@ namespace DungeonGame
                     File.WriteAllBytes(fileName, serializer.Serialize(GetViewModel().GameMap));
                 } catch (Exception ex)
                 {
-                    MessageBox.Show($"Chyba při exportu mapy do souboru {fileName}: {ex.Message}.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    ShowErrorMessage($"Chyba při exportu mapy do souboru {fileName}: {ex.Message}.");
                 }
             }
         }
+
+        /// <summary>
+        /// Tries to load map from file to editor.
+        /// </summary>
+        private void LoadMap()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                ValidateNames = true,
+                Filter = "Dungeon map file (*.dmap)|*.dmap | All files (*.*)|*.*"
+            };
+            string fileName;
+            if(openFileDialog.ShowDialog() == true)
+            {
+                fileName = openFileDialog.FileName;
+
+                // try to load map from file
+                Map newMap;
+                try
+                {
+                    byte[] fileContent = File.ReadAllBytes(fileName);
+                    newMap = new BinaryMapSerializer().Deserialize(fileContent);
+                } catch (Exception ex)
+                {
+                    ShowErrorMessage($"Chyba při čtení souboru {fileName}: {ex.Message}. Soubor je poškozený, nebo má neplatný formát.");
+                    return;
+                }
+
+                // try to load map to editor
+                try
+                {
+                    GetViewModel().LoadMap(newMap);
+                    RenderMap();
+                } catch (Exception ex)
+                {
+                    ShowErrorMessage($"Chyba při načítání mapy do editoru. {ex.Message}"); 
+                    return;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Shows simple error message dialog with OK button.
+        /// </summary>
+        /// <param name="errorMessage"></param>
+        private void ShowErrorMessage(string errorMessage)
+        {
+            MessageBox.Show(errorMessage, "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
 
         private void OnEditorClose(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -189,9 +243,14 @@ namespace DungeonGame
             RenderMap();
         }
 
-        private void SavemenuItemClick(object sender, RoutedEventArgs e)
+        private void SaveMenuItemClick(object sender, RoutedEventArgs e)
         {
             ExportMap();
+        }
+
+        private void LoadMenuItemClick(object sender, RoutedEventArgs e)
+        {
+            LoadMap();
         }
     }
 

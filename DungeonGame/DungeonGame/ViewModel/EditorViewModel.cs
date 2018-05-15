@@ -31,6 +31,8 @@ namespace DungeonGame.ViewModel
         
         public bool GeneratePanelEnabled { get; set; }
 
+        public bool HumanPlayerPlaced { get; protected set; }
+
         private List<EditorToolboxItem> toolboxItems;
         /// <summary>
         /// Collection with static number of items.
@@ -64,6 +66,7 @@ namespace DungeonGame.ViewModel
             MapSeed = ViewModelConstants.DEF_MAP_SEED;
             GeneratePanelEnabled = true;
             MapName = "Nová mapa";
+            HumanPlayerPlaced = false;
 
             SelectedToolboxItem = null;
             SelectedToolboxItemIndex = -1;
@@ -79,6 +82,7 @@ namespace DungeonGame.ViewModel
         private List<EditorToolboxItem> CreateToolboxItems()
         {
             List<EditorToolboxItem> items = new List<EditorToolboxItem>();
+            items.Add(new EditorToolboxItem() { Name = "Hráč", Tooltip = "Umístí hráče na hrací plochu.", ItemType = EditorToolboxItemType.AI_PLAYER });
             items.Add(new EditorToolboxItem() { Name = "Protihráč", Tooltip = "Umístí protihráče na hrací plochu.", ItemType = EditorToolboxItemType.AI_PLAYER});
             items.Add(new EditorToolboxItem() { Name = "Monstrum", Tooltip = "Umístí monstrum na hrací plochu.", ItemType = EditorToolboxItemType.MONSTER });
             items.Add(new EditorToolboxItem() { Name = "Zbraň", Tooltip = "Umístí zbraň na hrací plochu.", ItemType = EditorToolboxItemType.WEAPON });
@@ -110,6 +114,60 @@ namespace DungeonGame.ViewModel
         }
 
         /// <summary>
+        /// Load map to this view model.
+        /// </summary>
+        /// <param name="map">Map to be loaded.</param>
+        public void LoadMap(Map map)
+        {
+            // try to load all map items and if it's ok, place it, otherwise
+            // throw exception, this way the old map will still remain in editor
+            List<EditorToolboxItem> tmpPlacedItems = new List<EditorToolboxItem>();
+            foreach(MapBlock mb in map.Grid)
+            {
+                if (mb.Creature != null)
+                {
+                    EditorToolboxItemType type;
+                    if (mb.Creature is Monster) { type = EditorToolboxItemType.MONSTER; }
+                    else if (mb.Creature is HumanPlayer) { type = EditorToolboxItemType.HUMAN_PLAYER; }
+                    else if (mb.Creature is AbstractPlayer) { type = EditorToolboxItemType.AI_PLAYER; }
+                    else
+                    {
+                        throw new Exception($"Neznámý typ bytosti {mb.Creature.GetType()}!");
+                    }
+                    tmpPlacedItems.Add(new EditorToolboxItem() { UID = mb.Creature.UniqueId, Name = mb.Creature.Name, ItemType = type });
+                }
+
+                if (mb.Item != null)
+                {
+                    EditorToolboxItemType type;
+                    if (mb.Item is AbstractWeapon) { type = EditorToolboxItemType.WEAPON; }
+                    else if (mb.Item is AbstractArmor) { type = EditorToolboxItemType.ARMOR; }
+                    else if (mb.Item is AbstractInventoryItem) { type = EditorToolboxItemType.ITEM; }
+                    else
+                    {
+                        throw new Exception($"Neznámý typ předmětu {mb.Item.GetType()}!");
+                    }
+                    tmpPlacedItems.Add(new EditorToolboxItem() { UID = mb.Item.UniqueId, Name = mb.Item.Name, ItemType = type });
+                }
+            }
+
+            PlacedItems.Clear();
+            tmpPlacedItems.ForEach(placedItem => PlacedItems.Add(placedItem));
+            GameMap = map;
+            MapWidth = map.Width;
+            MapHeight = map.Height;
+            MapName = map.MapName;
+            GeneratePanelEnabled = true;
+            DeselectToolboxItem();
+
+            OnPropertyChanged("GeneratePanelEnabled");
+            OnPropertyChanged("PlacedItems");
+            OnPropertyChanged("MapWidth");
+            OnPropertyChanged("Mapheight");
+            OnPropertyChanged("MapName");
+        }
+
+        /// <summary>
         /// Generate new map from values stored in this view model.
         /// Note that this will also remove all placed items.
         /// </summary>
@@ -118,6 +176,7 @@ namespace DungeonGame.ViewModel
             GameMap = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(MapWidth, MapHeight, MapSeed);
             PlacedItems.Clear();
             GameMap.MapName = MapName;
+            HumanPlayerPlaced = false;
             OnPropertyChanged("PlacedItems");
         }
 
@@ -155,6 +214,16 @@ namespace DungeonGame.ViewModel
             int uid = -1;
             switch(item.ItemType)
             {
+                case EditorToolboxItemType.HUMAN_PLAYER:
+                    if (HumanPlayerPlaced)
+                    {
+                        throw new Exception("Na hrací plochu lze umístit pouze jendoho lidského hráče!");
+                    }
+                    GameMap.Grid[mapX, mapY].Creature = new HumanPlayer("Human player", GameMap.Grid[mapX, mapY]);
+                    uid = GameMap.Grid[mapX, mapY].Creature.UniqueId;
+                    HumanPlayerPlaced = true;
+                    break;
+
                 case EditorToolboxItemType.AI_PLAYER:
                     GameMap.Grid[mapX, mapY].Creature = AIPlayerFactory.CreateSimpleAIPLayer("Simple AI Player", GameMap.Grid[mapX, mapY]);
                     uid = GameMap.Grid[mapX, mapY].Creature.UniqueId;
@@ -237,6 +306,7 @@ namespace DungeonGame.ViewModel
     public enum EditorToolboxItemType
     {
         AI_PLAYER,
+        HUMAN_PLAYER,
         MONSTER,
         ITEM,
         ARMOR,

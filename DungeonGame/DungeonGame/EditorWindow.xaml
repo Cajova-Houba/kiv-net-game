@@ -23,8 +23,8 @@
 
         <Menu Grid.ColumnSpan="2" Grid.Row="0">
             <MenuItem Header="_Soubor">
-                <MenuItem Header="_Uložit" Click="SavemenuItemClick" />
-                <MenuItem Header="_Otevřít"/>
+                <MenuItem Header="_Uložit mapu" Click="SaveMenuItemClick" />
+                <MenuItem Header="_Nahrát mapu" Click="LoadMenuItemClick"/>
                 <Separator/>
                 <MenuItem Header="_Zavřít editor" Click="CloseMenuItemClick"/>
             </MenuItem>
