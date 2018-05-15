@@ -54,5 +54,13 @@ namespace DungeonGame
             this.Close();
             editorWindow.Show();
         }
+
+        private void ImportMapBtnClick(object sender, RoutedEventArgs e)
+        {
+            CustomMapManagementWindow mapManagementWindow = new CustomMapManagementWindow();
+            App.Current.MainWindow = mapManagementWindow;
+            this.Close();
+            mapManagementWindow.Show();
+        }
     }
 }

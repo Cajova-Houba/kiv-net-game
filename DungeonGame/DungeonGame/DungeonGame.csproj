@@ -74,6 +74,7 @@
       <DependentUpon>ScoreWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\EditorViewModel.cs" />
+    <Compile Include="ViewModel\MapManagementViewModel.cs" />
     <Compile Include="ViewModel\NewGameSettingsModel.cs" />
     <Compile Include="ViewModel\ScoreViewModel.cs" />
     <Compile Include="ViewModel\ViewModelConstants.cs" />

@@ -111,7 +111,7 @@ namespace GameCore.Map.Serializer
                 // read byte only every second iteration
                 if (!upper)
                 {
-                    blockByte = (byte)byteStream.ReadByte();
+                    blockByte = ReadByte(byteStream);
                     mask = 1;
                 }
 
@@ -174,7 +174,7 @@ namespace GameCore.Map.Serializer
             int hp = ReadInt(byteStream);
             int dmg = ReadInt(byteStream);
             int def = ReadInt(byteStream);
-            byte type = (byte)byteStream.ReadByte();
+            byte type = ReadByte(byteStream);
 
             switch(type)
             {
@@ -236,7 +236,7 @@ namespace GameCore.Map.Serializer
             int x = ReadInt(byteStream);
             int y = ReadInt(byteStream);
             int param = ReadInt(byteStream);
-            byte type = (byte)byteStream.ReadByte();
+            byte type = ReadByte(byteStream);
 
             switch(type)
             {
@@ -274,7 +274,7 @@ namespace GameCore.Map.Serializer
             byte[] buffer = new byte[stringLen];
             for(int i = 0; i < stringLen; i++)
             {
-                buffer[i] = ((byte)byteStream.ReadByte());
+                buffer[i] = ReadByte(byteStream);
             }
             str = Encoding.UTF8.GetString(buffer);   
 
@@ -504,6 +504,27 @@ namespace GameCore.Map.Serializer
         }
 
         /// <summary>
+        /// Reads one byte from stream and throws exception if the stream is empty.
+        /// </summary>
+        /// <param name="byteStream"></param>
+        /// <returns></returns>
+        private byte ReadByte(Stream byteStream)
+        {
+            byte res = 0;
+
+            int readByte = byteStream.ReadByte();
+            if (readByte == -1)
+            {
+                throw new Exception("Konec streamu!");
+            } else
+            {
+                res = (byte)readByte;
+            }
+
+            return res;
+        }
+
+        /// <summary>
         /// Reads four bytes from stream and converts them to int.
         /// Little endian.
         /// </summary>
@@ -511,10 +532,10 @@ namespace GameCore.Map.Serializer
         /// <returns>Result.</returns>
         private int ReadInt(Stream byteStream)
         {
-            byte b0 = (byte)byteStream.ReadByte();
-            byte b1 = (byte)byteStream.ReadByte();
-            byte b2 = (byte)byteStream.ReadByte();
-            byte b3 = (byte)byteStream.ReadByte();
+            byte b0 = ReadByte(byteStream);
+            byte b1 = ReadByte(byteStream);
+            byte b2 = ReadByte(byteStream);
+            byte b3 = ReadByte(byteStream);
 
             return (((((((((0 | b3 << 8) | b2) << 8) | b1) << 8) | b0))));
         }

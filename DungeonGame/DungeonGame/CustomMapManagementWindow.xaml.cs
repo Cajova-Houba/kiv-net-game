@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DungeonGame.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,7 @@ namespace DungeonGame
     {
         public CustomMapManagementWindow()
         {
+            DataContext = new MapManagementViewModel();
             InitializeComponent();
         }
 
@@ -34,9 +36,35 @@ namespace DungeonGame
             menuWindow.Show();
         }
 
+        private MapManagementViewModel GetViewModel()
+        {
+            return (MapManagementViewModel)DataContext;
+        }
+
+        /// <summary>
+        /// Shows simple error message dialog with OK button.
+        /// </summary>
+        /// <param name="errorMessage"></param>
+        private void ShowErrorMessage(string errorMessage)
+        {
+            MessageBox.Show(errorMessage, "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
         private void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             DisplayMenu();
+        }
+
+        private void RefreshMapsBtnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                int failedMaps = GetViewModel().RefreshImportedMaps();
+                MessageBox.Show($"Import map dokončen. Počet neúspěšně zpracovaných souborů: {failedMaps}.", "Import dokončen", MessageBoxButton.OK, MessageBoxImage.Information);
+            } catch (Exception ex)
+            {
+                ShowErrorMessage($"Chyba při obnovování map! {ex.Message}");
+            }
         }
     }
 }
