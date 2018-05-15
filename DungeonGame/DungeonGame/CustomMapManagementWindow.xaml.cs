@@ -1,4 +1,5 @@
-﻿using DungeonGame.ViewModel;
+﻿using DungeonGame.Common;
+using DungeonGame.ViewModel;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -42,15 +43,6 @@ namespace DungeonGame
             return (MapManagementViewModel)DataContext;
         }
 
-        /// <summary>
-        /// Shows simple error message dialog with OK button.
-        /// </summary>
-        /// <param name="errorMessage"></param>
-        private void ShowErrorMessage(string errorMessage)
-        {
-            MessageBox.Show(errorMessage, "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
         private void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             DisplayMenu();
@@ -64,7 +56,7 @@ namespace DungeonGame
                 MessageBox.Show($"Import map dokončen. Počet neúspěšně zpracovaných souborů: {failedMaps}.", "Import dokončen", MessageBoxButton.OK, MessageBoxImage.Information);
             } catch (Exception ex)
             {
-                ShowErrorMessage($"Chyba při obnovování map! {ex.Message}");
+                Utils.ShowErrorMessage($"Chyba při obnovování map! {ex.Message}");
             }
         }
 
@@ -82,7 +74,7 @@ namespace DungeonGame
                     GetViewModel().RemoveImportedMap(((Button)sender).Tag.ToString());
                 } catch (Exception ex)
                 {
-                    ShowErrorMessage($"Chyba při odstraňování mapy: {ex.Message}");
+                    Utils.ShowErrorMessage($"Chyba při odstraňování mapy: {ex.Message}");
                 }
             }
         }
@@ -109,7 +101,7 @@ namespace DungeonGame
                 GetViewModel().ImportMapFromCurrentFile();
             } catch (Exception ex)
             {
-                ShowErrorMessage($"Chyba při importování mapy ze souboru {fName}. {ex.Message}");
+                Utils.ShowErrorMessage($"Chyba při importování mapy ze souboru {fName}. {ex.Message}");
             }
         }
     }

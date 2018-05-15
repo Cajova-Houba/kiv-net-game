@@ -12,6 +12,16 @@ namespace DungeonGame.Common
     /// </summary>
     public class Utils
     {
+
+        /// <summary>
+        /// Shows simple error message dialog with OK button.
+        /// </summary>
+        /// <param name="errorMessage"></param>
+        public static void ShowErrorMessage(string errorMessage)
+        {
+            MessageBox.Show(errorMessage, "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
         /// <summary>
         /// Tries to parse integer from source and checks it's range.
         /// </summary>

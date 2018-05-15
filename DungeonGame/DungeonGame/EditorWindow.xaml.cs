@@ -115,7 +115,7 @@ namespace DungeonGame
                     File.WriteAllBytes(fileName, serializer.Serialize(GetViewModel().GameMap));
                 } catch (Exception ex)
                 {
-                    ShowErrorMessage($"Chyba při exportu mapy do souboru {fileName}: {ex.Message}.");
+                    Utils.ShowErrorMessage($"Chyba při exportu mapy do souboru {fileName}: {ex.Message}.");
                 }
             }
         }
@@ -143,7 +143,7 @@ namespace DungeonGame
                     newMap = new BinaryMapSerializer().Deserialize(fileContent);
                 } catch (Exception ex)
                 {
-                    ShowErrorMessage($"Chyba při čtení souboru {fileName}: {ex.Message}. Soubor je poškozený, nebo má neplatný formát.");
+                    Utils.ShowErrorMessage($"Chyba při čtení souboru {fileName}: {ex.Message}. Soubor je poškozený, nebo má neplatný formát.");
                     return;
                 }
 
@@ -154,20 +154,11 @@ namespace DungeonGame
                     RenderMap();
                 } catch (Exception ex)
                 {
-                    ShowErrorMessage($"Chyba při načítání mapy do editoru. {ex.Message}"); 
+                    Utils.ShowErrorMessage($"Chyba při načítání mapy do editoru. {ex.Message}"); 
                     return;
                 }
             }
 
-        }
-
-        /// <summary>
-        /// Shows simple error message dialog with OK button.
-        /// </summary>
-        /// <param name="errorMessage"></param>
-        private void ShowErrorMessage(string errorMessage)
-        {
-            MessageBox.Show(errorMessage, "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
 
