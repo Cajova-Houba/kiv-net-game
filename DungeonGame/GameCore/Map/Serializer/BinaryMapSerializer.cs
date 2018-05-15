@@ -73,6 +73,8 @@ namespace GameCore.Map.Serializer
         /// <param name="map">Map object to write into.</param>
         private void ReadMap(Stream byteStream, Map map)
         {
+            int nameLen = ReadInt(byteStream);
+            string mapName = ReadString(byteStream, nameLen);
             int w = ReadInt(byteStream);
             int h = ReadInt(byteStream);
             int wx = ReadInt(byteStream);
@@ -80,6 +82,7 @@ namespace GameCore.Map.Serializer
 
             map.InitializeMap(ReadMapBlocks(byteStream, w, h));
             map.WinningBlock = map.Grid[wx, wy];
+            map.MapName = mapName;
 
             List<AbstractCreature> creatures = ReadCreatures(byteStream, map);
             List<AbstractItem> items = ReadItems(byteStream, map);
@@ -296,6 +299,9 @@ namespace GameCore.Map.Serializer
         /// <param name="serialized">List with serialized data.</param>
         private void AddMapHeader(Map map, List<byte> serialized)
         {
+            byte[] encodedName = Encoding.UTF8.GetBytes(map.MapName);
+            serialized.AddRange(IntToBytes(encodedName.Length));
+            serialized.AddRange(encodedName);
             serialized.AddRange(IntToBytes(map.Width));
             serialized.AddRange(IntToBytes(map.Height));
             serialized.AddRange(IntToBytes(map.WinningBlock.X));

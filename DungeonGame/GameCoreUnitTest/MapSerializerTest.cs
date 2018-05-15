@@ -57,10 +57,11 @@ namespace GameCoreUnitTest
             int w = 4;
             int h = 4;
             Map map = MapGeneratorFactory.CreateOpenMapGenerator().GenerateMap(w, h, IMapGeneratorConstants.NO_SEED);
+            map.MapName = "";
             IMapSerializer<byte[], byte[]> byteSerializer = new BinaryMapSerializer();
             byte[] serializedMap = byteSerializer.Serialize(map);
-            // 3 bytes for header, 16 bytes for map header, (w*h) / 2 bytes for map data, 4 bytes for creature count, 4 bytes for item count
-            int expectedSize = 3 + 16 + (w * h) / 2 + 4 + 4;
+            // 3 bytes for header, 20 bytes for map header, (w*h) / 2 bytes for map data, 4 bytes for creature count, 4 bytes for item count
+            int expectedSize = 3 + 20 + (w * h) / 2 + 4 + 4;
 
             Assert.AreEqual(expectedSize, serializedMap.Length, "Wrong number of bytes returned!");
 
@@ -70,17 +71,20 @@ namespace GameCoreUnitTest
             Assert.AreEqual(BinaryMapSerializer.VERSION, serializedMap[2], "Wrong third byte of the header!");
 
             // check map header
-            int sw = serializedMap[3] + 256*serializedMap[4] + 256*256*serializedMap[5] + 256*256*256*serializedMap[6];
-            int sh = serializedMap[7] + 256 * serializedMap[8] + 256 * 256 * serializedMap[9] + 256 * 256 * 256 * serializedMap[10];
-            int wx = serializedMap[11] + 256 * serializedMap[12] + 256 * 256 * serializedMap[13] + 256 * 256 * 256 * serializedMap[14];
-            int wy = serializedMap[15] + 256 * serializedMap[16] + 256 * 256 * serializedMap[17] + 256 * 256 * 256 * serializedMap[18];
+            int counter = 3;
+            int nameLen = serializedMap[counter++] + 256 * serializedMap[counter++] + 256 * 256 * serializedMap[counter++] + 256 * 256 * 256 * serializedMap[counter++];
+            int sw = serializedMap[counter++] + 256*serializedMap[counter++] + 256*256*serializedMap[counter++] + 256*256*256*serializedMap[counter++];
+            int sh = serializedMap[counter++] + 256 * serializedMap[counter++] + 256 * 256 * serializedMap[counter++] + 256 * 256 * 256 * serializedMap[counter++];
+            int wx = serializedMap[counter++] + 256 * serializedMap[counter++] + 256 * 256 * serializedMap[counter++] + 256 * 256 * 256 * serializedMap[counter++];
+            int wy = serializedMap[counter++] + 256 * serializedMap[counter++] + 256 * 256 * serializedMap[counter++] + 256 * 256 * 256 * serializedMap[counter++];
+            Assert.AreEqual(0, nameLen, "Wrong name length!");
             Assert.AreEqual(w, sw, "Wrong map width!");
             Assert.AreEqual(h, sh, "Wrong map height!");
             Assert.AreEqual(wx, map.WinningBlock.X, "Wrong x coordinate of winning block!");
             Assert.AreEqual(wy, map.WinningBlock.Y, "Wrong y coordinate of winning block!");
 
             // check map data
-            for(int i = 19; i < 19+8; i++)
+            for(int i = counter; i < counter+8; i++)
             {
                 Assert.AreEqual(255, serializedMap[i], $"Wrong {i-18} byte of map data!");
             }
@@ -92,7 +96,8 @@ namespace GameCoreUnitTest
             // try to deserialize
             Map deserializedMap = byteSerializer.Deserialize(serializedMap);
 
-            // check map 
+            // check map
+            Assert.AreEqual(map.MapName, deserializedMap.MapName, "Wrong map name!");
             Assert.AreEqual(w, deserializedMap.Width, "Wrong width after deserialization!");
             Assert.AreEqual(h, deserializedMap.Width, "Wrong height after deserialization!");
             Assert.AreEqual(map.WinningBlock.X, deserializedMap.WinningBlock.X, "Wrong x coordinate of winning block!");
@@ -123,6 +128,7 @@ namespace GameCoreUnitTest
             int w = 4;
             int h = 4;
             Map map = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(w, h, IMapGeneratorConstants.NO_SEED);
+            map.MapName = "Test map";
 
             // add creatures to map
             Monster origMonster = new Monster("Test monster", map.Grid[0, 0], 4, 3654123, 87621235);
@@ -148,6 +154,7 @@ namespace GameCoreUnitTest
 
 
             // check map 
+            Assert.AreEqual(map.MapName, deserializedMap.MapName, "Wrong map name!");
             Assert.AreEqual(w, deserializedMap.Width, "Wrong width after deserialization!");
             Assert.AreEqual(h, deserializedMap.Width, "Wrong height after deserialization!");
             Assert.AreEqual(map.WinningBlock.X, deserializedMap.WinningBlock.X, "Wrong x coordinate of winning block!");

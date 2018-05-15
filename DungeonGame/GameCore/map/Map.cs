@@ -12,17 +12,22 @@ namespace GameCore.Map
     public class Map
     {
         /// <summary>
+        /// Optional map name. Used to identify it in game (this name will be displayed).
+        /// </summary>
+        public string MapName { get; set; }
+
+        /// <summary>
         /// Number of MapBlocks in horizontal direction.
         /// </summary>
         [JsonProperty]
         public int Width { get; protected set; }
-
+        
         /// <summary>
         /// Number of MapBlocks in vertical direction.
         /// </summary>
         [JsonProperty]
         public int Height { get; protected set; }
-
+        
         /// <summary>
         /// Winning block of this map.
         /// </summary>
