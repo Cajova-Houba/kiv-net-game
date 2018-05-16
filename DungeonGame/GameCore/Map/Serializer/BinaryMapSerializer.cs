@@ -298,15 +298,7 @@ namespace GameCore.Map.Serializer
         /// <param name="serialized">List with serialized data.</param>
         private void AddMapHeader(Map map, List<byte> serialized)
         {
-            if (map.MapName == null)
-            {
-                serialized.AddRange(IntToBytes(0));
-            } else
-            {
-                byte[] encodedName = Encoding.UTF8.GetBytes(map.MapName);
-                serialized.AddRange(IntToBytes(encodedName.Length));
-                serialized.AddRange(encodedName);
-            }
+            serialized.AddRange(NameToBytes(map.MapName, GameObject.MAX_NAME_LENGTH));
             serialized.AddRange(IntToBytes(map.Width));
             serialized.AddRange(IntToBytes(map.Height));
             serialized.AddRange(IntToBytes(map.WinningBlock.X));
@@ -415,9 +407,7 @@ namespace GameCore.Map.Serializer
             crBytes.AddRange(IntToBytes(creature.UniqueId));
 
             // name
-            byte[] encodedName = Encoding.UTF8.GetBytes(creature.Name);
-            crBytes.AddRange(IntToBytes(encodedName.Length));
-            crBytes.AddRange(encodedName);
+            crBytes.AddRange(NameToBytes(creature.Name, GameObject.MAX_NAME_LENGTH));
 
             // position
             crBytes.AddRange(IntToBytes(creature.Position.X));
@@ -461,9 +451,7 @@ namespace GameCore.Map.Serializer
             itBytes.AddRange(IntToBytes(item.UniqueId));
 
             // name
-            byte[] encodedName = Encoding.UTF8.GetBytes(item.Name);
-            itBytes.AddRange(IntToBytes(encodedName.Length));
-            itBytes.AddRange(encodedName);
+            itBytes.AddRange(NameToBytes(item.Name, GameObject.MAX_NAME_LENGTH));
 
             // position
             itBytes.AddRange(IntToBytes(item.Position.X));
@@ -479,6 +467,32 @@ namespace GameCore.Map.Serializer
             itBytes.Add(type);
 
             return itBytes;
+        }
+
+        /// <summary>
+        /// Converts name to list of bytes. If the name is longer than maxNameLen, it is trimmed to correct size.
+        /// If the name is null, returns 4 bytes with value 0.
+        /// </summary>
+        /// <param name="name">Name to be converted.</param>
+        /// <param name="maxBytes">Max number of allowed bytes.</param>
+        /// <returns></returns>
+        private List<byte> NameToBytes(string name, int maxNameLen)
+        {
+            List<byte> res = new List<byte>();
+            if (name == null || name.Length == 0)
+            {
+                res.AddRange(IntToBytes(0));
+                return res;
+            } else if (name.Length > maxNameLen)
+            {
+                name = name.Substring(0, maxNameLen);
+            }
+
+            byte[] encodedName = Encoding.UTF8.GetBytes(name);
+            res.AddRange(IntToBytes(encodedName.Length));
+            res.AddRange(encodedName);
+
+            return res;
         }
 
         /// <summary>
