@@ -13,6 +13,11 @@ namespace GameCore.Objects
     public abstract class GameObject
     {
         /// <summary>
+        /// Max length of object name.
+        /// </summary>
+        public const int MAX_NAME_LENGTH = 100;
+
+        /// <summary>
         /// Id counter used to give unique id to every object in the game.
         /// </summary>
         protected static int idCounter = 0;

@@ -13,6 +13,9 @@ namespace DungeonGame.ViewModel
     /// </summary>
     public class NewGameSettingsModel
     {
+        public const int MAX_DENSITY = 100;
+        public const int MIN_DENSITY = 0;
+        public const int DEF_DENSITY = 50;
         public const int DEF_MONSTER_COUNT = 10;
         public const int DEF_AI_COUNT = 3;
         public const string DEF_PLAYER_NAME = "Dobrodruh #5";
@@ -44,24 +47,27 @@ namespace DungeonGame.ViewModel
             set { aiCount = value; }
         }
 
-        private int monsterCount;
-        public int MonsterCount
+        public int MaxDensity { get { return MAX_DENSITY; } }
+        public int MinDensity { get { return MIN_DENSITY; } }
+
+        // densities should be in range MIN_DENSITY..MAX_DENSITY
+        public int MonsterDensity { get; set; }
+        public int ItemDensity { get; set; }
+
+        /// <summary>
+        /// Returns monster density normalized to range 1..0.
+        /// </summary>
+        public double NormalizedMonsterDensity
         {
-            get { return monsterCount; }
-            set { monsterCount = value; }
+            get { return MonsterDensity / (double)MAX_DENSITY; }
         }
 
-        private List<ItemsDensity> itemsDensities;
-        public List<ItemsDensity> ItemsDensities
+        /// <summary>
+        /// Returns item density normalized to range 1..0
+        /// </summary>
+        public double NormalizedItemDensity
         {
-            get { return itemsDensities; }
-        }
-
-        private ItemsDensity selectedDensity;
-        public ItemsDensity SelectedDensity
-        {
-            get { return selectedDensity; }
-            set { selectedDensity = value; }
+            get { return ItemDensity / (double)MAX_DENSITY; }
         }
 
         private string playerName;
@@ -70,9 +76,6 @@ namespace DungeonGame.ViewModel
             get { return playerName; }
             set { playerName = value; }
         }
-
-        public bool RandomMapSelected { get; set; }
-        public bool ImportedMapSelected { get; set; }
 
         public ImportedMapWrapper SelectedImportedMap { get; set; }
 
@@ -89,16 +92,9 @@ namespace DungeonGame.ViewModel
             mapHeight = ViewModelConstants.DEF_MAP_HEIGHT;
             mapSeed = ViewModelConstants.DEF_MAP_SEED;
             aiCount = DEF_AI_COUNT;
-            monsterCount = DEF_MONSTER_COUNT;
+            MonsterDensity = DEF_DENSITY;
+            ItemDensity = DEF_DENSITY;
             playerName = DEF_PLAYER_NAME;
-            RandomMapSelected = true;
-            ImportedMapSelected = false;
-
-            itemsDensities = new List<ItemsDensity>();
-            itemsDensities.Add(new ItemsDensity() { Value = 3, Name = "Málo" });
-            itemsDensities.Add(new ItemsDensity() { Value = 2, Name = "Středně" });
-            itemsDensities.Add(new ItemsDensity() { Value = 1, Name = "Hodně" });
-            selectedDensity = itemsDensities[1];
         }
     }
 

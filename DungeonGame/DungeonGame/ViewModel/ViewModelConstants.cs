@@ -19,5 +19,6 @@ namespace DungeonGame.ViewModel
         public const int MAX_MAP_WIDTH = 100;
         public const int MIN_MAP_HEIGHT = 3;
         public const int MAX_MAP_HEIGHT = 100;
+        public const int MAX_PLAYER_NAME_LEN = 100;
     }
 }

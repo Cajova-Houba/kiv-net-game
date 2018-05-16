@@ -18,7 +18,10 @@ namespace GameCore.Game
         /// Good for using imported maps.
         /// </summary>
         /// <param name="map">Map to be used for generation.</param>
-        /// <param name="humanPlayerName">If the provided map doesn't contain any human players, one will be randomly generated (if there's place left on the map) and this name will be used.</param>
+        /// <param name="humanPlayerName">
+        /// If the provided map doesn't contain any human players, one will be randomly generated (if there's place left on the map) and this name will be used.
+        /// If the provided map does contain human palyers, name of the first player will be set to this.
+        /// </param>
         /// <returns>Generated game instance.</returns>
         public static Game GenerateGame(Map.Map map, string humanPlayerName)
         {
@@ -61,6 +64,9 @@ namespace GameCore.Game
 
                     attempt++;
                 }
+            } else
+            {
+                humanPlayers[0].Name = humanPlayerName;
             }
 
             // generate game instance
@@ -114,10 +120,10 @@ namespace GameCore.Game
             int pCount = 1;
             AddObjectsToGame(width, height, aiCount, 20, (ox, oy) =>
             {
-                if (!creatureOccupiedPositions.Contains($"{x}:{y}"))
+                if (!creatureOccupiedPositions.Contains($"{ox}:{oy}"))
                 {
-                    game.AddAIPlayer(AIPlayerFactory.CreateSimpleAIPLayer($"Simple AI Player {pCount}", gameMap.Grid[x, y]));
-                    creatureOccupiedPositions.Add(($"{x}:{y}"));
+                    game.AddAIPlayer(AIPlayerFactory.CreateSimpleAIPLayer($"Simple AI Player {pCount}", gameMap.Grid[ox, oy]));
+                    creatureOccupiedPositions.Add(($"{ox}:{oy}"));
                     pCount++;
                     return true;
                 } else

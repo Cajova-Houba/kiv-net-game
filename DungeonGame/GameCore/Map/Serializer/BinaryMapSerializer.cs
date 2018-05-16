@@ -1,4 +1,5 @@
-﻿using GameCore.Objects.Creatures;
+﻿using GameCore.Objects;
+using GameCore.Objects.Creatures;
 using GameCore.Objects.Creatures.AIPlayers;
 using GameCore.Objects.Items;
 using GameCore.Objects.Items.Armors;
@@ -26,6 +27,7 @@ namespace GameCore.Map.Serializer
         /// Supported version of binary data structure.
         /// </summary>
         public const byte VERSION = 1;
+        
 
         public Map Deserialize(byte[] input)
         {
@@ -73,8 +75,7 @@ namespace GameCore.Map.Serializer
         /// <param name="map">Map object to write into.</param>
         private void ReadMap(Stream byteStream, Map map)
         {
-            int nameLen = ReadInt(byteStream);
-            string mapName = ReadString(byteStream, nameLen);
+            string mapName = ReadName(byteStream);
             int w = ReadInt(byteStream);
             int h = ReadInt(byteStream);
             int wx = ReadInt(byteStream);
@@ -167,8 +168,7 @@ namespace GameCore.Map.Serializer
         {
             AbstractCreature creature;
             int uid = ReadInt(byteStream);
-            int nameLen = ReadInt(byteStream);
-            String name = ReadString(byteStream, nameLen);
+            string name = ReadName(byteStream);
             int x = ReadInt(byteStream);
             int y = ReadInt(byteStream);
             int hp = ReadInt(byteStream);
@@ -231,8 +231,7 @@ namespace GameCore.Map.Serializer
         {
             AbstractItem item;
             int uid = ReadInt(byteStream);
-            int nameLen = ReadInt(byteStream);
-            String name = ReadString(byteStream, nameLen);
+            string name = ReadName(byteStream);
             int x = ReadInt(byteStream);
             int y = ReadInt(byteStream);
             int param = ReadInt(byteStream);
@@ -501,6 +500,23 @@ namespace GameCore.Map.Serializer
                 (byte)((intVal >> 16) & 255),
                 (byte)((intVal >> 24) & 255)
             };
+        }
+
+        /// <summary>
+        /// Reads four bytes containing name length and then reads name.
+        /// If the name is longer than GameObject.MAX_NAME_LENGTH, exception is thrown.
+        /// </summary>
+        /// <param name="byteStream"></param>
+        /// <returns>Name.</returns>
+        private string ReadName(Stream byteStream)
+        {
+            int nameLen = ReadInt(byteStream);
+            if (nameLen > GameObject.MAX_NAME_LENGTH)
+            {
+                throw new Exception($"Jméno objektu je moc dlouhé: {nameLen} bytů!");
+            }
+
+            return ReadString(byteStream, nameLen);
         }
 
         /// <summary>

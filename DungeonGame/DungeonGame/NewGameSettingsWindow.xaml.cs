@@ -51,7 +51,17 @@ namespace DungeonGame
             {
                 return;
             }
-            GameWindow gameWindow = new GameWindow(new GameViewModel(GenerateNewGame((NewGameSettingsModel)DataContext)));
+
+            Game game;
+            try
+            {
+                game = GenerateNewGame((NewGameSettingsModel)DataContext);
+            } catch (Exception ex)
+            {
+                Utils.ShowErrorMessage($"Chyba při vytváření mapy. {ex.Message}");
+                return;
+            }
+            GameWindow gameWindow = new GameWindow(new GameViewModel(game));
             App.Current.MainWindow = gameWindow;
             displayGameWindow = true;
             this.Close();
@@ -77,7 +87,7 @@ namespace DungeonGame
 
             if (!Int32.TryParse(tbMapSeed.Text, out res))
             {
-                MessageBox.Show("Seed pro mapu není platná hodnota.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Utils.ShowErrorMessage("Seed pro mapu není platná hodnota.");
                 return false;
             }
 
@@ -86,8 +96,9 @@ namespace DungeonGame
                 return false;
             }
 
-            if (!Utils.CheckRangedInt(tbMonsterCount.Text, MIN_MONSTER_COUNT, MAX_MONSTER_COUNT, "Počet monster není platná hodnota.", $"Počet monster musí být v rozsahu {MIN_MONSTER_COUNT}-{MAX_MONSTER_COUNT}."))
+            if (tbPlayerName.Text == null || tbPlayerName.Text.Length == 0 || tbPlayerName.Text.Length > ViewModelConstants.MAX_PLAYER_NAME_LEN)
             {
+                Utils.ShowErrorMessage($"Jméno hráče neobsahuje platnout hodnotu. Jméno hráče musí být řetězec délky 1..{ViewModelConstants.MAX_PLAYER_NAME_LEN}.");
                 return false;
             }
 
@@ -111,116 +122,26 @@ namespace DungeonGame
         /// <returns>Generated game.</returns>
         private Game GenerateNewGame(NewGameSettingsModel model)
         {
-            int w = model.MapWidth;
-            int h = model.MapHeight;
-            int seed = model.MapSeed;
-            int aiCount = model.AiCount;
-            int monsterCount = model.MonsterCount;
-            ItemsDensity itemsDensity = model.SelectedDensity;
+            string playerName = model.PlayerName;
 
-            // sets of occupied position for creatures and items, '{x}:{y}'
-            HashSet<String> creatureOccupiedPositions = new HashSet<string>();
-            HashSet<string> itemsOccupiedPositions = new HashSet<string>();
-
-            Random r = new Random();
-            Map gameMap;
             Game game;
-            if (model.RandomMapSelected)
+            if (rbRandomMap.IsChecked.HasValue && rbRandomMap.IsChecked.Value == true)
             {
-                gameMap = MapGeneratorFactory.CreateSimpleMapGenerator().GenerateMap(w, h, seed);
-                game = new Game() { GameMap = gameMap };
+                int w = model.MapWidth;
+                int h = model.MapHeight;
+                int seed = model.MapSeed;
+                int aiCount = model.AiCount;
+                double monsterDensity = model.NormalizedMonsterDensity;
+                double itemDensity = model.NormalizedItemDensity;
+                game = GameGenerator.GenerateGame(w, h, seed, aiCount, monsterDensity, itemDensity, playerName); 
+            } else if (rbImportedMap.IsChecked.HasValue && rbImportedMap.IsChecked.Value == true)
+            {
+                game = GameGenerator.GenerateGame(model.SelectedImportedMap.Map, playerName);
             } else
             {
-                gameMap = model.SelectedImportedMap.Map;
-                game = new Game() { GameMap = gameMap };
-                return game;
+                throw new Exception("Nebyla vybrána žádná volba nastavení mapy!");
             }
 
-            // place human player
-            int x = r.Next(w);
-            int y = r.Next(h);
-            AbstractPlayer player = new HumanPlayer(model.PlayerName, gameMap.Grid[x, y]);
-            game.AddHumanPlayer(player);
-            creatureOccupiedPositions.Add($"{x}:{y}");
-            
-            // place AI players
-            for(int i = 0; i < aiCount; i++)
-            {
-                // keep generating positions until player is placed or limit of tries is reached
-                int maxTries = 10;
-                int tries = 0;
-                bool placed = false;
-                while(!placed && (tries < maxTries))
-                {
-                    tries++;
-                    x = r.Next(w);
-                    y = r.Next(h);
-                    if (!creatureOccupiedPositions.Contains($"{x}:{y}")) {
-                        game.AddAIPlayer(AIPlayerFactory.CreateSimpleAIPLayer($"Simple AI Player {i + 1}", gameMap.Grid[x, y]));
-                        creatureOccupiedPositions.Add(($"{x}:{y}"));
-                        placed = true;
-                    }
-                }
-                
-                if (!placed)
-                {
-                    // todo: some error message
-                }
-            }
-            
-            // place monsters
-            for(int i = 0; i < monsterCount; i++)
-            {
-                // keep generating positions until player is placed or limit of tries is reached
-                int maxTries = 10;
-                int tries = 0;
-                bool placed = false;
-                while (!placed && (tries < maxTries))
-                {
-                    tries++;
-                    x = r.Next(w);
-                    y = r.Next(h);
-                    if (!creatureOccupiedPositions.Contains($"{x}:{y}"))
-                    {
-                        game.AddMonster(MonsterFactory.CreateRandomMonster(gameMap.Grid[x, y]));
-                        creatureOccupiedPositions.Add(($"{x}:{y}"));
-                        placed = true;
-                    }
-                }
-
-                if (!placed)
-                {
-                    // todo: some error message
-                }
-            }
-
-            // place items
-            int itemCount = r.Next((w * h) / (10 * Math.Max(itemsDensity.Value,1)));
-            itemCount = r.Next((w * h) / 10) + ((w*h)/10 * Math.Max(itemsDensity.Value, 1));
-            for(int i = 0; i < itemCount; i++)
-            {
-                // keep generating positions until item is placed or limit of tries is reached
-                int maxTries = 10;
-                int tries = 0;
-                bool placed = false;
-                while (!placed && (tries < maxTries))
-                {
-                    tries++;
-                    x = r.Next(w);
-                    y = r.Next(h);
-                    if (!itemsOccupiedPositions.Contains($"{x}:{y}"))
-                    {
-                        game.AddItem(ItemFactory.CreateRandomItem(gameMap.Grid[x,y]));
-                        itemsOccupiedPositions.Add(($"{x}:{y}"));
-                        placed = true;
-                    }
-                }
-
-                if (!placed)
-                {
-                    // todo: some error message
-                }
-            }
             return game;
         }
 
