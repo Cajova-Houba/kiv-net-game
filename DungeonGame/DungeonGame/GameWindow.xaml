@@ -120,7 +120,7 @@
             </GroupBox>
         </Grid>
 
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2" >
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2">
             <Label Content="Messages"/>
             <ListBox x:Name="messageBox" ItemsSource="{Binding GameMessages, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch"/>
         </StackPanel>

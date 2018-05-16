@@ -399,8 +399,8 @@ namespace DungeonGame
                     PickUp();
                     break;
             }
+            e.Handled = true;
         }
-       
     }
    
 }

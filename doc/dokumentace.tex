@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{epstopdf}
 \usepackage{float}
+\usepackage{textcomp}
 \graphicspath{{./img/}}
 
 \begin{document}
@@ -170,6 +171,83 @@
 	
 	\subsection{Herní akce}
 	Základní třída pro každou herní akci je \verb|AbstractAction|. Deklaruje metodu \verb|execute()|, kterou se akce vykoná a umožňuje nastavit objekt \verb|AbstractCreature|, nad kterým se akce vykoná (tedy ten, kdo akci provede). V současné době jsou implementovány akce na pohyb, útok a sebrání předmětu.
+	
+	\section{Uživatelská příručka}
+	Po spuštění aplikace je zobrazeno okno se základním menu (obrázek \ref{fig:main-window}). Toto okno je výchozem bodem pro celou aplikaci po zavření okna s některou z dalších částí aplikace (import map, editor, ...) je uživatel vrácen zpět sem.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=200px]{menu-window}
+		\caption{Hlavní menu aplikace}
+		\label{fig:main-window}
+	\end{figure}
+	
+	\subsection{Start nové hry a ovládání}
+	Po kliknutí na tlačítko 'Nová hra' je zobrazeno okno (obrázek \ref{fig:new-game-sett}), kde je možné nastavit parametry nové hry, případně začít hru na některé z importovaných map. 
+	
+	V případě generování náhodné mapy je možné zadat seed pro mapu, kterým je možné řídit generování struktury bludiště. Jako vstupní hodnotu seedu program očekává celé číslo.
+	
+	Pro spuštění nové hry zmáčkněte tlačítko 'Start', pro návrat do hlavního menu tlačítko 'Zpět'.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=200px]{new-game-settings-window}
+		\caption{Nastavení nové hry}
+		\label{fig:new-game-sett}
+	\end{figure}
+	
+	
+	\paragraph{Ovládání hry}
+	Po spuštění nové hry je zobrazeno okno se hrou (obrázek \ref{fig:game-window}). To je tvořeno panelem s mapou, panelem s herními zprávami a panelem s ovládání a přehledem hráčových atributů. Hra je ovládána buď pomocí tlačítek na pravém panelu, nebo pomocí kláves -- šipky pro pohyb, mezerník pro sebrání předmětu. Cílem hry je najít a dojít do červeně označeného políčka, které symbolizuje východ z bludiště.
+	
+	Mapa obsahuje tři typy pohyhblivých entit. Monstra a protihráče, ta jsou zobrazena červenou barvou a hráče, ten je zobrazen jako zelený panáček. Hráč může na ostatní tvory útočit a to pohybem na jejich pole. Při útočení ubývá protivníkovi život, což je vidět na čárce, která se nad ním postupně zkracuje.
+	
+	Kromě živých entit obsahuje herní mapa také předměty, ty jsou u každého políčka zobrazeny v jeho levé horní části. Sekera znamená zbraň, šít je zbroj a truhlička je poklad (sesbírané předměty může hráč vidět vlevo, ve svém inventáři). 
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=280px]{game-window}
+		\caption{Okno se spuštěnou hrou}
+		\label{fig:game-window}
+	\end{figure}
+	
+	
+	Po skončení hry je zobrazeno výsledné skóre se statistikami, viz obrázek \ref{fig:game-res-window}. Zeleně je označen ten hráč, který 'zavřel' hru -- tedy jako první došel k východu z bludiště.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=160px]{score-window}
+		\caption{Výsledky hry}
+		\label{fig:game-res-window}
+	\end{figure}
+	
+	\subsection{Práce s editorem}
+	Po kliknutí na tlačítko 'Editor' v hlavním menu je zobrazeno okno s editorem (obrázek \ref{fig:editor-window}). V editoru je možné nechat vygenerovat nové bludiště a do něj přidat objekty, nebo upravit již existující mapu (Soubor \textrightarrow Nahrát mapu).
+	
+	Okno editoru je rozděleno na dvě části, panel s mapou na levé straně a panel s mapou na straně pravé. Novou mapu je možné vygenerovat stisknutím tlačítka 'Generuj'. Objekty je na mapu možné umisťovat s Toolboxu a to tak, že uživatel klikne na předmět v toolboxu (při najetí myší se zobrazí popisek objektu) a pak klikne na políčko, kam chce předmět umístit. Umístěné předměty je možné odstranit kliknutím na tlačítko 'X' v panelu s umístěnými předměty.
+	
+	Mapu je možné uložit skrze menu (Soubor \textrightarrow Uložit mapu) do souboru, ze kterého je možné ji později naimportovat.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=380px]{editor-window}
+		\caption{Editor map}
+		\label{fig:editor-window}
+	\end{figure}
+	
+	\subsection{Import nových map}
+	Po kliknutí na tlačítko 'Import map' v hlavním menu je zobrazeno okno se správou importovaných map \ref{fig:import-window}. Okno se skládá z panelu pro načítání souborů a přehledu importovaných map. Tyto mapy jsou fyzicky uloženy jako soubory ve složce maps, která je očekávána ve stejném adresáři jako spustitelný soubor se hrou. V této složce by krom map neměly být žádné jiné soubory, program je jinak bude hlásit jako chybné mapy.
+	
+	Mapy je možné importovat jak přes načítací panel ('Načti soubor' \textrightarrow 'Importuj mapu'), tak ručně -- soubory s mapami stačí nakompírovat do výše zmíněné složky maps a kliknout na tlačítko 'Obnovit'. 
+	
+	Importované mapy je také možné smazat kliknutím na tlačítko 'X' u příslušné mapy. Po této akci dojde ke smazání mapy z paměti aplikace a ke smazání samotného souboru s mapou.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics{import-window}
+		\caption{Správa importovaných map}
+		\label{fig:import-window}
+	\end{figure}
 	 
 	\section{Závěr}
 	Jádro aplikace se povedlo naimplementovat a jeho základní funkcionalita je ověřena jednotkovými testy. V následující verzi přibude uživatelské rozhraní, které umožní hraní hry.

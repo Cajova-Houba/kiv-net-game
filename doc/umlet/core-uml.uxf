@@ -68,6 +68,7 @@ bg=blue</panel_attributes>
     </coordinates>
     <panel_attributes>/GameObject/
 --
+- uid: int
 - name: String
 - position: MapBlock
 </panel_attributes>
@@ -205,6 +206,7 @@ bg=blue</panel_attributes>
     </coordinates>
     <panel_attributes>Map
 --
+- name: string
 - width: int
 - height: int
 - grid: MapBlock[][]</panel_attributes>
