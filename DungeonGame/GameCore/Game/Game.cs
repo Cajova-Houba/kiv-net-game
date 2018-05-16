@@ -13,18 +13,18 @@ namespace GameCore.Game
         /// <summary>
         /// Human players present in game.
         /// </summary>
-        public List<AbstractPlayer> HumanPlayers { get; protected set; }
+        public List<AbstractPlayer> HumanPlayers { get; set; }
 
         /// <summary>
         /// AI players (same as human but controlled by computer).
         /// </summary>
-        public List<AbstractPlayer> AiPlayers { get; protected set; }
+        public List<AbstractPlayer> AiPlayers { get; set; }
 
         /// <summary>
         /// Monsters - spiders, rats, ... stupid but possibly deadly to both
         /// human and AI players.
         /// </summary>
-        public List<AbstractCreature> Monsters { get; protected set; }
+        public List<AbstractCreature> Monsters { get; set; }
 
         /// <summary>
         /// Game map. 
