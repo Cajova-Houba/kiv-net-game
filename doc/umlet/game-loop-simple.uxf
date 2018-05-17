@@ -42,7 +42,8 @@
       <w>260</w>
       <h>70</h>
     </coordinates>
-    <panel_attributes>Pro každého hráče-počítač naplánuj 
+    <panel_attributes>Pro každého živého 
+hráče-počítač naplánuj 
 jeho akci, vykonej ji 
 a zkontroluj vítězství</panel_attributes>
     <additional_attributes/>
@@ -66,7 +67,7 @@ a zkontroluj vítězství</panel_attributes>
       <w>260</w>
       <h>60</h>
     </coordinates>
-    <panel_attributes>Pro každého hráče-člověka 
+    <panel_attributes>Pro každého živého hráče-člověka 
 vykonej jeho akci a zkontroluj
 vítězství</panel_attributes>
     <additional_attributes/>
@@ -101,7 +102,7 @@ vítězství</panel_attributes>
       <w>260</w>
       <h>60</h>
     </coordinates>
-    <panel_attributes>Pro každé monstrum naplánuj 
+    <panel_attributes>Pro každé živé monstrum naplánuj 
 jeho akci a vykonej ji</panel_attributes>
     <additional_attributes/>
   </element>

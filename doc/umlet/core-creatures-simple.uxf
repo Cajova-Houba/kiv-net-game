@@ -24,7 +24,7 @@
       <x>90</x>
       <y>280</y>
       <w>270</w>
-      <h>60</h>
+      <h>80</h>
     </coordinates>
     <panel_attributes>AbstractPlayer
 --
@@ -49,21 +49,23 @@
     <coordinates>
       <x>500</x>
       <y>260</y>
-      <w>130</w>
+      <w>120</w>
       <h>50</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;110;30</additional_attributes>
+    <additional_attributes>30;30;100;30</additional_attributes>
   </element>
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
-      <x>610</x>
-      <y>280</y>
-      <w>100</w>
-      <h>30</h>
+      <x>600</x>
+      <y>270</y>
+      <w>120</w>
+      <h>50</h>
     </coordinates>
-    <panel_attributes>Monster</panel_attributes>
+    <panel_attributes>Monster
+--
+ - speed : double</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -81,22 +83,25 @@
     <id>UMLClass</id>
     <coordinates>
       <x>100</x>
-      <y>380</y>
+      <y>400</y>
       <w>100</w>
-      <h>30</h>
+      <h>40</h>
     </coordinates>
-    <panel_attributes>EmptyAIPlayer</panel_attributes>
+    <panel_attributes>EmptyAIPlayer
+--</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>240</x>
-      <y>380</y>
-      <w>110</w>
-      <h>30</h>
+      <y>400</y>
+      <w>120</w>
+      <h>50</h>
     </coordinates>
-    <panel_attributes>SimpleAIPlayer</panel_attributes>
+    <panel_attributes>SimpleAIPlayer
+--
+ - speed : double</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -114,7 +119,7 @@
     <id>Relation</id>
     <coordinates>
       <x>280</x>
-      <y>330</y>
+      <y>350</y>
       <w>30</w>
       <h>70</h>
     </coordinates>
@@ -125,7 +130,7 @@
     <id>Relation</id>
     <coordinates>
       <x>140</x>
-      <y>330</y>
+      <y>350</y>
       <w>30</w>
       <h>70</h>
     </coordinates>

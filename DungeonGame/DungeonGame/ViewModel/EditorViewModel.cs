@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using GameCore.Objects.Creatures;
 using GameCore.Objects.Creatures.AIPlayers;
 using GameCore.Objects.Items;
+using System.IO;
 
 namespace DungeonGame.ViewModel
 {
@@ -19,6 +20,15 @@ namespace DungeonGame.ViewModel
     /// </summary>
     public class EditorViewModel : INotifyPropertyChanged
     {
+
+        public const string PLAYER_IMAGE_FILE_NAME = "human-player.png";
+        public const string AI_PLAYER_IMAGE_FILE_NAME = "ai-player.png";
+        public const string MONSTER_IMAGE_FILE_NAME = "monster.png";
+        public const string WEAPON_IMAGE_FILE_NAME = "weapon.png";
+        public const string ARMOR_IMAGE_FILE_NAME = "armor.png";
+        public const string ITEM_IMAGE_FILE_NAME = "item.png";
+        public const string UNKNOWN_FILE_NAME = "unknown.png";
+
         public event PropertyChangedEventHandler PropertyChanged;
         
         public string MapName { get; set; }
@@ -289,6 +299,7 @@ namespace DungeonGame.ViewModel
     /// </summary>
     public class EditorToolboxItem
     {
+
         /// <summary>
         /// UID of placed item. Used when removing placed items from map.
         /// </summary>
@@ -296,11 +307,78 @@ namespace DungeonGame.ViewModel
         public String Name { get; set; }
         public String Tooltip { get; set; }
         public BitmapImage Icon { get; set; }
-        public EditorToolboxItemType ItemType { get; set; }
+        private EditorToolboxItemType itemType;
+        public EditorToolboxItemType ItemType
+        {
+            get { return itemType; }
+            set
+            {
+                itemType = value;
+                Icon = LoadIconByItemType(itemType);
+            }
+        }
 
         public EditorToolboxItem Clone()
         {
             return new EditorToolboxItem() { Name = this.Name, Tooltip = this.Tooltip, Icon = this.Icon, ItemType = this.ItemType };
+        }
+
+        /// <summary>
+        /// Loads icon for editor toolbox item by type.
+        /// </summary>
+        /// <param name="type">Item type.</param>
+        /// <returns>Icon.</returns>
+        private BitmapImage LoadIconByItemType(EditorToolboxItemType type)
+        {
+            BitmapImage image = null;
+            string fName = Directory.GetCurrentDirectory() + "\\img\\";
+
+            switch (type)
+            {
+                case EditorToolboxItemType.HUMAN_PLAYER:
+                    fName += EditorViewModel.PLAYER_IMAGE_FILE_NAME;
+                    break;
+
+                case EditorToolboxItemType.AI_PLAYER:
+                    fName += EditorViewModel.AI_PLAYER_IMAGE_FILE_NAME;
+                    break;
+
+                case EditorToolboxItemType.MONSTER:
+                    fName += EditorViewModel.MONSTER_IMAGE_FILE_NAME;
+                    break;
+
+                case EditorToolboxItemType.WEAPON:
+                    fName += EditorViewModel.WEAPON_IMAGE_FILE_NAME;
+                    break;
+
+                case EditorToolboxItemType.ARMOR:
+                    fName += EditorViewModel.ARMOR_IMAGE_FILE_NAME;
+                    break;
+
+                case EditorToolboxItemType.ITEM:
+                    fName += EditorViewModel.ITEM_IMAGE_FILE_NAME;
+                    break;
+
+                default:
+                    fName += EditorViewModel.UNKNOWN_FILE_NAME;
+                    break;
+            }
+
+            if (File.Exists(fName))
+            {
+                try
+                {
+                    image = new BitmapImage(new Uri(fName));
+                } catch (Exception ex)
+                {
+                    // do nothing if the image is corrupted, or just bad
+                    // is someone messes with this, let him have it
+                    return null;
+                }
+            }
+
+            return image;
+
         }
     }
 

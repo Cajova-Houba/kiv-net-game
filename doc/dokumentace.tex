@@ -11,7 +11,7 @@
 	\title{Semestrální práce z předmětu KIV/NET}
 	\subtitle{Dungeon hra}
 	\author{Zdeněk Valeš - A17N0094P}
-	\date{7. 4. 2018}
+	\date{17. 5. 2018}
 	\maketitle
 	\newpage
 	
@@ -63,7 +63,7 @@
 	\subsection{Komponenta pro práci s herními objekty}
 	Všechny objekty, které mohou být umístěny na mapu, a v případě hráčů a monster se po ní mohou i pohybovat, jsou v rámci aplikace souhrnně nazvané jako 'herní objekty'. Jsou rozděleny do dvou podmnožin: živé a neživé objekty, kde živé objekty představují hráče (člověka i počítač), neživé pak předměty které lze na mapě sebrat (například zbraň).
 	
-	Všechny předměty mají dvě společné vlastnosti: hrací blok, na kterém jsou umístěné a název. Základní struktura herních objektů je naznačena na obrázku \ref{fig:game-obj}. 
+	Všechny předměty mají tři společné vlastnosti: UID, hrací blok, na kterém jsou umístěné a název. Základní struktura herních objektů je naznačena na obrázku \ref{fig:game-obj}. UID je unikátní číselné označení herního objektu v rámci jedné mapy.
 	
 	\begin{figure}[H]
 		\centering
@@ -77,7 +77,9 @@
 	
 	V případě nositelných předmětů se jedná o zbraně a brnění. Ty dávají hráči bonusy k jeho základním schopnostem (zdraví, útok, obrana). Hráč může mít v jeden okamžik nasazenou pouze jednu zbroj a jednu zbraň. Pokud má hráč nasazenou zbroj (zbraň), zvyšuje se jeho celková obrana (útok).
 	
-	Oproti tomu v inventáři může hráč nosit libovolný počet stejných věcí (počet je omezen kapacitou inventáře). Speciální věc v inventáři je pak klíč, který slouží k odemčení zavřených průchodů mezi herními bloky.
+	Oproti tomu v inventáři může hráč nosit libovolný počet stejných věcí (počet je omezen kapacitou inventáře). Speciální věc v inventáři je pak klíč (z časových důvodů neimplementován), který slouží k odemčení zavřených průchodů mezi herními bloky. 
+	
+	Předměty umístěné v inventáři mají každý svou hodnotu, podle které se na konci hry počítá výsledné skóre. Zbraň a brnění nejsou do tohoto skóre započteny.
 	
 	\subsubsection{Monstra a hráči}
 	Ve hře se vyskytují dva typy živých objektů - monstra a hráči. Monstra jsou 'jednodušší' verzí hráčů: nemají inventář, sloty na zbraně a brnění a ani nemohou vyhrát hru. Mohou se pohybovat po mapě a případně napadat ostatní hráče. Monstrum je také vždy ovládáno pouze počítačem, hráč může oproti tomu být ovládaný jak počítačem, tak člověkem.
@@ -116,6 +118,10 @@
 	
 	\paragraph{Utočení} Útočit může hráč pouze na sousední bloky. K tomu stačí znát současnou pozici hráče a směr, kterým chce útočit. Výsledná hodnota útoku se spočítá podle vzorečku $poskozeni=max(0,utok_{utocnik} - obrana_{protivnik})$. Pokud protivník umřel, prohrává a hry se dále neúčastní.
 	
+	\paragraph{Sebrání předmětu} Hráč může sebrat předmět pouze pokud má v inventáři místo a stojí na stejném políčku, na kterém se nachází předmět. V případě pokladu (znázorněn malou truhličkou) se předmět přidá do hráčova inventáře a jeho skóre se zvýší o hodnotu sebraného předmětu. Poklady nelze v současné verzi hry z inventáře vyhazovat, ani je sbírat z těl mrtvých protihráčů.
+	
+	V případě zbraně nebo brnění se předmět automaticky na hráče nasadí a zvýší patřičný atribut (útok, obrana) a pokud už hráč měl nasazený předmět stejného typu, je tímto nově sebraným nahrazen a starý je umístěn zpět na políčko, kde hráč právě stojí.
+	
 	\section{Implementace}
 	
 	Aplikace se skládá ze dvou hlavních částí - jádro a uživatelské rozhraní. Jádro je řešené jako samostatná knihovna (Class library), kterou lze 'připojit' k uživatelskému rozhraní. V současné době je implementováno pouze jádro aplikace.
@@ -144,13 +150,111 @@
 		\label{fig:core-map-generator}
 	\end{figure}
 	
-	\subsubsection{Ukládání mapy}
-	Ukládání mapy do souborů (a stejně tak její načítání) je řešeno serializací do formátu JSON pomocí knihovny Newtonsoft.Json. Původní záměr byl použít serializaci do XML pomocí standardních knihoven frameworku .NET, ale bohužel se mi nepodařilo do class library s jádrem přidat požadovanou závislost.
+	\subsection{Export a import herní mapy}
+	Mapu je možné uložit do binárního souboru jehož formát je uveden v tabulkách \ref{tab:bin-map-file}, \ref{tab:bin-creature} a \ref{tab:bin-item}. K importování a exportování mapy slouží rozhraní \verb|IMapSerializer|, které je implementováno třídami \verb|JsonMapSerializer| a \verb|BinaryMapSerializer|. První serializér je zastaralý a slouží pouze k testovacím účelům. Druhý pak pracuje s mapou převedou do binární podoby.
 	
-	V jádře je implementována pouze serializace do řetězce, uložení tohoto řetězce do souboru (nebo kamkoliv jinam) pak závisí na vrstvě, která bude jádro hry používat.
+	Všechny celočíselné hodnoty (datový typ \verb|int|) jsou uloženy jako 4 byty v kódování little endian. Hodnota 4 by tedy byla uložena jako 4,0,0,0. Hodnota 511 by byla uložena jako 255,1,0,0.
+	
+	Jádro podporuje export (a následný import) do pole bytů. Samotné uložení tohoto pole do souboru, nebo jeho další zpracování závisí na vrstvě, která bude jádro hry používat.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|c|c|p{8cm}|}
+			\hline
+			Počet bytů & Jméno & Detailní popis \\
+			\hline
+			\hline
+			2 & Souborový prefix & Dva ASCII znaky 'D' a 'M'. \\
+			\hline
+			1 & Verze souboru & Verze souboru (kvůli čtení), v současnosti 1. \\
+			\hline
+			\hline
+			4 & Délka jména mapy & Počet následujících bytů, které tvoří jméno mapy. \\
+			\hline
+			X & Jméno mapy & - \\
+			\hline
+			4 & Šířka mapy & Počet políček na šířku.\\
+			\hline
+			4 & Výška mapy & Počet políček na délku. \\
+			\hline
+			X & Byty s políčky & Každé políčko je reprezentováno jako čtveřice bitů, která značí východy SEVER, VÝCHOD, JIH, ZÁPAD. Pokud je bit 0, východ je uzavřen. Políčka jsou po sloupcích, tedy: [0,0], [0,1], [0,2], ... [0,vyska], [1,0], ... [sirka,vyska]. \\	
+			\hline
+			\hline
+			4 & Počet živých objektů & Počet hráčů, protihráčů a monster dohromady. Následující byty reprezentují kolekci živých bytostí.\\
+			\hline
+			X & Živé objekty & Sekvence bytů reprezentující všechny živé objekty na mapě. Struktura jednoho živého objektu je popsána v tabulce \ref{tab:bin-creature}. \\
+			\hline
+			\hline
+			4 & Počet  předmětů & Počet všech neživých objektů (poklady, zbraně, zbroje) umístěných na mapě. \\
+			\hline
+			X & Předměty & Sekvence bytů reprezentující všechny neživé předměty na mapě. Struktura jednoho neživého objektu je popsána v tabulce \ref{tab:bin-item}. \\
+			\hline
+		\end{tabular}
+		\caption{Formát binárního souboru s mapou}
+		\label{tab:bin-map-file}
+	\end{table}
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|c|c|p{8cm}|}
+			\hline
+			Počet bytů & Jméno & Detailní popis \\
+			\hline
+			\hline
+			4 & UID & Začátek sekvence bytů reprezentující jednu živou bytost. Číslo, které unikátně označuje herní objekt. Musí být unikátní v rámci jedné mapy (tedy v rámci jednoho souboru). \\
+			\hline
+			4 & Délka jména objektu & Počet následujících bytů, které tvoří jméno objektu. \\
+			\hline
+			X & Jméno objektu & Jméno objektu v UTF-8 kódování. \\
+			\hline
+			4 & X-souřadnice pozice & X souřadnice políčka, na kterém je objekt umístěn. \\
+			\hline
+			4 & Y-souřadnice pozice & Y souřadnice políčka, na kterém je objekt umístěn. \\
+			\hline
+			4 & Zdraví & Zdraví objektu. \\
+			\hline
+			4 & Útok & Útočná síla objektu. \\
+			\hline
+			4 & Obrana & Obranná síla objektu. \\
+			\hline
+			1 & Typ živého objektu & Typ objektu. 0 znamená monstrum, 1 hráč-člověk, 2 prázdná AI (protihráč, který jen stojí), 3 jednoduchá AI, 255 jsou neznámé živé objekty. Zbytek hodnot je rezervován pro další případné AI, nebo jiné živé objekty. \\
+			\hline
+		\end{tabular}
+		\caption{Struktura uložení jednoho živého objektu}
+		\label{tab:bin-creature}
+	\end{table}
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|c|c|p{8cm}|}
+			\hline
+			Počet bytů & Jméno & Detailní popis \\
+			\hline
+			\hline
+			4 & UID & Začátek sekvence bytů reprezentující jednu živou bytost. Číslo, které unikátně označuje herní objekt. Musí být unikátní v rámci jedné mapy (tedy v rámci jednoho souboru). \\
+			\hline
+			4 & Délka jména objektu & Počet následujících bytů, které tvoří jméno objektu. \\
+			\hline
+			X & Jméno objektu & Jméno objektu v UTF-8 kódování. \\
+			\hline
+			4 & X-souřadnice pozice & X souřadnice políčka, na kterém je objekt umístěn. \\
+			\hline
+			4 & Y-souřadnice pozice & Y souřadnice políčka, na kterém je objekt umístěn. \\
+			\hline
+			4 & Vlastnost předmětu & Vlastnost předmětu, pro poklady jejich hodnota, pro zbraně jejich útok, pro brnění jejich obrana. \\
+			\hline
+			1 & Typ předmětu & Typ předmětu. 0 znamená zbraň, 1 brnění, 2 poklad, 255 je neznámý předmět. Zbytek hodnot je rezervován pro další případné typy předmětů. \\
+			\hline
+		\end{tabular}
+		\caption{Struktura uložení jednoho neživého objektu}
+		\label{tab:bin-item}
+	\end{table}
+	
+	\subsubsection{Správa importovaných map}
+	Importované mapy jsou ve výše zmíněné binární podobě uloženy ve složce \verb|maps|, která je očekávána ve stejném adresáři jako spustitelný soubor se hrou. Správa importovaných map je uvedená části \ref{subsec:map-import} herní příručky. 
 	
 	\subsection{Komponenta pro práci s herními objekty}
-	Jak již bylo zmíněno v analytické části, předměty ve hře se dělí na živé a neživé. Základem pro všechny objekty je třída \verb|GameObject|, která každému objektu dává jméno a pozici na mapě.
+	Jak již bylo zmíněno v analytické části, předměty ve hře se dělí na živé a neživé. Základem pro všechny objekty je třída \verb|GameObject|, která každému objektu dává jméno a pozici na mapě. V konstruktoru třídy je také přiřazeno UID, které je získáno ze statického čítače. UID může být později změněno -- to je důležité hlavně při načítání importovaných map, ve kterých mají herní objekty svoje UID již určená.
 	
 	\subsubsection{Monstra a protihráči}
 	Nepřátelé jsou pro hráče-člověka monstra a ostatní hráči ovládaní počítačem. Monstrum je implementováno třídou \verb|Monster| a k vytvoření různých druhů monster slouží třída \verb|MonsterFactory|. jednotlivá monstra se od sebe liší pouze jménem a vlastnostmi (život, útok, obrana). Na obrázku \ref{fig:core-creatures} je pro úplnost zobrazen UML diagram znázorňující strukturu živých objektů.
@@ -169,8 +273,16 @@
 	
 	V případě, že některý z hráčů dojde do cílového pole (které nemusí být určeno - v takovém případě se jedná o nekonečnou hru), nastaví instance hry příznak \verb|IsWinner|. Opět je na vrstvě, která herní jádro využívá, aby po každém volání kroku herní smyčky zkontrolovala, zdali někdo nevyhrál.
 	
-	\subsection{Herní akce}
+	\subsubsection{Herní akce}
 	Základní třída pro každou herní akci je \verb|AbstractAction|. Deklaruje metodu \verb|execute()|, kterou se akce vykoná a umožňuje nastavit objekt \verb|AbstractCreature|, nad kterým se akce vykoná (tedy ten, kdo akci provede). V současné době jsou implementovány akce na pohyb, útok a sebrání předmětu.
+	
+	\subsubsection{Generování herních instancí}
+	Hru je možné zahájit dvěma způsoby -- vygenerováním nové náhodné mapy, nebo použitím některé z importovaných map. Ke generování herních instancí slouží třída \verb|GameGenerator|.
+	
+	\subsection{Renderování mapy}
+	Renderování herní mapy je v současné verzi realizováno umisťováním vektorů na grafickou komponentu \verb|Canvas| každých 100ms (řešeno pomocí časovače). Společný interface pro renderery je \verb|IMapRenderer|, ten je v současnosti implementován pouze třídou \verb|VectorMapRenderer|. Během vývoje aplikace se renderování herní plochy pomocí vektorů ukázalo jako neefektivní, proto by mělo být v budoucích verzích nahrazeno (alespoň částečně) renderováním do virtuální bitmapy.
+	
+	Při návrhu rendereru jsem počítal s jeho možnou rozšiřitelností skrze renderovací konfiguraci. Ta v současné době obsahuje barvy zdí a cesty, podle kterých se tvoří vektory jednotlivých objektů. V budoucnu by mělo být možné tuto konfiguraci načítat ze souboru (nejspíše ve formátu \textless\textit{UID}\textgreater.\textless\textit{vlastnost}\textgreater=\textless\textit{hodnota}\textgreater) a tím zajistit pohodlné přidávání nových objektů bez nutnosti rozšiřování kódu.
 	
 	\section{Uživatelská příručka}
 	Po spuštění aplikace je zobrazeno okno se základním menu (obrázek \ref{fig:main-window}). Toto okno je výchozem bodem pro celou aplikaci po zavření okna s některou z dalších částí aplikace (import map, editor, ...) je uživatel vrácen zpět sem.
@@ -204,6 +316,8 @@
 	
 	Kromě živých entit obsahuje herní mapa také předměty, ty jsou u každého políčka zobrazeny v jeho levé horní části. Sekera znamená zbraň, šít je zbroj a truhlička je poklad (sesbírané předměty může hráč vidět vlevo, ve svém inventáři). 
 	
+	Během hraní se může dojít k přepnutí focusu na jinou komponentu (například komponentu se správami) a hra pak nemusí jít ovládat pomocí kláves. Tento problém se mi nepodařilo odstranit a jeho řešením v současné verzi je použití ovládacích tlačítek na pravém panelu.
+	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[height=280px]{game-window}
@@ -236,6 +350,7 @@
 	\end{figure}
 	
 	\subsection{Import nových map}
+	\label{subsec:map-import}
 	Po kliknutí na tlačítko 'Import map' v hlavním menu je zobrazeno okno se správou importovaných map \ref{fig:import-window}. Okno se skládá z panelu pro načítání souborů a přehledu importovaných map. Tyto mapy jsou fyzicky uloženy jako soubory ve složce maps, která je očekávána ve stejném adresáři jako spustitelný soubor se hrou. V této složce by krom map neměly být žádné jiné soubory, program je jinak bude hlásit jako chybné mapy.
 	
 	Mapy je možné importovat jak přes načítací panel ('Načti soubor' \textrightarrow 'Importuj mapu'), tak ručně -- soubory s mapami stačí nakompírovat do výše zmíněné složky maps a kliknout na tlačítko 'Obnovit'. 
@@ -250,6 +365,8 @@
 	\end{figure}
 	 
 	\section{Závěr}
-	Jádro aplikace se povedlo naimplementovat a jeho základní funkcionalita je ověřena jednotkovými testy. V následující verzi přibude uživatelské rozhraní, které umožní hraní hry.
+	Hru se podařilo úspěšně naimplementovat. Během vývoje mě napadla spousta vylepšení, která jsem z časových důvodů již nestihl do současné verze přidat, například klíče pro otvírání dveří mezi herními políčky, vyhzování předmětů z inventáře, lepší gameplay a vybalancování herní AI.
+	
+	Dalším námětem na vylepšení by pak mohlo být renderování mapy, které by mohlo hrací plochu (bludiště se nemění) renderovat do bitmapy a jako vektory renderovat pouze předměty, které jsou na mapě umístěny.
 	
 \end{document}
