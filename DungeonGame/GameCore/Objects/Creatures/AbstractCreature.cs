@@ -2,6 +2,8 @@
 using GameCore.Map;
 using System.Collections.Generic;
 using GameCore.Game.Actions;
+using GameCore.Map.Serializer;
+using GameCore.Map.Serializer.Binary;
 
 namespace GameCore.Objects.Creatures
 {
@@ -11,6 +13,16 @@ namespace GameCore.Objects.Creatures
     /// </summary>
     public abstract class AbstractCreature : GameObject
     {
+        public const byte MONSTER_TYPE = 0;
+        public const byte HUMAN_PLAYER_TYPE = 1;
+        public const byte EMPTY_AI_TYPE = 2;
+        public const byte SIMPLE_AI_TYPE = 3;
+
+        /// <summary>
+        /// Internal type of creature. Every implementing class should set this.
+        /// </summary>
+        public byte CreatureType { get; set; }
+
         /// <summary>
         /// Whether shoudl AI ignore its' speed. Should be used while implementing Think() method.
         /// </summary>
@@ -94,7 +106,7 @@ namespace GameCore.Objects.Creatures
         /// <returns>Max possible HP of this creature.</returns>
         public abstract double MaxHitPoints { get; }
 
-        public AbstractCreature(string name, MapBlock position, int baseHitPoints, int baseAttack, int baseDeffense) : base(name, position)
+        public AbstractCreature(string name, MapBlock position, int baseHitPoints, int baseAttack, int baseDeffense, byte creatureType) : base(name, position)
         {
             BaseHitPoints = baseHitPoints;
             CurrentHitPoints = baseHitPoints;
@@ -102,6 +114,7 @@ namespace GameCore.Objects.Creatures
             BaseDeffense = baseDeffense;
             ActionQueue = new Queue<AbstractAction>();
             moveCounter = 0;
+            CreatureType = creatureType;
         }
 
         /// <summary>
@@ -134,5 +147,29 @@ namespace GameCore.Objects.Creatures
         /// Leave this method empty for human players as their thinking is replaced by user input.
         /// </summary>
         public abstract void Think();
+
+        public override List<byte> SerializeBinary()
+        {
+            List<byte> crBytes = new List<byte>();
+
+            // uid
+            crBytes.AddRange(BinarySerializerUtils.IntToBytes(UniqueId));
+
+            // name
+            crBytes.AddRange(BinarySerializerUtils.StrToBytes(Name, GameObject.MAX_NAME_LENGTH));
+
+            // position
+            crBytes.AddRange(BinarySerializerUtils.IntToBytes(Position.X));
+            crBytes.AddRange(BinarySerializerUtils.IntToBytes(Position.Y));
+
+            // creature attributes
+            byte type = CreatureType;
+            crBytes.AddRange(BinarySerializerUtils.IntToBytes(BaseHitPoints));
+            crBytes.AddRange(BinarySerializerUtils.IntToBytes(BaseAttack));
+            crBytes.AddRange(BinarySerializerUtils.IntToBytes(BaseDeffense));
+            crBytes.Add(type);
+
+            return crBytes;
+        }
     }
 }

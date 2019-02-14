@@ -6,6 +6,7 @@ using GameCore.Map.Serializer;
 using GameCore.Objects.Creatures;
 using GameCore.Objects.Creatures.AIPlayers;
 using GameCore.Objects.Items;
+using GameCore.Map.Serializer.Binary;
 
 namespace GameCoreUnitTest
 {

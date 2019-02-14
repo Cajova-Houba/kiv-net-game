@@ -122,7 +122,7 @@ namespace GameCore.Objects.Creatures
         /// </summary>
         /// <param name="name">Player's name.</param>
         /// <param name="position">Players position.</param>
-        public AbstractPlayer(string name, MapBlock position) : base(name, position, DEFAULT_BASE_HP, DEFAULT_BASE_ATTACK, DEFAULT_BASE_DEFFENSE)
+        public AbstractPlayer(string name, MapBlock position, byte type) : base(name, position, DEFAULT_BASE_HP, DEFAULT_BASE_ATTACK, DEFAULT_BASE_DEFFENSE, type)
         {
             Inventory = new List<AbstractInventoryItem>();
         }

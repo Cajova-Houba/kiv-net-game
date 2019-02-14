@@ -1,4 +1,5 @@
-﻿using GameCore.Objects;
+﻿using GameCore.Map.Serializer;
+using GameCore.Objects;
 using GameCore.Objects.Creatures;
 using GameCore.Objects.Items;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ namespace GameCore.Map
     /// Map is represented by grid of MapBlocks.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn, Title = "mapBlock")]
-    public class MapBlock
+    public class MapBlock //: IBinarySerializable
     {
         /// <summary>
         /// X coordinate of this block.
@@ -242,5 +243,24 @@ namespace GameCore.Map
         {
             return $"MapBlock [{X},{Y}]";
         }
+
+        //public void SerializeBinary(List<byte> serialized)
+        //{
+        //    byte tmp = 0;
+        //    byte mask = 1;
+
+        //    if (upper)
+        //    {
+        //        mask = (byte)(mask << 4);
+        //    }
+
+        //    if (mapBlock.North.IsOpen()) { tmp = (byte)(tmp | mask); }
+        //    if (mapBlock.East.IsOpen()) { tmp = (byte)(tmp | (mask << 1)); }
+        //    if (mapBlock.South.IsOpen()) { tmp = (byte)(tmp | (mask << 2)); }
+        //    if (mapBlock.West.IsOpen()) { tmp = (byte)(tmp | (mask << 3)); }
+
+        //    res = (byte)(source | tmp);
+        //    throw new System.NotImplementedException();
+        //}
     }
 }

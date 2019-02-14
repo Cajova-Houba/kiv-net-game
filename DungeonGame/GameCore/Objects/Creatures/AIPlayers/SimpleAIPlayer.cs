@@ -32,7 +32,7 @@ namespace GameCore.Objects.Creatures.AIPlayers
         private Stack<VisitedBlock> blockStack;
         private HashSet<VisitedBlock> visitedBlocks;
 
-        public SimpleAIPlayer(string name, MapBlock position) : base(name, position)
+        public SimpleAIPlayer(string name, MapBlock position) : base(name, position, SIMPLE_AI_TYPE)
         {
             blockStack = new Stack<VisitedBlock>();
             blockStack.Push(new VisitedBlock(position));

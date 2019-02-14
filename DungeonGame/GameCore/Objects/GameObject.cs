@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using GameCore.Map;
+using GameCore.Map.Serializer;
+using GameCore.Map.Serializer.Binary;
 using Newtonsoft.Json;
 
 namespace GameCore.Objects
@@ -10,7 +12,7 @@ namespace GameCore.Objects
     /// Base class for all objects which can be placed on the map - player, monsters, items, ...
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public abstract class GameObject
+    public abstract class GameObject : IBinarySerializable
     {
         /// <summary>
         /// Max length of object name.
@@ -31,6 +33,8 @@ namespace GameCore.Objects
             idCounter++;
             return idCounter;
         }
+
+        public abstract List<byte> SerializeBinary();
 
         /// <summary>
         /// Unique id of this object.

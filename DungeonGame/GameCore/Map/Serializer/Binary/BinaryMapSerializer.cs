@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace GameCore.Map.Serializer
+namespace GameCore.Map.Serializer.Binary
 {
     /// <summary>
     /// Serializes to map to byte array so that it can be saved to binary file later.
@@ -366,21 +366,33 @@ namespace GameCore.Map.Serializer
             List<AbstractCreature> creatures = new List<AbstractCreature>();
             List<AbstractItem> items = new List<AbstractItem>();
 
+            int creatureCount = 0;
+            int itemCount = 0;
+            List<byte> serializedCreatures = new List<byte>();
+            List<byte> serializedItems = new List<byte>();
+
             foreach (MapBlock mapBlock in map.Grid)
             {
                 if (mapBlock.Occupied)
                 {
-                    creatures.Add(mapBlock.Creature);
+                    creatureCount++;
+                    serializedCreatures.AddRange(mapBlock.Creature.SerializeBinary());
                 }
 
                 if (mapBlock.Item != null)
                 {
-                    items.Add(mapBlock.Item);
+                    itemCount++;
+                    serializedItems.AddRange(mapBlock.Item.SerializeBinary());
                 }
             }
 
-            AddCreatures(creatures, serialized);
-            AddItems(items, serialized);
+            // add creature count and serialized creatures
+            serialized.AddRange(IntToBytes(creatureCount));
+            serialized.AddRange(serializedCreatures);
+
+            // add item count and serialized items
+            serialized.AddRange(IntToBytes(itemCount));
+            serialized.AddRange(serializedItems);
         }
 
         /// <summary>

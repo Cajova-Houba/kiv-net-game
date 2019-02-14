@@ -14,11 +14,21 @@ namespace GameCore.Objects.Items
         /// Value of this utem, used for score calculations.
         /// 0 by default.
         /// </summary>
-        public int ItemValue { get; set; }
-
-        public AbstractInventoryItem(string name, MapBlock position) : base(name, position)
+        public int ItemValue
         {
-            ItemValue = 0;
+            get
+            {
+                return ItemParameter;
+            }
+
+            set
+            {
+                ItemParameter = value;
+            }
+        }
+
+        public AbstractInventoryItem(string name, MapBlock position) : base(name, position, AbstractItem.INVENTORY_ITEM_TYPE, 0)
+        {
         }
     }
 }

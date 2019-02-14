@@ -11,11 +11,21 @@ namespace GameCore.Objects.Items
         /// <summary>
         /// Damage this weapon addes to player's base damage.
         /// </summary>
-        public int Damage { get; set; }
-
-        public AbstractWeapon(string name, MapBlock position, int damage) : base(name, position)
+        public int Damage
         {
-            Damage = damage;
+            get
+            {
+                return ItemParameter;
+            }
+
+            set
+            {
+                ItemParameter = value;
+            }
+        }
+
+        public AbstractWeapon(string name, MapBlock position, int damage) : base(name, position, AbstractItem.WEAPON_TYPE, damage)
+        {
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using GameCore.Map;
+﻿using System.Collections.Generic;
+using GameCore.Map;
 
 namespace GameCore.Objects.Items
 {
@@ -9,12 +10,22 @@ namespace GameCore.Objects.Items
     {
         /// <summary>
         /// Defense which is added to player's base defense.
+        /// Property is mapped to AbstractItem.ItemParameter.
         /// </summary>
-        public int Defense { get; set; }
+        public int Defense {
+            get
+            {
+                return ItemParameter;
+            }
 
-        public AbstractArmor(string name, MapBlock position, int defense) : base(name, position)
+            set
+            {
+                ItemParameter = value;
+            }
+        }
+
+        public AbstractArmor(string name, MapBlock position, int defense) : base(name, position, AbstractItem.ARMOR_TYPE, defense)
         {
-            Defense = defense;
         }
     }
 }

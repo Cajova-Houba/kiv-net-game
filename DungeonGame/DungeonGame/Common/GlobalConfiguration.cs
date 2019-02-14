@@ -1,5 +1,6 @@
 ﻿using GameCore.Map;
 using GameCore.Map.Serializer;
+using GameCore.Map.Serializer.Binary;
 using System;
 using System.Collections.Generic;
 using System.IO;

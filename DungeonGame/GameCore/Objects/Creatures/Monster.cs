@@ -75,7 +75,7 @@ namespace GameCore.Objects.Creatures
         /// <param name="baseHitPoints"></param>
         /// <param name="baseAttack"></param>
         /// <param name="baseDeffense"></param>
-        public Monster(string name, MapBlock position, int baseHitPoints, int baseAttack, int baseDeffense) : base(name, position, baseHitPoints, baseAttack, baseDeffense)
+        public Monster(string name, MapBlock position, int baseHitPoints, int baseAttack, int baseDeffense) : base(name, position, baseHitPoints, baseAttack, baseDeffense, MONSTER_TYPE)
         {
             Init();
             stackCapacity = randomizer.Next(DEF_MAX_STACK_CAPACITY) + 1;
@@ -90,7 +90,7 @@ namespace GameCore.Objects.Creatures
         /// <param name="baseAttack"></param>
         /// <param name="baseDeffense"></param>
         /// <param name="stackCapacity">Max capacity of stack. Should be greater than 0.</param>
-        public Monster(string name, MapBlock position, int baseHitPoints, int baseAttack, int baseDeffense, int stackCapacity) : base(name, position, baseHitPoints, baseAttack, baseDeffense)
+        public Monster(string name, MapBlock position, int baseHitPoints, int baseAttack, int baseDeffense, int stackCapacity) : base(name, position, baseHitPoints, baseAttack, baseDeffense, MONSTER_TYPE)
         {
             Init();
             this.stackCapacity = stackCapacity;

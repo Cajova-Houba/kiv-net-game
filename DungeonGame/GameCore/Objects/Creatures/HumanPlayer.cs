@@ -10,7 +10,7 @@ namespace GameCore.Objects.Creatures
     /// </summary>
     public class HumanPlayer : AbstractPlayer
     {
-        public HumanPlayer(string name, MapBlock position) : base(name, position)
+        public HumanPlayer(string name, MapBlock position) : base(name, position, HUMAN_PLAYER_TYPE)
         {
         }
 

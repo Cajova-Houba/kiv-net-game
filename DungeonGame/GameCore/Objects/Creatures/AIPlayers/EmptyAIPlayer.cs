@@ -10,7 +10,7 @@ namespace GameCore.Objects.Creatures.AIPlayers
     /// </summary>
     public class EmptyAIPlayer : AbstractPlayer
     {
-        public EmptyAIPlayer(string name, MapBlock position) : base(name, position)
+        public EmptyAIPlayer(string name, MapBlock position) : base(name, position, EMPTY_AI_TYPE)
         {
 
         }

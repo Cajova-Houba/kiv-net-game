@@ -3,6 +3,7 @@ using DungeonGame.Render;
 using DungeonGame.ViewModel;
 using GameCore.Map;
 using GameCore.Map.Serializer;
+using GameCore.Map.Serializer.Binary;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
